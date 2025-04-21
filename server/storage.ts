@@ -166,12 +166,12 @@ export class MemStorage implements IStorage {
   async filterRestrooms(filters: Partial<Record<string, boolean | number>>): Promise<RestroomWithRating[]> {
     let filteredRestrooms = Array.from(this.restrooms.values());
     
-    // Apply boolean filters
+    // Apply boolean filters - only filter when the value is true
     for (const [key, value] of Object.entries(filters)) {
-      if (typeof value === 'boolean') {
+      if (typeof value === 'boolean' && value === true) {
         filteredRestrooms = filteredRestrooms.filter(restroom => 
           // @ts-ignore - Dynamic property access
-          restroom[key] === value
+          restroom[key] === true
         );
       }
     }
@@ -184,6 +184,10 @@ export class MemStorage implements IStorage {
     } else {
       filteredRestrooms = filteredRestrooms.map(restroom => this.attachRestroomRating(restroom));
     }
+    
+    // Log the filter criteria and results for debugging
+    console.log('Filter criteria:', filters);
+    console.log('Filtered restrooms count:', filteredRestrooms.length);
     
     return filteredRestrooms;
   }
