@@ -5,6 +5,8 @@ import {
   articles, type Article, type InsertArticle,
   testimonials, type Testimonial, type InsertTestimonial
 } from "@shared/schema";
+import { eq, or, ilike } from "drizzle-orm";
+import { db } from "./db";
 
 export interface IStorage {
   // User methods
@@ -434,4 +436,230 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Database Storage implementation
+export class DatabaseStorage implements IStorage {
+  // User methods
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+  
+  // Restroom methods
+  async getRestrooms(): Promise<RestroomWithRating[]> {
+    const allRestrooms = await db.select().from(restrooms);
+    return Promise.all(allRestrooms.map(async (restroom) => this.attachRestroomRating(restroom)));
+  }
+  
+  async getRestroomById(id: number): Promise<RestroomWithRating | undefined> {
+    const [restroom] = await db.select().from(restrooms).where(eq(restrooms.id, id));
+    if (!restroom) return undefined;
+    return this.attachRestroomRating(restroom);
+  }
+  
+  async getNearbyRestrooms(latitude: string, longitude: string): Promise<RestroomWithRating[]> {
+    const allRestrooms = await db.select().from(restrooms);
+    
+    const restroomsWithDistance = await Promise.all(
+      allRestrooms.map(async (restroom) => {
+        const distance = calculateDistance(
+          latitude,
+          longitude,
+          restroom.latitude,
+          restroom.longitude
+        );
+        
+        const withRating = await this.attachRestroomRating(restroom);
+        return {
+          ...withRating,
+          distance
+        };
+      })
+    );
+    
+    return restroomsWithDistance.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+  }
+  
+  async createRestroom(insertRestroom: InsertRestroom): Promise<Restroom> {
+    const [restroom] = await db
+      .insert(restrooms)
+      .values(insertRestroom)
+      .returning();
+    return restroom;
+  }
+  
+  async updateRestroom(id: number, restroomUpdate: Partial<Restroom>): Promise<Restroom | undefined> {
+    const [restroom] = await db
+      .update(restrooms)
+      .set(restroomUpdate)
+      .where(eq(restrooms.id, id))
+      .returning();
+    return restroom || undefined;
+  }
+  
+  async deleteRestroom(id: number): Promise<boolean> {
+    await db.delete(restrooms).where(eq(restrooms.id, id));
+    return true;
+  }
+  
+  async searchRestrooms(query: string): Promise<RestroomWithRating[]> {
+    const lowerQuery = query.toLowerCase();
+    
+    // Perform search across multiple fields
+    const matchingRestrooms = await db
+      .select()
+      .from(restrooms)
+      .where(
+        or(
+          ilike(restrooms.name, `%${lowerQuery}%`),
+          ilike(restrooms.address, `%${lowerQuery}%`),
+          ilike(restrooms.city, `%${lowerQuery}%`),
+          ilike(restrooms.state, `%${lowerQuery}%`),
+          ilike(restrooms.zipCode, `%${lowerQuery}%`),
+          ilike(restrooms.description, `%${lowerQuery}%`)
+        )
+      );
+    
+    return Promise.all(matchingRestrooms.map(restroom => this.attachRestroomRating(restroom)));
+  }
+  
+  async filterRestrooms(filters: Partial<Record<string, boolean | number>>): Promise<RestroomWithRating[]> {
+    let query = db.select().from(restrooms);
+    
+    // Apply boolean filters (only for true values)
+    const booleanColumns = [
+      'accessibilityFeatures', 'babyChanging', 'genderNeutral', 'freeToUse',
+      'changingRoom', 'singleOccupancy', 'customerOnly', 'codeRequired',
+      'attendantPresent', 'familyFriendly', 'soapAvailable', 'wellStocked',
+      'premiumProducts'
+    ];
+    
+    for (const column of booleanColumns) {
+      if (filters[column] === true) {
+        // @ts-ignore - We know these are valid column names
+        query = query.where(eq(restrooms[column], true));
+      }
+    }
+    
+    // Execute the query
+    const filteredRestrooms = await query;
+    
+    // Get all restrooms with ratings
+    const restroomsWithRatings = await Promise.all(
+      filteredRestrooms.map(restroom => this.attachRestroomRating(restroom))
+    );
+    
+    // Apply cleanliness rating filter if present
+    const minRating = filters.cleanliness as number | undefined;
+    if (minRating !== undefined && typeof minRating === 'number' && minRating > 0) {
+      return restroomsWithRatings.filter(restroom => restroom.averageRating >= minRating);
+    }
+    
+    return restroomsWithRatings;
+  }
+  
+  // Review methods
+  async getReviews(restroomId: number): Promise<Review[]> {
+    return db
+      .select()
+      .from(reviews)
+      .where(eq(reviews.restroomId, restroomId));
+  }
+  
+  async getReviewById(id: number): Promise<Review | undefined> {
+    const [review] = await db
+      .select()
+      .from(reviews)
+      .where(eq(reviews.id, id));
+    return review || undefined;
+  }
+  
+  async createReview(insertReview: InsertReview): Promise<Review> {
+    const [review] = await db
+      .insert(reviews)
+      .values(insertReview)
+      .returning();
+    return review;
+  }
+  
+  async deleteReview(id: number): Promise<boolean> {
+    await db.delete(reviews).where(eq(reviews.id, id));
+    return true;
+  }
+  
+  // Article methods
+  async getArticles(): Promise<Article[]> {
+    return db.select().from(articles);
+  }
+  
+  async getArticleById(id: number): Promise<Article | undefined> {
+    const [article] = await db
+      .select()
+      .from(articles)
+      .where(eq(articles.id, id));
+    return article || undefined;
+  }
+  
+  async createArticle(insertArticle: InsertArticle): Promise<Article> {
+    const [article] = await db
+      .insert(articles)
+      .values(insertArticle)
+      .returning();
+    return article;
+  }
+  
+  async getArticlesByCategory(category: string): Promise<Article[]> {
+    return db
+      .select()
+      .from(articles)
+      .where(eq(articles.category, category));
+  }
+  
+  // Testimonial methods
+  async getTestimonials(): Promise<Testimonial[]> {
+    return db.select().from(testimonials);
+  }
+  
+  async createTestimonial(insertTestimonial: InsertTestimonial): Promise<Testimonial> {
+    const [testimonial] = await db
+      .insert(testimonials)
+      .values(insertTestimonial)
+      .returning();
+    return testimonial;
+  }
+  
+  // Helper method to calculate average rating
+  private async attachRestroomRating(restroom: Restroom): Promise<RestroomWithRating> {
+    const restroomReviews = await db
+      .select()
+      .from(reviews)
+      .where(eq(reviews.restroomId, restroom.id));
+    
+    const reviewCount = restroomReviews.length;
+    
+    const averageRating = reviewCount > 0
+      ? restroomReviews.reduce((sum, review) => sum + review.rating, 0) / reviewCount
+      : 0;
+    
+    return {
+      ...restroom,
+      averageRating,
+      reviewCount
+    };
+  }
+}
+
+// Export storage instance
+export const storage = new DatabaseStorage();

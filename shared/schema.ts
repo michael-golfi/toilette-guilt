@@ -1,6 +1,7 @@
 import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
 
 // Users schema
 export const users = pgTable("users", {
@@ -102,6 +103,39 @@ export const insertTestimonialSchema = createInsertSchema(testimonials).omit({
   id: true,
   createdAt: true,
 });
+
+// Relations definitions
+export const usersRelations = relations(users, ({ many }) => ({
+  reviews: many(reviews),
+  restrooms: many(restrooms),
+  articles: many(articles)
+}));
+
+export const restroomsRelations = relations(restrooms, ({ one, many }) => ({
+  creator: one(users, {
+    fields: [restrooms.createdBy],
+    references: [users.id]
+  }),
+  reviews: many(reviews)
+}));
+
+export const reviewsRelations = relations(reviews, ({ one }) => ({
+  restroom: one(restrooms, {
+    fields: [reviews.restroomId],
+    references: [restrooms.id]
+  }),
+  user: one(users, {
+    fields: [reviews.userId],
+    references: [users.id]
+  })
+}));
+
+export const articlesRelations = relations(articles, ({ one }) => ({
+  author: one(users, {
+    fields: [articles.authorId],
+    references: [users.id]
+  })
+}));
 
 // Export types
 export type User = typeof users.$inferSelect;
