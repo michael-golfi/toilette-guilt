@@ -663,3 +663,199 @@ export class DatabaseStorage implements IStorage {
 
 // Export storage instance
 export const storage = new DatabaseStorage();
+
+// Seed the database with initial data
+async function seedDatabase() {
+  try {
+    // Check if we already have users
+    const existingUsers = await db.select().from(users);
+    
+    if (existingUsers.length === 0) {
+      console.log('Seeding database with initial data...');
+      
+      // Create admin user
+      const admin = await storage.createUser({
+        username: "admin",
+        password: "password123",
+        email: "admin@toiletteguilt.com"
+      });
+      
+      // Create restrooms
+      const centralPark = await storage.createRestroom({
+        name: "Central Park Public Restroom",
+        address: "65 Central Park West",
+        city: "New York",
+        state: "NY",
+        zipCode: "10023",
+        latitude: "40.7812",
+        longitude: "-73.9665",
+        description: "This well-maintained public facility features touchless fixtures, clean stalls, and is regularly serviced. Accessible entrance with wide doorways.",
+        hours: "6AM-10PM",
+        accessibilityFeatures: true,
+        babyChanging: true,
+        genderNeutral: true,
+        freeToUse: true,
+        changingRoom: false,
+        singleOccupancy: false,
+        customerOnly: false,
+        codeRequired: false,
+        attendantPresent: false,
+        familyFriendly: false,
+        soapAvailable: true,
+        wellStocked: true,
+        premiumProducts: false,
+        imageUrl: "https://images.unsplash.com/photo-1613214756180-22cfbf6a15b5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
+      const metroShopping = await storage.createRestroom({
+        name: "Metropolitan Shopping Center",
+        address: "233 Broadway",
+        city: "New York",
+        state: "NY",
+        zipCode: "10279",
+        latitude: "40.7128",
+        longitude: "-74.0060",
+        description: "Luxury shopping center restrooms with attendant service, premium hand soap, and individual cloth towels. Exceptionally clean with elegant fixtures.",
+        hours: "9AM-9PM",
+        accessibilityFeatures: true,
+        babyChanging: true,
+        genderNeutral: false,
+        freeToUse: true,
+        changingRoom: true,
+        singleOccupancy: false,
+        customerOnly: false,
+        codeRequired: false,
+        attendantPresent: true,
+        familyFriendly: true,
+        soapAvailable: true,
+        wellStocked: true,
+        premiumProducts: true,
+        imageUrl: "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
+      const riverside = await storage.createRestroom({
+        name: "Riverside Coffee Shop",
+        address: "78 Hudson River Greenway",
+        city: "New York",
+        state: "NY",
+        zipCode: "10014",
+        latitude: "40.7309",
+        longitude: "-74.0096",
+        description: "Stylish bathroom with artisanal soap and hand lotion. The facilities are clean, though you may need to purchase something to receive the door code.",
+        hours: "7AM-8PM",
+        accessibilityFeatures: false,
+        babyChanging: false,
+        genderNeutral: true,
+        freeToUse: false,
+        changingRoom: false,
+        singleOccupancy: true,
+        customerOnly: true,
+        codeRequired: true,
+        attendantPresent: false,
+        familyFriendly: false,
+        soapAvailable: true,
+        wellStocked: true,
+        premiumProducts: true,
+        imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
+      // Create reviews
+      await storage.createReview({ 
+        restroomId: centralPark.id, 
+        userId: admin.id, 
+        rating: 4, 
+        comment: "Very clean and accessible!" 
+      });
+      
+      await storage.createReview({ 
+        restroomId: centralPark.id, 
+        userId: admin.id, 
+        rating: 5, 
+        comment: "Well maintained, soap was fully stocked." 
+      });
+      
+      await storage.createReview({ 
+        restroomId: metroShopping.id, 
+        userId: admin.id, 
+        rating: 5, 
+        comment: "Luxury bathroom experience!" 
+      });
+      
+      await storage.createReview({ 
+        restroomId: metroShopping.id, 
+        userId: admin.id, 
+        rating: 4, 
+        comment: "Very clean, attendant was helpful." 
+      });
+      
+      await storage.createReview({ 
+        restroomId: riverside.id, 
+        userId: admin.id, 
+        rating: 4, 
+        comment: "Nice bathroom but had to buy a coffee first." 
+      });
+      
+      // Create articles
+      await storage.createArticle({
+        title: "The Right Way to Wash Your Hands (Most People Get It Wrong)",
+        content: "Proper handwashing is one of the most effective ways to prevent the spread of germs and illnesses. According to the World Health Organization (WHO), the correct handwashing technique involves several steps that many people skip or rush through.\n\nHere's the WHO-recommended technique:\n\n1. Wet your hands with clean, running water\n2. Apply enough soap to cover all hand surfaces\n3. Rub hands palm to palm\n4. Rub right palm over left dorsum with interlaced fingers and vice versa\n5. Rub palm to palm with fingers interlaced\n6. Rub backs of fingers to opposing palms with fingers interlocked\n7. Rotational rubbing of left thumb clasped in right palm and vice versa\n8. Rotational rubbing, backward and forward with clasped fingers of right hand in left palm and vice versa\n9. Rinse hands with water\n10. Dry hands thoroughly with a single-use towel\n\nThe entire process should take about 20 seconds - about the time it takes to sing \"Happy Birthday\" twice. Make sure to turn off the faucet using a paper towel to avoid recontamination.\n\nRemember, washing your hands is particularly important:\n- Before, during, and after preparing food\n- Before eating\n- Before and after caring for someone who is sick\n- After using the toilet\n- After changing diapers or cleaning up a child who has used the toilet\n- After blowing your nose, coughing, or sneezing\n- After touching an animal, animal feed, or animal waste\n- After handling pet food or pet treats\n- After touching garbage\n\nBy following these guidelines, you can significantly reduce your risk of getting sick and spreading germs to others.",
+        excerpt: "Discover the WHO-recommended handwashing technique that kills 99.9% of germs and helps prevent illness.",
+        imageUrl: "https://images.unsplash.com/photo-1585914641050-fa9883c4e21c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        category: "Hygiene Tips",
+        authorId: admin.id
+      });
+      
+      await storage.createArticle({
+        title: "Designing Truly Accessible Restrooms: Beyond The Basics",
+        content: "While ADA compliance is a crucial starting point for bathroom accessibility, truly inclusive restroom design goes far beyond the minimum requirements. When we think about accessibility, we often focus on wheelchair access, but there are many other considerations to make restrooms welcoming and functional for people of all abilities.\n\nHere are some elements to consider when designing or evaluating truly accessible restroom facilities:\n\n## Beyond Wheelchair Access\n\n1. **Clear wayfinding and signage**: Use high-contrast, large-font signage with tactile elements and braille. Consider audio cues and smart technology to assist with navigation.\n\n2. **Sensory considerations**: Install non-fluorescent lighting options to accommodate those with sensory sensitivities or epilepsy. Provide sound-dampening features for those with auditory sensitivities.\n\n3. **Height-adjustable elements**: When possible, incorporate sinks and hand dryers at multiple heights to accommodate users of different statures, including children and people of short stature.\n\n4. **Non-slip flooring**: Ensure floors remain slip-resistant even when wet, benefiting everyone but especially those with mobility or balance challenges.\n\n## Inclusive Family Facilities\n\n1. **Universal changing stations**: Install adult-sized changing tables in at least some restrooms, as standard baby changing tables don't accommodate older children or adults who may need assistance.\n\n2. **Family restrooms**: Design spacious family restrooms that can accommodate multiple family members, including those with mobility devices.\n\n3. **Caregiver support**: Include features like a shelf near the toilet for medical supplies and hooks for bags or clothing.\n\n## Gender Inclusivity\n\n1. **Single-occupancy options**: Provide clearly marked all-gender, single-occupancy restrooms when possible.\n\n2. **Privacy considerations**: Ensure stall doors and walls extend close to the floor and ceiling, with no gaps in the doors, benefiting all users but especially transgender and non-binary individuals who may face harassment.\n\n## Invisible Disabilities\n\n1. **Accessible handles and faucets**: Choose hardware that can be operated with minimal grip strength or dexterity for those with arthritis or other conditions.\n\n2. **Emergency features**: Install emergency pull cords that alert staff if someone needs assistance.\n\n3. **Ostomy support**: Include a shelf and hook in at least one stall for people who use ostomy bags.\n\nRemember that accessible design benefits everyone, not just those with disabilities. Pregnant women, elderly individuals, people with temporary injuries, and parents with children all benefit from thoughtfully designed facilities.\n\nBy going beyond basic code compliance and embracing truly inclusive design principles, we can create restroom spaces that respect the dignity and meet the needs of all users.",
+        excerpt: "Creating truly inclusive restrooms means going beyond ADA compliance to consider invisible disabilities, sensory needs, and diverse user requirements.",
+        imageUrl: "https://images.unsplash.com/photo-1594708053186-a48a36e654a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        category: "Accessibility",
+        authorId: admin.id
+      });
+      
+      await storage.createArticle({
+        title: "Sustainable Restroom Solutions: Reducing Environmental Impact",
+        content: "Public restrooms represent a significant opportunity for environmental conservation. By implementing sustainable practices and technologies, facility managers can dramatically reduce water usage, energy consumption, and waste production while often lowering long-term operational costs.\n\n## Water Conservation Technologies\n\n1. **High-efficiency toilets (HETs)**: Modern HETs use just 1.28 gallons per flush compared to older models that use 3-5 gallons. For high-traffic public restrooms, this can save thousands of gallons daily.\n\n2. **Waterless urinals**: These fixtures can save approximately 40,000 gallons of water per urinal annually while reducing sewage costs.\n\n3. **Advanced sensor faucets**: Newer models combine infrared sensors with aerators to reduce water usage by up to 70% compared to conventional faucets.\n\n4. **Water recycling systems**: Greywater recycling can repurpose handwashing water for toilet flushing, creating a closed-loop system.\n\n## Energy Efficiency Measures\n\n1. **LED lighting**: Replacing traditional lighting with LEDs can reduce energy consumption by up to 75% while providing better illumination.\n\n2. **Motion sensors**: Installing occupancy sensors ensures lights only operate when the facility is in use.\n\n3. **High-efficiency hand dryers**: Modern hand dryers use 80% less energy than older models and eliminate paper towel waste. Some newer models dry hands in as little as 10 seconds.\n\n4. **Natural lighting**: Where possible, incorporating skylights or light tubes can reduce daytime lighting needs.\n\n## Sustainable Materials\n\n1. **Recycled and recyclable materials**: Toilet partitions, countertops, and other fixtures can be made from recycled plastics, metals, or composite materials.\n\n2. **Low-VOC products**: Using low volatile organic compound paints, adhesives, and sealants improves indoor air quality.\n\n3. **Durable fixtures**: Selecting vandal-resistant, long-lasting fixtures reduces replacement frequency and associated waste.\n\n## Waste Reduction Strategies\n\n1. **Bulk soap dispensers**: These eliminate the waste associated with individual soap packets or disposable dispensers.\n\n2. **Electric hand dryers**: While there are ongoing debates about their overall environmental impact, modern energy-efficient hand dryers typically have a lower carbon footprint than paper towels when considering the entire lifecycle.\n\n3. **Smart dispensers**: Toilet paper and towel dispensers can be designed to release controlled amounts, reducing overuse and waste.\n\n## Implementation Considerations\n\nWhen planning sustainable restroom upgrades, consider these factors:\n\n- **Return on investment**: While some sustainable technologies have higher upfront costs, the long-term savings in water, energy, and reduced maintenance often provide significant ROI.\n\n- **User experience**: Ensure that sustainable solutions don't compromise the user experience. The best green technologies should be intuitive and effective.\n\n- **Maintenance requirements**: Some sustainable solutions may require different maintenance procedures. Staff training should be part of any implementation plan.\n\n- **Compliance**: Ensure all modifications meet relevant accessibility requirements and building codes.\n\nBy embracing sustainable restroom design, facility managers can significantly reduce environmental impact while often improving the user experience and reducing long-term operational costs.",
+        excerpt: "Explore how sustainable restroom technologies can dramatically reduce environmental impact while lowering operational costs in public facilities.",
+        imageUrl: "https://images.unsplash.com/photo-1584622786477-cdc9afd72313?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        category: "Sustainability",
+        authorId: admin.id
+      });
+      
+      // Create testimonials
+      await storage.createTestimonial({
+        name: "Sarah K.",
+        location: "New York, NY",
+        rating: 5,
+        comment: "This app saved me during my pregnancy! I could always find a clean, accessible restroom when I needed one most."
+      });
+      
+      await storage.createTestimonial({
+        name: "Michael T.",
+        location: "Chicago, IL",
+        rating: 5,
+        comment: "As someone with Crohn's disease, this app has been life-changing. I can now explore new places with confidence."
+      });
+      
+      await storage.createTestimonial({
+        name: "Elena R.",
+        location: "Portland, OR",
+        rating: 4,
+        comment: "I love that I can filter for gender-neutral bathrooms. Makes traveling so much less stressful."
+      });
+      
+      console.log('Database seeding completed successfully!');
+    } else {
+      console.log('Database already contains data, skipping seed operation.');
+    }
+  } catch (error) {
+    console.error('Error seeding database:', error);
+  }
+}
+
+// Call the seed function
+seedDatabase();
