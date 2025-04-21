@@ -24,14 +24,13 @@ interface FiltersProps {
 
 const Filters: React.FC<FiltersProps> = ({ onApplyFilters }) => {
   const [filters, setFilters] = useState<FilterOptions>({
-    // Initialize with undefined values so no filters are applied initially
-    accessibilityFeatures: undefined,
-    babyChanging: undefined,
-    genderNeutral: undefined,
-    freeToUse: undefined,
-    changingRoom: undefined,
-    singleOccupancy: undefined,
-    customerOnly: undefined,
+    accessibilityFeatures: false,
+    babyChanging: false,
+    genderNeutral: false,
+    freeToUse: false,
+    changingRoom: false,
+    singleOccupancy: false,
+    customerOnly: false,
     cleanliness: 0, // Set to 0 to not filter by rating initially
     distance: 'Any distance',
   });
@@ -39,8 +38,8 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters }) => {
   const handleCheckboxChange = (featureName: keyof FilterOptions) => {
     setFilters(prev => ({ 
       ...prev, 
-      // Toggle between true and undefined (not false)
-      [featureName]: prev[featureName] === true ? undefined : true 
+      // Toggle between true and false
+      [featureName]: prev[featureName] === true ? false : true 
     }));
   };
 

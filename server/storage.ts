@@ -536,6 +536,7 @@ export class DatabaseStorage implements IStorage {
   }
   
   async filterRestrooms(filters: Partial<Record<string, boolean | number>>): Promise<RestroomWithRating[]> {
+    // Start with a base query
     let query = db.select().from(restrooms);
     
     // Apply boolean filters (only for true values)
@@ -546,6 +547,7 @@ export class DatabaseStorage implements IStorage {
       'premiumProducts'
     ];
     
+    // Only apply filters that are explicitly set to true
     for (const column of booleanColumns) {
       if (filters[column] === true) {
         // @ts-ignore - We know these are valid column names
@@ -561,11 +563,15 @@ export class DatabaseStorage implements IStorage {
       filteredRestrooms.map(restroom => this.attachRestroomRating(restroom))
     );
     
-    // Apply cleanliness rating filter if present
+    // Apply cleanliness rating filter if present and > 0
     const minRating = filters.cleanliness as number | undefined;
     if (minRating !== undefined && typeof minRating === 'number' && minRating > 0) {
       return restroomsWithRatings.filter(restroom => restroom.averageRating >= minRating);
     }
+    
+    // Log to help with debugging
+    console.log('Applied filters:', filters);
+    console.log('Filtered restrooms count:', restroomsWithRatings.length);
     
     return restroomsWithRatings;
   }
