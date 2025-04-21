@@ -4,6 +4,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { RestroomWithRating } from '@shared/schema';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 import Filters, { FilterOptions } from './Filters';
 import Map from './Map';
 import RestroomListing from './RestroomListing';
@@ -19,6 +21,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
   const [displayCount, setDisplayCount] = useState<number>(3);
   const [currentFilters, setCurrentFilters] = useState<FilterOptions>({});
   const [coordinates, setCoordinates] = useState<{latitude?: string, longitude?: string}>({});
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Fetch all restrooms
   const { data: restrooms, isLoading } = useQuery<RestroomWithRating[]>({
@@ -65,6 +68,25 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
   // Load more restrooms
   const loadMore = () => {
     setDisplayCount(prev => prev + 3);
+  };
+
+  // Handle search input
+  const handleSearch = async () => {
+    if (searchTerm.trim() === '') {
+      // If search is empty, reset to all restrooms
+      if (restrooms) {
+        setFilteredRestrooms(sortRestrooms(restrooms, sortOption));
+      }
+      return;
+    }
+    
+    try {
+      const response = await apiRequest('GET', `/api/restrooms/search?query=${encodeURIComponent(searchTerm)}`);
+      const data = await response.json();
+      setFilteredRestrooms(sortRestrooms(data, sortOption));
+    } catch (error) {
+      console.error('Error searching restrooms:', error);
+    }
   };
 
   // Initialize filteredRestrooms with all restrooms
@@ -146,6 +168,33 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
                     <SelectItem value="most-reviewed">Most Reviewed</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+            </div>
+            
+            {/* Search Box */}
+            <div className="relative mb-8">
+              <div className="flex">
+                <div className="relative flex-grow">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input 
+                    type="text"
+                    placeholder="Search by city, address or name..." 
+                    className="pl-10 pr-24"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSearch();
+                      }
+                    }}
+                  />
+                </div>
+                <Button 
+                  onClick={handleSearch}
+                  className="ml-2 bg-primary text-white"
+                >
+                  Search
+                </Button>
               </div>
             </div>
             
