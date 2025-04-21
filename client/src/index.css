@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --primary: 207 90% 54%;
+  --primary-foreground: 211 100% 99%;
+  --secondary: 152 60% 38%;
+  --secondary-foreground: 24 9.8% 10%;
+  --accent: 270 61% 64%;
+  --accent-foreground: 24 9.8% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 20 14.3% 4.1%;
+  --radius: 0.5rem;
+  --sidebar-background: 240 10% 3.9%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-primary: 207 90% 54%;
+  --sidebar-primary-foreground: 211 100% 99%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 240 4.9% 83.9%;
+  --chart-1: 207 90% 54%;
+  --chart-2: 152 60% 38%;
+  --chart-3: 270 61% 64%;
+  --chart-4: 31 95% 58%;
+  --chart-5: 203 74% 63%;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --primary: 207 90% 54%;
+  --primary-foreground: 211 100% 99%;
+  --secondary: 152 60% 38%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 270 61% 64%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .feature-tag {
+    @apply text-xs px-2 py-1 rounded-full text-center;
+  }
+  
+  .feature-tag-accessibility {
+    @apply bg-blue-100 text-blue-800;
+  }
+  
+  .feature-tag-baby-changing {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  .feature-tag-gender-neutral {
+    @apply bg-purple-100 text-purple-800;
+  }
+  
+  .feature-tag-free {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  
+  .feature-tag-changing-room {
+    @apply bg-pink-100 text-pink-800;
+  }
+  
+  .feature-tag-customer-only {
+    @apply bg-orange-100 text-orange-800;
+  }
+  
+  .feature-tag-single-occupancy {
+    @apply bg-blue-100 text-blue-800;
+  }
+  
+  .article-tag {
+    @apply text-xs font-medium rounded-full px-3 py-1;
+  }
+  
+  .article-tag-hygiene {
+    @apply text-primary bg-primary bg-opacity-10;
+  }
+  
+  .article-tag-accessibility {
+    @apply text-accent bg-accent bg-opacity-10;
+  }
+  
+  .article-tag-eco {
+    @apply text-secondary bg-secondary bg-opacity-10;
+  }
+  
+  .star-rating {
+    @apply text-yellow-500;
+  }
+}
