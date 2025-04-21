@@ -880,6 +880,115 @@ async function seedDatabase() {
         createdBy: admin.id
       });
       
+      // Add restrooms in other cities for better filtering
+      const beachPavilion = await storage.createRestroom({
+        name: "Venice Beach Public Pavilion",
+        address: "1800 Ocean Front Walk",
+        city: "Los Angeles",
+        state: "CA",
+        zipCode: "90291",
+        latitude: "33.9854",
+        longitude: "-118.4732",
+        description: "Public restrooms located on the Venice Beach boardwalk. Regularly cleaned and maintained by city staff.",
+        hours: "5:00AM-11:00PM",
+        accessibilityFeatures: true,
+        babyChanging: true,
+        genderNeutral: false,
+        freeToUse: true,
+        changingRoom: true,
+        singleOccupancy: false,
+        customerOnly: false,
+        codeRequired: false,
+        attendantPresent: false,
+        familyFriendly: true,
+        soapAvailable: true,
+        wellStocked: false,
+        premiumProducts: false,
+        imageUrl: "https://images.unsplash.com/photo-1624094969100-ac2cfecbba04?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
+      const chicagoPark = await storage.createRestroom({
+        name: "Millennium Park Public Restroom",
+        address: "201 E Randolph St",
+        city: "Chicago",
+        state: "IL",
+        zipCode: "60602",
+        latitude: "41.8826",
+        longitude: "-87.6226",
+        description: "Modern facilities located near Cloud Gate (The Bean). Clean, spacious, and wheelchair accessible.",
+        hours: "6:00AM-11:00PM",
+        accessibilityFeatures: true,
+        babyChanging: true,
+        genderNeutral: true,
+        freeToUse: true,
+        changingRoom: false,
+        singleOccupancy: false,
+        customerOnly: false,
+        codeRequired: false,
+        attendantPresent: true,
+        familyFriendly: true,
+        soapAvailable: true,
+        wellStocked: true,
+        premiumProducts: false,
+        imageUrl: "https://images.unsplash.com/photo-1570240636485-907949ef6858?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
+      const miamiBeach = await storage.createRestroom({
+        name: "South Beach Public Facility",
+        address: "1001 Ocean Drive",
+        city: "Miami",
+        state: "FL",
+        zipCode: "33139",
+        latitude: "25.7825",
+        longitude: "-80.1324",
+        description: "Modern restroom facilities on Miami's South Beach. Open-air design with beach shower stations outside.",
+        hours: "7:00AM-10:00PM",
+        accessibilityFeatures: true,
+        babyChanging: false,
+        genderNeutral: false,
+        freeToUse: true,
+        changingRoom: true,
+        singleOccupancy: false,
+        customerOnly: false,
+        codeRequired: false,
+        attendantPresent: false,
+        familyFriendly: true,
+        soapAvailable: true,
+        wellStocked: false,
+        premiumProducts: false,
+        imageUrl: "https://images.unsplash.com/photo-1535927578172-a69c677fd4e7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
+      const seattleCoffee = await storage.createRestroom({
+        name: "Pioneer Square Café",
+        address: "102 1st Ave S",
+        city: "Seattle",
+        state: "WA",
+        zipCode: "98104",
+        latitude: "47.6016",
+        longitude: "-122.3343",
+        description: "Charming café with clean restrooms available to customers. Artisanal coffee shop with premium bathroom amenities.",
+        hours: "6:00AM-8:00PM",
+        accessibilityFeatures: false,
+        babyChanging: false,
+        genderNeutral: true,
+        freeToUse: false,
+        changingRoom: false,
+        singleOccupancy: true,
+        customerOnly: true,
+        codeRequired: true,
+        attendantPresent: false,
+        familyFriendly: false,
+        soapAvailable: true,
+        wellStocked: true,
+        premiumProducts: true,
+        imageUrl: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
       // Create reviews
       await storage.createReview({ 
         restroomId: centralPark.id, 
@@ -971,6 +1080,63 @@ async function seedDatabase() {
         userId: admin.id,
         rating: 1,
         comment: "Had to buy something to get the key. Bathroom was poorly maintained."
+      });
+      
+      // Add reviews for new city restrooms
+      await storage.createReview({
+        restroomId: beachPavilion.id,
+        userId: admin.id,
+        rating: 3,
+        comment: "Clean enough but typical beach facilities. Sand everywhere."
+      });
+      
+      await storage.createReview({
+        restroomId: beachPavilion.id,
+        userId: admin.id,
+        rating: 4,
+        comment: "Great location right on the beach. Convenient showers for rinsing off."
+      });
+      
+      await storage.createReview({
+        restroomId: chicagoPark.id,
+        userId: admin.id,
+        rating: 5,
+        comment: "Exceptionally clean for a park restroom. Attendant was very friendly."
+      });
+      
+      await storage.createReview({
+        restroomId: chicagoPark.id,
+        userId: admin.id,
+        rating: 5,
+        comment: "Modern facilities with excellent accessibility features. Highly recommend."
+      });
+      
+      await storage.createReview({
+        restroomId: miamiBeach.id,
+        userId: admin.id,
+        rating: 2,
+        comment: "Facilities were ok but not well maintained. Very busy during peak hours."
+      });
+      
+      await storage.createReview({
+        restroomId: miamiBeach.id,
+        userId: admin.id,
+        rating: 3,
+        comment: "Beach showers were useful but restrooms need more attention from staff."
+      });
+      
+      await storage.createReview({
+        restroomId: seattleCoffee.id,
+        userId: admin.id,
+        rating: 4,
+        comment: "Beautiful café with equally beautiful restroom. Need to buy something first though."
+      });
+      
+      await storage.createReview({
+        restroomId: seattleCoffee.id,
+        userId: admin.id,
+        rating: 5,
+        comment: "Premium hand soaps and lotions. Well worth buying a coffee to use!"
       });
       
       // Create articles

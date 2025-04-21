@@ -184,9 +184,8 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
                 {displayCount < filteredRestrooms.length && (
                   <div className="text-center mt-6">
                     <Button 
-                      variant="outline"
-                      className="bg-primary bg-opacity-10 text-primary hover:bg-opacity-20"
                       onClick={loadMore}
+                      className="bg-primary text-white hover:bg-primary/80"
                     >
                       Load More Restrooms
                     </Button>
