@@ -667,11 +667,20 @@ export const storage = new DatabaseStorage();
 // Seed the database with initial data
 async function seedDatabase() {
   try {
-    // Check if we already have users
-    const existingUsers = await db.select().from(users);
+    // Clear existing database data for testing
+    try {
+      await db.delete(reviews);
+      await db.delete(restrooms);
+      await db.delete(articles);
+      await db.delete(testimonials);
+      await db.delete(users);
+      console.log('Cleared existing database data for fresh seeding');
+    } catch (err) {
+      console.log('Error clearing database, continuing with seed:', err);
+    }
     
-    if (existingUsers.length === 0) {
-      console.log('Seeding database with initial data...');
+    // Seed fresh data
+    console.log('Seeding database with initial data...');
       
       // Create admin user
       const admin = await storage.createUser({
@@ -762,6 +771,115 @@ async function seedDatabase() {
         createdBy: admin.id
       });
       
+      // Add more restrooms with diverse filter options for testing
+      const grandStation = await storage.createRestroom({
+        name: "Grand Central Terminal",
+        address: "89 E 42nd Street",
+        city: "New York",
+        state: "NY",
+        zipCode: "10017",
+        latitude: "40.7527",
+        longitude: "-73.9772",
+        description: "Public facilities in the lower concourse of Grand Central. Clean and well-maintained with attendants present during peak hours.",
+        hours: "5:30AM-1:30AM",
+        accessibilityFeatures: true,
+        babyChanging: true,
+        genderNeutral: false,
+        freeToUse: true,
+        changingRoom: true,
+        singleOccupancy: false,
+        customerOnly: false,
+        codeRequired: false,
+        attendantPresent: true,
+        familyFriendly: true,
+        soapAvailable: true,
+        wellStocked: true,
+        premiumProducts: false,
+        imageUrl: "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
+      const publicLibrary = await storage.createRestroom({
+        name: "New York Public Library",
+        address: "476 5th Ave",
+        city: "New York",
+        state: "NY",
+        zipCode: "10018",
+        latitude: "40.7532",
+        longitude: "-73.9822",
+        description: "Clean restrooms available on multiple floors. Quiet and typically not crowded except during special events.",
+        hours: "10AM-6PM",
+        accessibilityFeatures: true,
+        babyChanging: false,
+        genderNeutral: false,
+        freeToUse: true,
+        changingRoom: false,
+        singleOccupancy: false,
+        customerOnly: false,
+        codeRequired: false,
+        attendantPresent: false,
+        familyFriendly: true,
+        soapAvailable: true,
+        wellStocked: true,
+        premiumProducts: false,
+        imageUrl: "https://images.unsplash.com/photo-1541671034471-a9d3ea84bf4a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
+      const hotelLuxury = await storage.createRestroom({
+        name: "The Ritz-Carlton Hotel Lobby",
+        address: "50 Central Park South",
+        city: "New York",
+        state: "NY",
+        zipCode: "10019",
+        latitude: "40.7659",
+        longitude: "-73.9771",
+        description: "Luxurious hotel lobby restrooms with premium amenities. Exceptionally clean with high-end finishes and complimentary toiletries.",
+        hours: "24/7",
+        accessibilityFeatures: true,
+        babyChanging: true,
+        genderNeutral: false,
+        freeToUse: true,
+        changingRoom: true,
+        singleOccupancy: true,
+        customerOnly: false,
+        codeRequired: false,
+        attendantPresent: true,
+        familyFriendly: true,
+        soapAvailable: true,
+        wellStocked: true,
+        premiumProducts: true,
+        imageUrl: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
+      const gasStation = await storage.createRestroom({
+        name: "Shell Gas Station",
+        address: "450 W 126th St",
+        city: "New York",
+        state: "NY",
+        zipCode: "10027",
+        latitude: "40.8150",
+        longitude: "-73.9561",
+        description: "Basic restroom facilities available at this gas station. Requires key from attendant.",
+        hours: "24/7",
+        accessibilityFeatures: false,
+        babyChanging: false,
+        genderNeutral: false,
+        freeToUse: false,
+        changingRoom: false,
+        singleOccupancy: true,
+        customerOnly: true,
+        codeRequired: true,
+        attendantPresent: false,
+        familyFriendly: false,
+        soapAvailable: true,
+        wellStocked: false,
+        premiumProducts: false,
+        imageUrl: "https://images.unsplash.com/photo-1605034313761-73ea4a0cfbf3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+        createdBy: admin.id
+      });
+      
       // Create reviews
       await storage.createReview({ 
         restroomId: centralPark.id, 
@@ -796,6 +914,63 @@ async function seedDatabase() {
         userId: admin.id, 
         rating: 4, 
         comment: "Nice bathroom but had to buy a coffee first." 
+      });
+      
+      // Add reviews for new restrooms
+      await storage.createReview({
+        restroomId: grandStation.id,
+        userId: admin.id,
+        rating: 3,
+        comment: "Clean but very busy during rush hour. Had to wait in line."
+      });
+      
+      await storage.createReview({
+        restroomId: grandStation.id,
+        userId: admin.id,
+        rating: 4,
+        comment: "Attendant kept the place spotless. Love the central location."
+      });
+      
+      await storage.createReview({
+        restroomId: publicLibrary.id,
+        userId: admin.id,
+        rating: 5,
+        comment: "Quietest public restroom in the city! Always clean."
+      });
+      
+      await storage.createReview({
+        restroomId: publicLibrary.id,
+        userId: admin.id,
+        rating: 4,
+        comment: "Well maintained but limited hours since it's in a library."
+      });
+      
+      await storage.createReview({
+        restroomId: hotelLuxury.id,
+        userId: admin.id,
+        rating: 5,
+        comment: "Fancy! Has mouthwash, hand lotion, and cloth towels."
+      });
+      
+      await storage.createReview({
+        restroomId: hotelLuxury.id,
+        userId: admin.id,
+        rating: 5,
+        comment: "5-star hotel bathroom experience without needing to be a guest."
+      });
+      
+      await storage.createReview({
+        restroomId: gasStation.id,
+        userId: admin.id,
+        rating: 2,
+        comment: "Basic and functional but not very clean."
+      });
+      
+      await storage.createReview({
+        restroomId: gasStation.id,
+        userId: admin.id,
+        rating: 1,
+        comment: "Had to buy something to get the key. Bathroom was poorly maintained."
       });
       
       // Create articles
@@ -849,9 +1024,6 @@ async function seedDatabase() {
       });
       
       console.log('Database seeding completed successfully!');
-    } else {
-      console.log('Database already contains data, skipping seed operation.');
-    }
   } catch (error) {
     console.error('Error seeding database:', error);
   }

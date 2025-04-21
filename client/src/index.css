@@ -109,15 +109,32 @@
   }
   
   .article-tag-hygiene {
-    @apply text-primary bg-primary bg-opacity-10;
+    @apply text-blue-800 bg-blue-100;
   }
   
   .article-tag-accessibility {
-    @apply text-accent bg-accent bg-opacity-10;
+    @apply text-purple-800 bg-purple-100;
   }
   
   .article-tag-eco {
-    @apply text-secondary bg-secondary bg-opacity-10;
+    @apply text-green-800 bg-green-100;
+  }
+  
+  /* Add category tag styles */
+  .category-tag {
+    @apply text-xs px-2 py-1 rounded-full;
+  }
+  
+  .category-tag-hygiene-tips {
+    @apply text-blue-800 bg-blue-100;
+  }
+  
+  .category-tag-accessibility {
+    @apply text-purple-800 bg-purple-100;
+  }
+  
+  .category-tag-sustainability {
+    @apply text-green-800 bg-green-100;
   }
   
   .star-rating {
