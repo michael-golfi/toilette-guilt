@@ -1,0 +1,70 @@
+{
+  "hero": {
+    "title": "About Toilette Guilt",
+    "subtitle": "Our mission is to destigmatize bathroom conversations and improve access to clean facilities."
+  },
+  "mission": {
+    "title": "Our Mission",
+    "paragraph1": "At Toilette Guilt, we believe that access to clean, safe restrooms is a basic human necessity. Yet, conversations about bathroom needs are often stigmatized, causing unnecessary anxiety and discomfort for many people.",
+    "paragraph2": "Our platform aims to break down these barriers by creating an open community where people can find, review, and share information about public restrooms. By normalizing these discussions, we hope to improve restroom accessibility and cleanliness standards worldwide.",
+    "paragraph3": "Whether you're living with a medical condition that requires frequent restroom access, traveling with young children, or simply appreciate a clean facility, our goal is to help you find suitable restrooms wherever you go.",
+    "imageAlt": "Accessible bathroom features including grab bars and raised toilet seat"
+  },
+  "story": {
+    "title": "Our Story",
+    "paragraph1": "Toilette Guilt was founded in 2021 by a small team who shared frustrating experiences finding suitable restrooms while traveling. What began as a personal project to map clean, accessible facilities has evolved into a growing platform serving thousands of users worldwide.",
+    "paragraph2": "The name 'Toilette Guilt' acknowledges the unnecessary embarrassment many people feel when addressing basic human needs. Our team is committed to eliminating that guilt through education, community, and advocacy.",
+    "imageAlt": "A modern, clean public restroom with multiple stalls"
+  },
+  "values": {
+    "title": "Our Values",
+    "accessibility": {
+      "title": "Accessibility",
+      "description": "We believe everyone deserves equal access to clean restrooms, regardless of ability, gender identity, or health condition."
+    },
+    "transparency": {
+      "title": "Transparency",
+      "description": "We promote honest reviews and factual information to help users make informed decisions."
+    },
+    "community": {
+      "title": "Community",
+      "description": "Our platform is built by and for users, fostering a supportive environment where people can share experiences."
+    },
+    "advocacy": {
+      "title": "Advocacy",
+      "description": "We actively promote improved restroom standards and accessibility in public and private facilities."
+    }
+  },
+  "team": {
+    "title": "Our Team",
+    "description": "Toilette Guilt is powered by a dedicated team of professionals who are passionate about making a positive impact on public health and accessibility."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "description": "Have questions, suggestions, or want to get involved? We'd love to hear from you!",
+    "emailLabel": "Email",
+    "emailAddress": "contact@toiletteguilt.com",
+    "phoneLabel": "Phone",
+    "phoneNumber": "(555) 123-4567",
+    "addressLabel": "Address",
+    "addressValue": "123 Bathroom Blvd, New York, NY 10001",
+    "followUs": "Follow Us",
+    "form": {
+      "title": "Send Us a Message",
+      "name": "Your Name",
+      "namePlaceholder": "Your Name",
+      "email": "Email Address",
+      "emailPlaceholder": "your.email@example.com",
+      "subject": "Subject",
+      "message": "Message",
+      "messagePlaceholder": "Your message here...",
+      "submit": "Send Message",
+      "submitAlert": "Thank you for your message! (Placeholder - form not functional)"
+    }
+  },
+  "cta": {
+    "title": "Join Our Mission",
+    "description": "Help us grow our directory and destigmatize bathroom-related topics. Together, we can create a more accessible and comfortable world for everyone.",
+    "button": "Submit a Listing"
+  }
+} 

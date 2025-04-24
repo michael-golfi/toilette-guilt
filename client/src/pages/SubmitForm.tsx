@@ -12,43 +12,44 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { insertRestroomSchema } from '@shared/schema';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
+import type { i18n as I18nType } from 'i18next';
 
-// Extend the insert schema with validation and defaults
-const submitFormSchema = insertRestroomSchema.extend({
-  name: z.string().min(3, {
-    message: "Restroom name must be at least 3 characters.",
-  }),
-  address: z.string().min(5, {
-    message: "Please provide a valid address.",
-  }),
-  city: z.string().min(2, {
-    message: "City name is required.",
-  }),
-  state: z.string().min(2, {
-    message: "State is required.",
-  }),
-  zipCode: z.string().min(5, {
-    message: "Please provide a valid ZIP code.",
-  }),
-  description: z.string().min(10, {
-    message: "Please provide a brief description (at least 10 characters).",
-  }),
-  hours: z.string().min(3, {
-    message: "Please provide operating hours.",
-  }),
-  latitude: z.string().optional().default("0"),
-  longitude: z.string().optional().default("0"),
-  imageUrl: z.string().optional(),
-  createdBy: z.number().optional().default(1), // Default to admin user
-});
+// Function to create the schema, accepting the t function
+// Note: Validation keys now need prefixes like 'restrooms:submit.validation...'
+const createSubmitFormSchema = (t: I18nType['t']) => 
+  insertRestroomSchema.extend({
+    name: z.string().min(3, { message: t('restrooms:submit.validation.nameMin') }),
+    address: z.string().min(5, { message: t('restrooms:submit.validation.addressMin') }),
+    city: z.string().min(2, { message: t('restrooms:submit.validation.cityRequired') }),
+    state: z.string().min(2, { message: t('restrooms:submit.validation.stateRequired') }),
+    zipCode: z.string().min(5, { message: t('restrooms:submit.validation.zipCodeMin') }),
+    description: z.string().min(10, { message: t('restrooms:submit.validation.descriptionMin') }),
+    hours: z.string().min(3, { message: t('restrooms:submit.validation.hoursRequired') }),
+    latitude: z.string().optional().default("0"),
+    longitude: z.string().optional().default("0"),
+    imageUrl: z.string().url({ message: t('restrooms:submit.validation.imageUrlInvalid') }).optional().or(z.literal('')),
+    createdBy: z.number().optional().default(1), 
+  });
 
-type FormValues = z.infer<typeof submitFormSchema>;
+// Infer type from the schema creator function's return type
+type FormValues = z.infer<ReturnType<typeof createSubmitFormSchema>>;
+
+// List of feature/amenity fields from the schema (excluding non-booleans)
+const featureFields: (keyof FormValues)[] = [
+  'accessibilityFeatures', 'babyChanging', 'genderNeutral', 'freeToUse', 'changingRoom',
+  'singleOccupancy', 'customerOnly', 'codeRequired', 'attendantPresent', 'familyFriendly',
+  'soapAvailable', 'wellStocked', 'premiumProducts'
+];
 
 const SubmitForm: React.FC = () => {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  // Load restrooms and common namespaces
+  const { t } = useTranslation(['restrooms', 'common']); 
+
+  const submitFormSchema = createSubmitFormSchema(t);
   
-  // Initialize form with default values
   const form = useForm<FormValues>({
     resolver: zodResolver(submitFormSchema),
     defaultValues: {
@@ -59,6 +60,10 @@ const SubmitForm: React.FC = () => {
       zipCode: "",
       description: "",
       hours: "",
+      imageUrl: "",
+      latitude: "0",
+      longitude: "0",
+      createdBy: 1, 
       accessibilityFeatures: false,
       babyChanging: false,
       genderNeutral: false,
@@ -76,29 +81,34 @@ const SubmitForm: React.FC = () => {
   });
 
   const onSubmit = async (data: FormValues) => {
+    console.log("Submitting data:", data);
     try {
       const result = await apiRequest('POST', '/api/restrooms', data);
       
       if (result.ok) {
-        // Show success toast
         toast({
-          title: "Submission Successful",
-          description: "Thank you for contributing to our restroom directory!",
+          // Keys now need appropriate namespace prefix (e.g., common or restrooms)
+          title: t('common:toast.successTitle', { defaultValue: 'Submission Successful!' }),
+          description: t('common:toast.successDescription', { defaultValue: 'Thank you for contributing!' }),
         });
-        
-        // Invalidate restrooms query to refresh data
         queryClient.invalidateQueries({ queryKey: ['/api/restrooms'] });
-        
-        // Redirect to home page
         setTimeout(() => {
           setLocation('/');
         }, 2000);
+      } else {
+         const errorData = await result.json().catch(() => ({}));
+         console.error('Submission error response:', errorData);
+         toast({
+            title: t('common:toast.errorTitle', { defaultValue: 'Submission Failed' }),
+            description: t('common:toast.errorDescription', { error: errorData.message || 'Unknown error', defaultValue: 'An error occurred.' }),
+            variant: "destructive",
+        });
       }
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
-        title: "Submission Failed",
-        description: "There was an error submitting your restroom listing. Please try again.",
+        title: t('common:toast.errorTitle', { defaultValue: 'Submission Failed' }),
+        description: t('common:toast.errorDescription', { error: (error as Error).message || 'Network error', defaultValue: 'An error occurred.' }),
         variant: "destructive",
       });
     }
@@ -107,94 +117,96 @@ const SubmitForm: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-3xl mx-auto">
+        {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-3">Submit a Restroom Listing</h1>
+           {/* Keys now need restrooms:submit... prefix */}
+          <h1 className="text-3xl font-bold mb-3">{t('restrooms:submit.title')}</h1>
           <p className="text-gray-600">
-            Help our community find clean, accessible facilities by adding a public restroom to our directory.
+            {t('restrooms:submit.subtitle')}
           </p>
         </div>
         
-        <Card>
+        {/* Form Card */}
+        <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle>Restroom Information</CardTitle>
+            <CardTitle>{t('restrooms:submit.locationInfo')}</CardTitle> 
             <CardDescription>
-              Please provide accurate details to help users find this facility.
+               {t('restrooms:submit.cardDescription', {defaultValue: 'Please provide accurate details.'})}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="space-y-4">
+                {/* Basic Information Section */}
+                <div className="space-y-4 border-b pb-6 mb-6">
+                 {/* Section title might be restrooms:submit.locationInfo already used in CardTitle? Or add a new key */}
+                 {/* <h3 className="text-lg font-medium mb-1">{t('restrooms:submit.locationInfo')}</h3> */} 
                   <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Restroom Name</FormLabel>
+                        <FormLabel>{t('restrooms:submit.name')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g. Central Park Public Restroom" {...field} />
+                          <Input placeholder={t('restrooms:submit.namePlaceholder')} {...field} />
                         </FormControl>
-                        <FormDescription>
-                          The name or location of the restroom
-                        </FormDescription>
+                        {/* Optional: Add description key if needed: t('restrooms:submit.nameDescription') */}
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   
+                  {/* Address Fields */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="address"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Address</FormLabel>
+                          <FormLabel>{t('restrooms:submit.address')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="Street Address" {...field} />
+                            <Input placeholder={t('restrooms:submit.addressPlaceholder')} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    
                     <FormField
                       control={form.control}
                       name="city"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>City</FormLabel>
+                          <FormLabel>{t('restrooms:submit.city')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="City" {...field} />
+                            <Input placeholder={t('restrooms:submit.cityPlaceholder', {defaultValue: 'City'})} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
-                  
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="state"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>State</FormLabel>
+                          <FormLabel>{t('restrooms:submit.state')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="State" {...field} />
+                            <Input placeholder={t('restrooms:submit.statePlaceholder', {defaultValue: 'State/Province'})} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    
                     <FormField
                       control={form.control}
                       name="zipCode"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>ZIP Code</FormLabel>
+                          <FormLabel>{t('restrooms:submit.zipCode')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="ZIP Code" {...field} />
+                            <Input type="text" inputMode="numeric" placeholder={t('restrooms:submit.zipCodePlaceholder', {defaultValue: 'Zip/Postal Code'})} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -202,291 +214,88 @@ const SubmitForm: React.FC = () => {
                     />
                   </div>
                   
+                  {/* Operating Hours */}
                   <FormField
                     control={form.control}
                     name="hours"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Operating Hours</FormLabel>
+                         {/* Add hours label key if needed: t('restrooms:submit.hoursLabel') */}
+                         <FormLabel>{t('restrooms:detail.hours')}</FormLabel> 
                         <FormControl>
-                          <Input placeholder="e.g. 6AM-10PM" {...field} />
+                          <Input placeholder={t('restrooms:submit.hoursPlaceholder', {defaultValue: 'e.g., 6AM-10PM Daily'})} {...field} />
                         </FormControl>
-                        <FormDescription>
-                          When is this restroom available to the public?
-                        </FormDescription>
+                         {/* Optional: Add hours description key if needed: t('restrooms:submit.hoursDescription') */}
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   
+                  {/* Description */}
                   <FormField
                     control={form.control}
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                         <FormLabel>{t('restrooms:submit.descriptionLabel', {defaultValue: 'Description'})}</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Describe the restroom facilities, condition, and any additional details users should know..." 
+                            placeholder={t('restrooms:submit.descriptionPlaceholder', {defaultValue: 'Describe the facilities...'})} 
                             {...field} 
-                            className="min-h-[120px]"
+                            className="min-h-[100px]"
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  
-                  <div>
-                    <h3 className="text-lg font-medium mb-3">Features & Amenities</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                </div> 
+
+                {/* Features & Amenities Section */}
+                <div className="space-y-4 border-b pb-6 mb-6">
+                  <h3 className="text-lg font-medium mb-3">{t('restrooms:submit.featuresTitle', {defaultValue: 'Features & Amenities'})}</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
+                    {featureFields.map((featureName) => (
                       <FormField
+                        key={featureName}
                         control={form.control}
-                        name="accessibilityFeatures"
+                        name={featureName as keyof FormValues}
                         render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
+                          <FormItem className="flex items-center space-x-3 space-y-0 bg-gray-50 p-3 rounded-md border">
                             <FormControl>
                               <Checkbox
-                                checked={field.value}
+                                checked={field.value as boolean | undefined}
                                 onCheckedChange={field.onChange}
+                                id={featureName}
                               />
                             </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Accessibility Features</FormLabel>
-                            </div>
+                            <FormLabel htmlFor={featureName} className="font-normal cursor-pointer">
+                               {/* Use keys from restrooms:features namespace */}
+                               {t(`restrooms:features.${featureName}`, { 
+                                   defaultValue: featureName 
+                               }) }
+                            </FormLabel>
                           </FormItem>
                         )}
                       />
-                      
-                      <FormField
-                        control={form.control}
-                        name="babyChanging"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Baby Changing</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="genderNeutral"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Gender Neutral</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="freeToUse"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Free to Use</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="changingRoom"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Changing Room</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="singleOccupancy"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Single Occupancy</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="customerOnly"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Customer Only</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="codeRequired"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Code Required</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="attendantPresent"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Attendant Present</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="familyFriendly"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Family Friendly</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="soapAvailable"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Soap Available</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="wellStocked"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Well Stocked</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="premiumProducts"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>Premium Products</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                    ))}
                   </div>
-                  
+                </div>
+                
+                {/* Optional Information Section */}
+                <div className="space-y-4">
+                 <h3 className="text-lg font-medium mb-1">{t('restrooms:submit.optionalInfoTitle', {defaultValue: 'Optional Information'})}</h3>
                   <FormField
                     control={form.control}
                     name="imageUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Image URL (Optional)</FormLabel>
+                        <FormLabel>{t('restrooms:submit.imageUrlLabel', {defaultValue: 'Image URL'})}</FormLabel>
                         <FormControl>
-                          <Input placeholder="https://example.com/image.jpg" {...field} />
+                          <Input type="url" placeholder={t('restrooms:submit.imageUrlPlaceholder', {defaultValue: 'https://example.com/image.jpg'})} {...field} />
                         </FormControl>
                         <FormDescription>
-                          URL to an image of the restroom (if available)
+                          {t('restrooms:submit.imageUrlDescription', {defaultValue: 'Link to an image (optional).'})}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -494,33 +303,22 @@ const SubmitForm: React.FC = () => {
                   />
                 </div>
                 
-                <div className="pt-4 border-t">
-                  <Button type="submit" className="w-full">Submit Listing</Button>
+                {/* Submission Button */}
+                <div className="pt-6 border-t mt-6">
+                  <Button 
+                     type="submit" 
+                     className="w-full sm:w-auto" 
+                     disabled={form.formState.isSubmitting}
+                   >
+                     {form.formState.isSubmitting 
+                       ? t('common:submitting', { defaultValue: 'Submitting...' }) 
+                       : t('restrooms:submit.submit')}
+                   </Button>
                 </div>
               </form>
             </Form>
           </CardContent>
         </Card>
-        
-        <div className="mt-8 bg-blue-50 p-6 rounded-lg">
-          <h3 className="text-lg font-semibold mb-2">Why Submit a Listing?</h3>
-          <p className="text-gray-700 mb-4">
-            Your contributions help build our community database of accessible, clean restrooms. By sharing your knowledge, you're helping others find facilities when they need them most.
-          </p>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600 text-sm">
-              <i className="fas fa-shield-alt mr-1"></i> All submissions are reviewed for accuracy
-            </span>
-            <a 
-              href="https://injoy.bio" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-primary hover:text-blue-700 font-medium text-sm"
-            >
-              Visit Injoy Bio <i className="fas fa-external-link-alt ml-1"></i>
-            </a>
-          </div>
-        </div>
       </div>
     </div>
   );

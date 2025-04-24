@@ -1,0 +1,144 @@
+{
+  "brandName": "Toilette Guilt",
+  "unknownDate": "تاريخ غير معروف",
+  "submitting": "جارٍ التقديم...",
+  "navigation": {
+    "home": "الرئيسية",
+    "findRestrooms": "البحث عن مراحيض",
+    "articles": "المقالات",
+    "submitListing": "إضافة مرحاض",
+    "about": "من نحن",
+    "login": "تسجيل الدخول",
+    "signup": "التسجيل",
+    "mostReviewed": "الأكثر تقييماً",
+    "topRated": "الأعلى تقييماً",
+    "recentlyAdded": "أضيف مؤخراً"
+  },
+  "footer": {
+    "tagline": "إزالة وصمة العار عن محادثات المراحيض تقييمًا تلو الآخر. ابحث عن مراحيض نظيفة ويمكن الوصول إليها أينما كنت.",
+    "links": "روابط سريعة",
+    "resources": "الموارد",
+    "about": "من نحن",
+    "contact": "اتصل بنا",
+    "privacy": "سياسة الخصوصية",
+    "terms": "شروط الخدمة",
+    "copyright": "© {{year}} Toilette Guilt. جميع الحقوق محفوظة.",
+    "hygieneArticles": "مقالات النظافة",
+    "accessibilityGuide": "دليل إمكانية الوصول",
+    "bathroomEtiquette": "آداب استخدام المرحاض",
+    "travelTips": "نصائح السفر",
+    "ourMission": "مهمتنا",
+    "mobileCtaAriaLabel": "زيارة Injoy Bio"
+  },
+  "buttons": {
+    "submit": "إرسال",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "search": "بحث",
+    "readMore": "قراءة المزيد",
+    "viewAll": "عرض الكل",
+    "leaveReview": "ترك تقييم",
+    "loadMore": "تحميل المزيد"
+  },
+  "form": {
+    "required": "مطلوب",
+    "invalidEmail": "عنوان البريد الإلكتروني غير صالح",
+    "passwordLength": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل"
+  },
+  "social": {
+    "facebook": "زيارة صفحتنا على فيسبوك",
+    "twitter": "زيارة ملفنا الشخصي على تويتر",
+    "instagram": "زيارة ملفنا الشخصي على إنستغرام",
+    "pinterest": "زيارة ملفنا الشخصي على بينتريست",
+    "linkedin": "زيارة صفحتنا على لينكد إن"
+  },
+  "validation": {
+    "ratingAndCommentRequired": "الرجاء اختيار تقييم وإدخال تعليق.",
+    "reviewSubmitted": "تم إرسال التقييم بنجاح!",
+    "reviewError": "فشل إرسال التقييم. الرجاء المحاولة مرة أخرى."
+  },
+  "notFound": {
+    "title": "الصفحة غير موجودة",
+    "message": "عذراً! الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+    "goHome": "العودة إلى الصفحة الرئيسية"
+  },
+  "header": {
+    "toggleMenuAriaLabel": "تبديل قائمة التنقل"
+  },
+  "toast": {
+    "successTitle": "تم الإرسال بنجاح!",
+    "successDescription": "شكراً لمساهمتك في دليل المراحيض لدينا!",
+    "errorTitle": "فشل الإرسال",
+    "errorDescription": "حدث خطأ: {{error}}. الرجاء المحاولة مرة أخرى."
+  },
+  "siteName": "Toilette Guilt",
+  "tagline": "ابحث عن مراحيض عامة نظيفة ويمكن الوصول إليها بالقرب منك",
+  "nav": {
+    "home": "الرئيسية",
+    "restrooms": "المراحيض",
+    "articles": "المقالات",
+    "about": "من نحن",
+    "contact": "اتصل بنا",
+    "submit": "إضافة مرحاض",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "dashboard": "لوحة التحكم",
+    "language": "اللغة"
+  },
+  "search": {
+    "placeholder": "ابحث عن مراحيض...",
+    "button": "بحث",
+    "locationError": "تعذر الحصول على الموقع.",
+    "geolocationDenied": "تم رفض إذن تحديد الموقع الجغرافي.",
+    "geolocationUnavailable": "تحديد الموقع الجغرافي غير متاح في هذا المتصفح.",
+    "geolocationTimeout": "انتهت مهلة طلب تحديد الموقع الجغرافي.",
+    "geolocationUnknown": "حدث خطأ غير معروف في تحديد الموقع الجغرافي."
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "الصفحة {page}",
+    "goToPage": "الانتقال إلى الصفحة {page}",
+    "of": "من {totalPages}"
+  },
+  "errors": {
+    "notFound": {
+      "title": "الصفحة غير موجودة",
+      "message": "عذراً، الصفحة التي تبحث عنها غير موجودة.",
+      "backHome": "العودة إلى الصفحة الرئيسية"
+    },
+    "generic": "حدث خطأ غير متوقع.",
+    "loading": "جارٍ التحميل..."
+  },
+  "accessibility": {
+    "skipToContent": "تخطي إلى المحتوى الرئيسي"
+  },
+  "user": {
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "contributions": "مساهماتي"
+  },
+  "general": {
+    "yes": "نعم",
+    "no": "لا",
+    "unknown": "غير معروف",
+    "loading": "جارٍ التحميل...",
+    "error": "خطأ",
+    "close": "إغلاق",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "confirm": "تأكيد",
+    "optional": "(اختياري)"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "zh-CN": "简体中文",
+    "ar": "العربية"
+  }
+} 

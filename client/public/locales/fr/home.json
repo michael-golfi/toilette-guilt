@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "title": "Trouvez votre prochain arrêt en toute confiance",
+    "subtitle": "Accédez à une base de données communautaire de toilettes publiques, évaluées pour leur propreté et leur accessibilité.",
+    "cta": "Trouver des toilettes maintenant",
+    "locationPlaceholder": "Entrez ville, adresse ou point de repère",
+    "badgeReviews": "+10 000 avis",
+    "badgeRestrooms": "+25 000 toilettes",
+    "badgeCommunity": "Communauté active",
+    "imageAlt": "Intérieur de toilettes publiques modernes et propres avec des caractéristiques d'accessibilité"
+  },
+  "submitListing": {
+    "title": "Aidez-nous à enrichir notre répertoire",
+    "description": "Vous connaissez des toilettes publiques qui ne sont pas dans notre base de données ? Soumettez-les pour aider les autres à trouver des installations propres et accessibles.",
+    "button": "Soumettre une nouvelle toilette"
+  },
+  "testimonials": {
+    "title": "Ce que dit notre communauté",
+    "subtitle": "Rejoignez des milliers d'utilisateurs qui comptent sur Toilette Guilt pour trouver des installations propres et accessibles où qu'ils aillent.",
+    "commentQuote": "\"{{comment}}\"",
+    "viewAll": "Voir Tous les Témoignages"
+  },
+  "articles": {
+    "title": "Derniers Articles",
+    "subtitle": "Contenu éducatif sur l'hygiène, l'accessibilité et plus",
+    "viewAll": "Voir Tous les Articles"
+  },
+  "features": {
+    "title": "Caractéristiques Clés",
+    "subtitle": "Tout ce dont vous avez besoin pour trouver les toilettes parfaites.",
+    "search": {
+      "title": "Recherche Facile",
+      "description": "Trouvez rapidement des toilettes à proximité grâce à notre recherche intuitive et nos filtres."
+    },
+    "ratings": {
+      "title": "Évaluations des Utilisateurs",
+      "description": "Consultez les évaluations et avis honnêtes d'autres utilisateurs pour prendre des décisions éclairées."
+    },
+    "details": {
+      "title": "Informations Détaillées",
+      "description": "Accédez aux détails tels que la propreté, l'accessibilité, la disponibilité des équipements et les photos."
+    },
+    "contribute": {
+        "title": "Contribuez et Améliorez",
+        "description": "Ajoutez de nouvelles toilettes, mettez à jour les informations et partagez vos expériences pour aider la communauté."
+    }
+  },
+  "howItWorks": {
+    "title": "Comment Ça Marche",
+    "step1": {
+      "title": "Recherchez",
+      "description": "Entrez votre emplacement ou explorez la carte pour trouver des toilettes à proximité."
+    },
+    "step2": {
+      "title": "Filtrez",
+      "description": "Utilisez des filtres pour trouver des toilettes avec des caractéristiques spécifiques comme l'accessibilité ou les tables à langer."
+    },
+    "step3": {
+      "title": "Choisissez",
+      "description": "Consultez les évaluations, les avis et les photos pour sélectionner les meilleures toilettes selon vos besoins."
+    },
+    "step4": {
+        "title": "Contribuez",
+        "description": "Ajoutez de nouvelles toilettes ou évaluez celles existantes pour aider les autres."
+    }
+  },
+  "featuredArticles": {
+    "title": "Articles en Vedette",
+    "subtitle": "Lisez nos dernières actualités, guides et conseils sur l'hygiène publique et les voyages.",
+    "viewAll": "Voir Tous les Articles"
+  },
+  "cta": {
+    "title": "Prêt à Trouver Vos Prochaines Toilettes ?",
+    "subtitle": "Commencez à chercher maintenant ou téléchargez notre application pour un accès facile en déplacement.",
+    "searchButton": "Rechercher des Toilettes à Proximité",
+    "downloadApp": "Télécharger l'Application (Bientôt Disponible)"
+  }
+} 

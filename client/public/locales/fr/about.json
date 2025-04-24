@@ -1,0 +1,70 @@
+{
+  "hero": {
+    "title": "À Propos de Toilette Guilt",
+    "subtitle": "Notre mission est de déstigmatiser les conversations sur les toilettes et d'améliorer l'accès à des installations propres."
+  },
+  "mission": {
+    "title": "Notre Mission",
+    "paragraph1": "Chez Toilette Guilt, nous croyons que l'accès à des toilettes propres et sûres est une nécessité humaine fondamentale. Pourtant, les conversations sur les besoins liés aux toilettes sont souvent stigmatisées, causant anxiété et inconfort inutiles pour beaucoup de personnes.",
+    "paragraph2": "Notre plateforme vise à briser ces barrières en créant une communauté ouverte où les gens peuvent trouver, évaluer et partager des informations sur les toilettes publiques. En normalisant ces discussions, nous espérons améliorer l'accessibilité des toilettes et les normes de propreté dans le monde entier.",
+    "paragraph3": "Que vous viviez avec une condition médicale qui nécessite un accès fréquent aux toilettes, que vous voyagiez avec de jeunes enfants, ou que vous appréciez simplement des installations propres, notre objectif est de vous aider à trouver des toilettes adaptées où que vous alliez.",
+    "imageAlt": "Caractéristiques des toilettes accessibles, y compris barres d'appui et siège de toilette surélevé"
+  },
+  "story": {
+    "title": "Notre Histoire",
+    "paragraph1": "Toilette Guilt a été fondée en 2021 par une petite équipe qui partageait des expériences frustrantes pour trouver des toilettes adaptées lors de voyages. Ce qui a commencé comme un projet personnel pour cartographier des installations propres et accessibles s'est transformé en une plateforme en croissance servant des milliers d'utilisateurs dans le monde entier.",
+    "paragraph2": "Le nom 'Toilette Guilt' reconnaît l'embarras inutile que beaucoup de personnes ressentent lorsqu'elles abordent des besoins humains fondamentaux. Notre équipe s'engage à éliminer cette culpabilité par l'éducation, la communauté et le plaidoyer.",
+    "imageAlt": "Des toilettes publiques modernes et propres avec plusieurs cabines"
+  },
+  "values": {
+    "title": "Nos Valeurs",
+    "accessibility": {
+      "title": "Accessibilité",
+      "description": "Nous croyons que tout le monde mérite un accès égal à des toilettes propres, indépendamment de ses capacités, de son identité de genre ou de son état de santé."
+    },
+    "transparency": {
+      "title": "Transparence",
+      "description": "Nous promouvons des avis honnêtes et des informations factuelles pour aider les utilisateurs à prendre des décisions éclairées."
+    },
+    "community": {
+      "title": "Communauté",
+      "description": "Notre plateforme est construite par et pour les utilisateurs, favorisant un environnement de soutien où les gens peuvent partager leurs expériences."
+    },
+    "advocacy": {
+      "title": "Plaidoyer",
+      "description": "Nous promouvons activement l'amélioration des normes et de l'accessibilité des toilettes dans les installations publiques et privées."
+    }
+  },
+  "team": {
+    "title": "Notre Équipe",
+    "description": "Toilette Guilt est animée par une équipe dévouée de professionnels passionnés par l'impact positif sur la santé publique et l'accessibilité."
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "description": "Vous avez des questions, des suggestions ou vous souhaitez vous impliquer? Nous serions ravis d'avoir de vos nouvelles!",
+    "emailLabel": "Email",
+    "emailAddress": "contact@toiletteguilt.com",
+    "phoneLabel": "Téléphone",
+    "phoneNumber": "(555) 123-4567",
+    "addressLabel": "Adresse",
+    "addressValue": "123 Boulevard des Toilettes, New York, NY 10001",
+    "followUs": "Suivez-nous",
+    "form": {
+      "title": "Envoyez-nous un message",
+      "name": "Votre Nom",
+      "namePlaceholder": "Votre Nom",
+      "email": "Adresse Email",
+      "emailPlaceholder": "votre.email@exemple.com",
+      "subject": "Sujet",
+      "message": "Message",
+      "messagePlaceholder": "Votre message ici...",
+      "submit": "Envoyer le Message",
+      "submitAlert": "Merci pour votre message ! (Ceci est un placeholder)"
+    }
+  },
+  "cta": {
+    "title": "Rejoignez Notre Mission",
+    "description": "Aidez-nous à développer notre répertoire et à déstigmatiser les sujets liés aux toilettes. Ensemble, nous pouvons créer un monde plus accessible et confortable pour tous.",
+    "button": "Soumettre une Liste"
+  }
+} 

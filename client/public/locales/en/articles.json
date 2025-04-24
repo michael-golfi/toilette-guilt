@@ -1,0 +1,59 @@
+{
+  "featured": {
+    "title": "Bathroom Hygiene & Wellness Resources",
+    "subtitle": "Explore tips, guides, and stories about public restrooms and personal hygiene.",
+    "readArticle": "Read Article",
+    "viewAll": "View All Articles",
+    "imageAlt": "Image for {{title}}"
+  },
+  "categories": {
+    "all": "All",
+    "hygienetips": "Hygiene Tips",
+    "accessibility": "Accessibility",
+    "ecofriendly": "Eco-Friendly"
+  },
+  "listing": {
+    "title": "Articles & Resources",
+    "subtitle": "Explore our collection of articles about bathroom hygiene, accessibility, and wellness",
+    "searchPlaceholder": "Search articles...",
+    "filter": "Filter by category",
+    "all": "All Categories",
+    "noResults": "No articles found matching your search or filter.",
+    "noResultsHint": "Try clearing your search or selecting a different category.",
+    "clearSearch": "Clear Search & Filters",
+    "published": "Published",
+    "category": "Category",
+    "imageAlt": "Image for {{title}}"
+  },
+  "detail": {
+    "author": "By",
+    "authorLabel": "Author",
+    "publishedOn": "Published on",
+    "category": "Category",
+    "readingTime": "{{minutes}} min read",
+    "relatedArticles": "Related Articles",
+    "backToArticles": "Back to Articles",
+    "backButton": "Back to Articles",
+    "imageAlt": "Image for {{title}}",
+    "error": {
+        "title": "Article Not Found",
+        "description": "The article you're looking for might have been removed or doesn't exist.",
+        "button": "Browse Other Articles"
+    },
+    "related": {
+        "title": "Recommended For You",
+        "card1": {
+            "category": "Hygiene Tips",
+            "title": "Maintain Hygiene on the Go: Travel Tips",
+            "description": "Essential hygiene practices to follow when using public facilities while traveling.",
+            "button": "Browse Hygiene Articles"
+        },
+        "card2": {
+            "category": "Eco-Friendly",
+            "title": "Sustainable Hygiene Products from Injoy Bio",
+            "description": "Discover eco-friendly alternatives that are better for you and the environment.",
+            "button": "Visit Injoy Bio"
+        }
+    }
+  }
+} 

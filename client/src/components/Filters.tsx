@@ -5,6 +5,7 @@ import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { useTranslation } from 'react-i18next';
 
 export interface FilterOptions {
   accessibilityFeatures?: boolean;
@@ -23,6 +24,17 @@ interface FiltersProps {
 }
 
 const Filters: React.FC<FiltersProps> = ({ onApplyFilters }) => {
+  const { t } = useTranslation('restrooms');
+  
+  // Define distance options mapping internal values to translation keys
+  const distanceOptions = {
+    'any': t('filters.distanceOptions.any'),
+    '0.5': t('filters.distanceOptions.halfMile'),
+    '1': t('filters.distanceOptions.oneMile'),
+    '2': t('filters.distanceOptions.twoMiles'),
+    '5': t('filters.distanceOptions.fiveMiles'),
+  };
+
   const [filters, setFilters] = useState<FilterOptions>({
     accessibilityFeatures: false,
     babyChanging: false,
@@ -31,15 +43,14 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters }) => {
     changingRoom: false,
     singleOccupancy: false,
     customerOnly: false,
-    cleanliness: 0, // Set to 0 to not filter by rating initially
-    distance: 'Any distance',
+    cleanliness: 0, // 0 means no minimum cleanliness filter
+    distance: 'any', // Use 'any' as the initial internal value
   });
 
-  const handleCheckboxChange = (featureName: keyof FilterOptions) => {
-    setFilters(prev => ({ 
-      ...prev, 
-      // Toggle between true and false
-      [featureName]: prev[featureName] === true ? false : true 
+  const handleCheckboxChange = (featureName: keyof Omit<FilterOptions, 'cleanliness' | 'distance'>) => {
+    setFilters(prev => ({
+      ...prev,
+      [featureName]: !prev[featureName] // Simplified toggle
     }));
   };
 
@@ -53,130 +64,154 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters }) => {
   const handleDistanceChange = (value: string) => {
     setFilters(prev => ({
       ...prev,
-      distance: value
+      distance: value // Store the internal value ('any', '0.5', '1', etc.)
     }));
   };
 
   const handleApplyFilters = () => {
-    onApplyFilters(filters);
+    // Construct filters to send, potentially converting distance if API expects numbers
+    const filtersToSend: Record<string, any> = { ...filters };
+    if (filters.distance === 'any') {
+       delete filtersToSend.distance; // Don't send distance if 'any'
+    }
+     if (filters.cleanliness === 0) {
+        delete filtersToSend.cleanliness; // Don't send cleanliness if 0
+    }
+    // Send only true boolean filters
+    Object.keys(filtersToSend).forEach(key => {
+        if (typeof filtersToSend[key] === 'boolean' && !filtersToSend[key]) {
+            delete filtersToSend[key];
+        }
+    });
+
+    onApplyFilters(filtersToSend);
   };
 
   return (
     <Card className="mb-6">
       <CardContent className="p-5">
-        <h3 className="font-semibold text-lg mb-4">Filters</h3>
-        
+        <h3 className="font-semibold text-lg mb-4">{t('filters.title')}</h3>
+
         <div className="mb-4">
-          <Label className="block text-sm font-medium text-gray-700 mb-1">Features</Label>
+          <Label className="block text-sm font-medium text-gray-700 mb-1">{t('filters.features')}</Label> 
           <div className="space-y-2">
+            {/* Accessibility */}
             <div className="flex items-center">
-              <Checkbox 
-                id="accessibility" 
-                checked={filters.accessibilityFeatures}
+              <Checkbox
+                id="accessibility"
+                checked={!!filters.accessibilityFeatures}
                 onCheckedChange={() => handleCheckboxChange('accessibilityFeatures')}
               />
-              <Label htmlFor="accessibility" className="ml-2 text-sm">Accessibility Features</Label>
+              <Label htmlFor="accessibility" className="ml-2 text-sm font-normal">{t('filters.wheelchairAccessible')}</Label>
             </div>
-            
+
+            {/* Baby Changing */}
             <div className="flex items-center">
-              <Checkbox 
-                id="babyChanging" 
-                checked={filters.babyChanging}
+              <Checkbox
+                id="babyChanging"
+                checked={!!filters.babyChanging}
                 onCheckedChange={() => handleCheckboxChange('babyChanging')}
               />
-              <Label htmlFor="babyChanging" className="ml-2 text-sm">Baby Changing</Label>
+              <Label htmlFor="babyChanging" className="ml-2 text-sm font-normal">{t('filters.changingTable')}</Label>
             </div>
-            
+
+            {/* Gender Neutral */}
             <div className="flex items-center">
-              <Checkbox 
-                id="genderNeutral" 
-                checked={filters.genderNeutral}
+              <Checkbox
+                id="genderNeutral"
+                checked={!!filters.genderNeutral}
                 onCheckedChange={() => handleCheckboxChange('genderNeutral')}
               />
-              <Label htmlFor="genderNeutral" className="ml-2 text-sm">Gender Neutral</Label>
+              <Label htmlFor="genderNeutral" className="ml-2 text-sm font-normal">{t('filters.genderNeutral')}</Label>
             </div>
-            
+
+            {/* Free To Use */}
             <div className="flex items-center">
-              <Checkbox 
-                id="freeToUse" 
-                checked={filters.freeToUse}
+              <Checkbox
+                id="freeToUse"
+                checked={!!filters.freeToUse}
                 onCheckedChange={() => handleCheckboxChange('freeToUse')}
               />
-              <Label htmlFor="freeToUse" className="ml-2 text-sm">Free to Use</Label>
+              <Label htmlFor="freeToUse" className="ml-2 text-sm font-normal">{t('filters.free')}</Label>
             </div>
-            
+
+            {/* Changing Room / Family Friendly */}
             <div className="flex items-center">
-              <Checkbox 
-                id="changingRoom" 
-                checked={filters.changingRoom}
+              <Checkbox
+                id="changingRoom"
+                checked={!!filters.changingRoom}
                 onCheckedChange={() => handleCheckboxChange('changingRoom')}
               />
-              <Label htmlFor="changingRoom" className="ml-2 text-sm">Changing Room</Label>
+              <Label htmlFor="changingRoom" className="ml-2 text-sm font-normal">{t('filters.familyFriendly')}</Label>
             </div>
-            
+
+            {/* Single Occupancy */}
             <div className="flex items-center">
-              <Checkbox 
-                id="singleOccupancy" 
-                checked={filters.singleOccupancy}
+              <Checkbox
+                id="singleOccupancy"
+                checked={!!filters.singleOccupancy}
                 onCheckedChange={() => handleCheckboxChange('singleOccupancy')}
               />
-              <Label htmlFor="singleOccupancy" className="ml-2 text-sm">Single Occupancy</Label>
+              <Label htmlFor="singleOccupancy" className="ml-2 text-sm font-normal">{t('filters.singleOccupancy')}</Label> 
             </div>
-            
+
+            {/* Customer Only */}
             <div className="flex items-center">
-              <Checkbox 
-                id="customerOnly" 
-                checked={filters.customerOnly}
+              <Checkbox
+                id="customerOnly"
+                checked={!!filters.customerOnly}
                 onCheckedChange={() => handleCheckboxChange('customerOnly')}
               />
-              <Label htmlFor="customerOnly" className="ml-2 text-sm">Customer Only</Label>
+              <Label htmlFor="customerOnly" className="ml-2 text-sm font-normal">{t('filters.customerOnly')}</Label>
             </div>
           </div>
         </div>
-        
+
+        {/* Cleanliness Slider */}
         <div className="mb-4">
           <Label htmlFor="cleanliness" className="block text-sm font-medium text-gray-700 mb-1">
-            Cleanliness Rating
+            {t('filters.minCleanliness')} 
           </Label>
           <div className="flex items-center">
-            <div className="w-full mr-3">
-              <Slider 
-                id="cleanliness"
-                min={1} 
-                max={5} 
-                step={1} 
-                defaultValue={[filters.cleanliness || 3]}
-                onValueChange={handleCleanlinessChange}
-              />
-            </div>
-            <span className="text-sm font-medium text-gray-600">{filters.cleanliness}+</span>
+            <Slider
+              id="cleanliness"
+              min={0} // Allow 0 for "any rating"
+              max={5}
+              step={1}
+              value={[filters.cleanliness ?? 0]}
+              onValueChange={handleCleanlinessChange}
+              className="mr-3"
+            />
+            <span className="text-sm font-medium text-gray-600 w-12 text-right">
+              {filters.cleanliness === 0 ? t('filters.anyRating') : `${filters.cleanliness}+`}
+            </span>
           </div>
         </div>
-        
+
+        {/* Distance Select */}
         <div className="mb-4">
-          <Label htmlFor="distance" className="block text-sm font-medium text-gray-700 mb-1">Distance</Label>
-          <Select 
-            defaultValue={filters.distance} 
+          <Label htmlFor="distance" className="block text-sm font-medium text-gray-700 mb-1">{t('filters.distance')}</Label>
+          <Select
+            value={filters.distance} // Controlled component using internal value
             onValueChange={handleDistanceChange}
           >
             <SelectTrigger id="distance" className="w-full">
-              <SelectValue placeholder="Select distance" />
+              <SelectValue placeholder={t('filters.selectDistancePlaceholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Any distance">Any distance</SelectItem>
-              <SelectItem value="Within 0.5 miles">Within 0.5 miles</SelectItem>
-              <SelectItem value="Within 1 mile">Within 1 mile</SelectItem>
-              <SelectItem value="Within 2 miles">Within 2 miles</SelectItem>
-              <SelectItem value="Within 5 miles">Within 5 miles</SelectItem>
+              {Object.entries(distanceOptions).map(([value, label]) => (
+                <SelectItem key={value} value={value}>{label}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
-        
-        <Button 
-          className="w-full bg-primary text-white" 
+
+        {/* Apply Button */}
+        <Button
+          className="w-full bg-primary text-white"
           onClick={handleApplyFilters}
         >
-          Apply Filters
+          {t('filters.apply')}
         </Button>
       </CardContent>
     </Card>

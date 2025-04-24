@@ -1,0 +1,70 @@
+{
+  "hero": {
+    "title": "Acerca de Toilette Guilt",
+    "subtitle": "Nuestra misión es desestigmatizar las conversaciones sobre baños y mejorar el acceso a instalaciones limpias."
+  },
+  "mission": {
+    "title": "Nuestra Misión",
+    "paragraph1": "En Toilette Guilt, creemos que el acceso a baños limpios y seguros es una necesidad humana básica. Sin embargo, las conversaciones sobre las necesidades del baño a menudo están estigmatizadas, causando ansiedad e incomodidad innecesarias para muchas personas.",
+    "paragraph2": "Nuestra plataforma tiene como objetivo romper estas barreras creando una comunidad abierta donde las personas puedan encontrar, revisar y compartir información sobre baños públicos. Al normalizar estas discusiones, esperamos mejorar la accesibilidad de los baños y los estándares de limpieza en todo el mundo.",
+    "paragraph3": "Ya sea que vivas con una condición médica que requiere acceso frecuente al baño, viajes con niños pequeños o simplemente aprecies una instalación limpia, nuestro objetivo es ayudarte a encontrar baños adecuados donde quiera que vayas.",
+    "imageAlt": "Características de baño accesible, incluidas barras de apoyo y asiento de inodoro elevado"
+  },
+  "story": {
+    "title": "Nuestra Historia",
+    "paragraph1": "Toilette Guilt fue fundada en 2021 por un pequeño equipo que compartía experiencias frustrantes para encontrar baños adecuados mientras viajaba. Lo que comenzó como un proyecto personal para mapear instalaciones limpias y accesibles se ha convertido en una plataforma en crecimiento que sirve a miles de usuarios en todo el mundo.",
+    "paragraph2": "El nombre 'Toilette Guilt' reconoce la vergüenza innecesaria que muchas personas sienten al abordar las necesidades humanas básicas. Nuestro equipo está comprometido a eliminar esa culpa a través de la educación, la comunidad y la defensa.",
+    "imageAlt": "Un baño público moderno y limpio con múltiples cabinas"
+  },
+  "values": {
+    "title": "Nuestros Valores",
+    "accessibility": {
+      "title": "Accesibilidad",
+      "description": "Creemos que todos merecen igual acceso a baños limpios, independientemente de su capacidad, identidad de género o condición de salud."
+    },
+    "transparency": {
+      "title": "Transparencia",
+      "description": "Promovemos reseñas honestas e información fáctica para ayudar a los usuarios a tomar decisiones informadas."
+    },
+    "community": {
+      "title": "Comunidad",
+      "description": "Nuestra plataforma está construida por y para los usuarios, fomentando un ambiente de apoyo donde las personas pueden compartir experiencias."
+    },
+    "advocacy": {
+      "title": "Defensa",
+      "description": "Promovemos activamente la mejora de los estándares de baños y la accesibilidad en instalaciones públicas y privadas."
+    }
+  },
+  "team": {
+    "title": "Nuestro Equipo",
+    "description": "Toilette Guilt es impulsado por un equipo dedicado de profesionales apasionados por tener un impacto positivo en la salud pública y la accesibilidad."
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "description": "¿Tienes preguntas, sugerencias o quieres participar? ¡Nos encantaría saber de ti!",
+    "emailLabel": "Correo Electrónico",
+    "emailAddress": "contacto@toiletteguilt.com",
+    "phoneLabel": "Teléfono",
+    "phoneNumber": "(555) 123-4567",
+    "addressLabel": "Dirección",
+    "addressValue": "123 Bulevar del Baño, Nueva York, NY 10001",
+    "followUs": "Síguenos",
+    "form": {
+      "title": "Envíanos un Mensaje",
+      "name": "Tu Nombre",
+      "namePlaceholder": "Tu Nombre",
+      "email": "Dirección de Correo",
+      "emailPlaceholder": "tu.correo@ejemplo.com",
+      "subject": "Asunto",
+      "message": "Mensaje",
+      "messagePlaceholder": "Tu mensaje aquí...",
+      "submit": "Enviar Mensaje",
+      "submitAlert": "¡Gracias por tu mensaje! (Esto es un marcador de posición)"
+    }
+  },
+  "cta": {
+    "title": "Únete a Nuestra Misión",
+    "description": "Ayúdanos a hacer crecer nuestro directorio y a desestigmatizar los temas relacionados con los baños. Juntos, podemos crear un mundo más accesible y cómodo para todos.",
+    "button": "Enviar un Listado"
+  }
+} 

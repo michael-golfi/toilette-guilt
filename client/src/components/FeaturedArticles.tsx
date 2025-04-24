@@ -4,25 +4,32 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { type Article } from '@shared/schema';
+import { useTranslation } from 'react-i18next';
+
+// Mapping from API category name (assumed English) to internal key
+const apiCategoryToKeyMap: { [key: string]: string } = {
+  'Hygiene Tips': 'hygienetips',
+  'Accessibility': 'accessibility',
+  'Eco-Friendly': 'ecofriendly',
+};
+
+// Mapping from internal key to CSS class
+const categoryKeyToCssMap: { [key: string]: string } = {
+  'hygienetips': 'article-tag-hygiene',
+  'accessibility': 'article-tag-accessibility',
+  'ecofriendly': 'article-tag-eco',
+};
 
 const FeaturedArticles: React.FC = () => {
   const [, setLocation] = useLocation();
+  const { t } = useTranslation('articles');
   
   const { data: articles, isLoading } = useQuery<Article[]>({
     queryKey: ['/api/articles'],
   });
 
-  const getCategoryClassName = (category: string) => {
-    switch (category) {
-      case 'Hygiene Tips':
-        return 'article-tag article-tag-hygiene';
-      case 'Accessibility':
-        return 'article-tag article-tag-accessibility';
-      case 'Eco-Friendly':
-        return 'article-tag article-tag-eco';
-      default:
-        return 'article-tag article-tag-hygiene';
-    }
+  const getCategoryClassNameByKey = (key: string | undefined) => {
+    return key && categoryKeyToCssMap[key] ? `article-tag ${categoryKeyToCssMap[key]}` : 'article-tag article-tag-hygiene'; // Default class
   };
 
   const navigateToArticle = (id: number) => {
@@ -37,9 +44,9 @@ const FeaturedArticles: React.FC = () => {
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold mb-3">Bathroom Hygiene & Wellness Resources</h2>
+          <h2 className="text-3xl font-bold mb-3">{t('featured.title')}</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Expert advice, tips, and articles to promote better hygiene practices and destigmatize bathroom-related topics.
+            {t('featured.subtitle')}
           </p>
         </div>
         
@@ -71,14 +78,19 @@ const FeaturedArticles: React.FC = () => {
                   className="w-full h-48 object-cover"
                 />
                 <CardContent className="p-6">
-                  <span className={getCategoryClassName(article.category)}>{article.category}</span>
+                  {(() => { // IIFE to calculate category info
+                     const articleCategoryKey = apiCategoryToKeyMap[article.category];
+                     const categoryClassName = getCategoryClassNameByKey(articleCategoryKey);
+                     const translatedCategoryName = articleCategoryKey ? t(`categories.${articleCategoryKey}`) : article.category;
+                     return <span className={categoryClassName}>{translatedCategoryName}</span>
+                  })()}
                   <h3 className="text-xl font-semibold mt-3 mb-2">{article.title}</h3>
                   <p className="text-gray-600 text-sm mb-4">{article.excerpt}</p>
                   <button 
                     onClick={() => navigateToArticle(article.id)}
                     className="text-primary font-medium hover:text-blue-700 inline-flex items-center"
                   >
-                    Read Article <i className="fas fa-arrow-right ml-2"></i>
+                    {t('featured.readArticle')} <i className="fas fa-arrow-right ml-2"></i>
                   </button>
                 </CardContent>
               </Card>
@@ -92,7 +104,7 @@ const FeaturedArticles: React.FC = () => {
             className="border-primary text-primary hover:bg-primary hover:text-white"
             onClick={navigateToAllArticles}
           >
-            View All Articles
+            {t('featured.viewAll')}
           </Button>
         </div>
       </div>

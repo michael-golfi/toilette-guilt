@@ -1,0 +1,144 @@
+{
+  "brandName": "Toilette Guilt",
+  "unknownDate": "Fecha desconocida",
+  "submitting": "Enviando...",
+  "navigation": {
+    "home": "Inicio",
+    "findRestrooms": "Buscar Baños",
+    "articles": "Artículos",
+    "submitListing": "Añadir Listado",
+    "about": "Acerca de",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "mostReviewed": "Más comentados",
+    "topRated": "Mejor valorados",
+    "recentlyAdded": "Añadidos recientemente"
+  },
+  "footer": {
+    "tagline": "Desestigmatizando las conversaciones sobre baños, una reseña a la vez. Encuentra baños limpios y accesibles dondequiera que vayas.",
+    "links": "Enlaces Rápidos",
+    "resources": "Recursos",
+    "about": "Acerca de",
+    "contact": "Contáctenos",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "copyright": "© {{year}} Toilette Guilt. Todos los derechos reservados.",
+    "hygieneArticles": "Artículos de higiene",
+    "accessibilityGuide": "Guía de accesibilidad",
+    "bathroomEtiquette": "Etiqueta en el baño",
+    "travelTips": "Consejos de viaje",
+    "ourMission": "Nuestra misión",
+    "mobileCtaAriaLabel": "Visita Injoy Bio"
+  },
+  "buttons": {
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "search": "Buscar",
+    "readMore": "Leer Más",
+    "viewAll": "Ver Todo",
+    "leaveReview": "Dejar una Reseña",
+    "loadMore": "Cargar más"
+  },
+  "form": {
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Dirección de correo electrónico inválida",
+    "passwordLength": "La contraseña debe tener al menos 8 caracteres"
+  },
+  "social": {
+    "facebook": "Visita nuestra página de Facebook",
+    "twitter": "Visita nuestro perfil de Twitter",
+    "instagram": "Visita nuestro perfil de Instagram",
+    "pinterest": "Visita nuestro perfil de Pinterest",
+    "linkedin": "Visita nuestra página de LinkedIn"
+  },
+  "validation": {
+    "ratingAndCommentRequired": "Por favor, selecciona una calificación y escribe un comentario.",
+    "reviewSubmitted": "¡Reseña enviada con éxito!",
+    "reviewError": "Error al enviar la reseña. Por favor, inténtalo de nuevo."
+  },
+  "notFound": { 
+    "title": "Página No Encontrada",
+    "message": "¡Ups! La página que buscas no existe o ha sido movida.",
+    "goHome": "Volver al inicio"
+  },
+  "header": { 
+    "toggleMenuAriaLabel": "Alternar menú de navegación"
+  },
+  "toast": { 
+    "successTitle": "¡Envío Exitoso!",
+    "successDescription": "¡Gracias por contribuir a nuestro directorio de baños!",
+    "errorTitle": "Envío Fallido",
+    "errorDescription": "Ocurrió un error: {{error}}. Por favor, inténtalo de nuevo."
+  },
+  "siteName": "Toilette Guilt",
+  "tagline": "Encuentra baños públicos limpios y accesibles cerca de ti",
+  "nav": {
+    "home": "Inicio",
+    "restrooms": "Baños",
+    "articles": "Artículos",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "submit": "Añadir Baño",
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión",
+    "dashboard": "Panel de Control",
+    "language": "Idioma"
+  },
+  "search": {
+    "placeholder": "Buscar baños...",
+    "button": "Buscar",
+    "locationError": "No se pudo obtener la ubicación.",
+    "geolocationDenied": "Permiso de geolocalización denegado.",
+    "geolocationUnavailable": "La geolocalización no está disponible en este navegador.",
+    "geolocationTimeout": "Se agotó el tiempo de espera de la solicitud de geolocalización.",
+    "geolocationUnknown": "Se produjo un error desconocido de geolocalización."
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {page}",
+    "goToPage": "Ir a la página {page}",
+    "of": "de {totalPages}"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Página no encontrada",
+      "message": "Lo sentimos, la página que buscas no existe.",
+      "backHome": "Volver al Inicio"
+    },
+    "generic": "Ocurrió un error inesperado.",
+    "loading": "Cargando..."
+  },
+  "accessibility": {
+    "skipToContent": "Saltar al contenido principal"
+  },
+  "user": {
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "contributions": "Mis Contribuciones"
+  },
+  "general": {
+    "yes": "Sí",
+    "no": "No",
+    "unknown": "Desconocido",
+    "loading": "Cargando...",
+    "error": "Error",
+    "close": "Cerrar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "confirm": "Confirmar",
+    "optional": "(opcional)"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "zh-CN": "简体中文",
+    "ar": "العربية"
+  }
+} 

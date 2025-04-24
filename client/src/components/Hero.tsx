@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { imageUrls } from '@/lib/imageUrls';
+import { useTranslation } from 'react-i18next';
 
 const Hero: React.FC = () => {
   const [, setLocation] = useLocation();
   const [searchLocation, setSearchLocation] = useState('');
+  const { t } = useTranslation('home');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,10 +25,10 @@ const Hero: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-8 md:mb-0">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
-              Find and Review Public Restrooms Near You
+              {t('hero.title')}
             </h1>
             <p className="text-lg md:text-xl opacity-90 mb-8">
-              Destigmatizing bathroom conversations one review at a time. Join our community dedicated to finding clean, accessible facilities everywhere.
+              {t('hero.subtitle')}
             </p>
             
             <form 
@@ -37,7 +39,7 @@ const Hero: React.FC = () => {
                 <div className="relative">
                   <input 
                     type="text" 
-                    placeholder="Enter your location" 
+                    placeholder={t('hero.locationPlaceholder')} 
                     className="w-full py-3 px-4 pr-10 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary bg-gray-50 text-gray-800" 
                     value={searchLocation}
                     onChange={(e) => setSearchLocation(e.target.value)}
@@ -49,19 +51,19 @@ const Hero: React.FC = () => {
                 type="submit" 
                 className="bg-secondary text-white px-6 py-3 rounded-md font-medium hover:bg-green-600 transition w-full md:w-auto md:ml-3"
               >
-                Find Restrooms
+                {t('hero.cta')}
               </button>
             </form>
             
             <div className="mt-6 flex flex-wrap gap-3">
               <span className="inline-flex items-center bg-white bg-opacity-20 text-sm px-3 py-1 rounded-full">
-                <i className="fas fa-star-half-alt mr-2"></i> 10,000+ Reviews
+                <i className="fas fa-star-half-alt mr-2"></i> {t('hero.badgeReviews')}
               </span>
               <span className="inline-flex items-center bg-white bg-opacity-20 text-sm px-3 py-1 rounded-full">
-                <i className="fas fa-toilet mr-2"></i> 25,000+ Restrooms
+                <i className="fas fa-toilet mr-2"></i> {t('hero.badgeRestrooms')}
               </span>
               <span className="inline-flex items-center bg-white bg-opacity-20 text-sm px-3 py-1 rounded-full">
-                <i className="fas fa-users mr-2"></i> Community Driven
+                <i className="fas fa-users mr-2"></i> {t('hero.badgeCommunity')}
               </span>
             </div>
           </div>
@@ -69,7 +71,7 @@ const Hero: React.FC = () => {
           <div className="md:w-1/2 md:pl-12">
             <img 
               src={imageUrls.hero} 
-              alt="Modern public restroom interior" 
+              alt={t('hero.imageAlt')} 
               className="rounded-lg shadow-lg w-full h-auto"
             />
           </div>

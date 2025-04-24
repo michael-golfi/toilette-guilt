@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "title": "Encuentra Tu Próxima Parada con Confianza",
+    "subtitle": "Accede a una base de datos comunitaria de baños públicos, revisados por limpieza y accesibilidad.",
+    "cta": "Encontrar Baños Ahora",
+    "locationPlaceholder": "Introduce ciudad, dirección o punto de referencia",
+    "badgeReviews": "+10.000 Reseñas",
+    "badgeRestrooms": "+25.000 Baños",
+    "badgeCommunity": "Impulsado por la Comunidad",
+    "imageAlt": "Interior de baño público limpio y moderno con características de accesibilidad"
+  },
+  "submitListing": {
+    "title": "Ayuda a Crecer Nuestro Directorio",
+    "description": "¿Conoces un baño público que no está en nuestra base de datos? Envíalo para ayudar a otros a encontrar instalaciones limpias y accesibles.",
+    "button": "Enviar un Nuevo Baño"
+  },
+  "testimonials": {
+    "title": "Lo Que Dice Nuestra Comunidad",
+    "subtitle": "Únete a miles de usuarios que confían en Toilette Guilt para encontrar instalaciones limpias y accesibles dondequiera que vayan.",
+    "commentQuote": "\"{{comment}}\"",
+    "viewAll": "Ver Todos los Testimonios"
+  },
+  "articles": {
+    "title": "Últimos Artículos",
+    "subtitle": "Contenido educativo sobre higiene, accesibilidad y más",
+    "viewAll": "Ver Todos los Artículos"
+  },
+  "features": {
+    "title": "Características Clave",
+    "subtitle": "Todo lo que necesitas para encontrar el baño perfecto.",
+    "search": {
+      "title": "Búsqueda Fácil",
+      "description": "Encuentra baños cercanos rápidamente con nuestra búsqueda intuitiva y filtros."
+    },
+    "ratings": {
+      "title": "Calificaciones por Usuarios",
+      "description": "Revisa calificaciones y reseñas honestas de otros usuarios para tomar decisiones informadas."
+    },
+    "details": {
+      "title": "Información Detallada",
+      "description": "Accede a detalles como limpieza, accesibilidad, disponibilidad de comodidades y fotos."
+    },
+    "contribute": {
+        "title": "Contribuye y Mejora",
+        "description": "Añade nuevos baños, actualiza la información y comparte tus experiencias para ayudar a la comunidad."
+    }
+  },
+  "howItWorks": {
+    "title": "Cómo Funciona",
+    "step1": {
+      "title": "Busca",
+      "description": "Ingresa tu ubicación o explora el mapa para encontrar baños cercanos."
+    },
+    "step2": {
+      "title": "Filtra",
+      "description": "Usa filtros para encontrar baños con características específicas como accesibilidad o cambiadores."
+    },
+    "step3": {
+      "title": "Elige",
+      "description": "Consulta calificaciones, reseñas y fotos para seleccionar el mejor baño para tus necesidades."
+    },
+    "step4": {
+        "title": "Contribuye",
+        "description": "Añade nuevos baños o califica los existentes para ayudar a otros."
+    }
+  },
+  "featuredArticles": {
+    "title": "Artículos Destacados",
+    "subtitle": "Lee nuestras últimas noticias, guías y consejos sobre higiene pública y viajes.",
+    "viewAll": "Ver Todos los Artículos"
+  },
+  "cta": {
+    "title": "¿Listo para Encontrar tu Próximo Baño?",
+    "subtitle": "Empieza a buscar ahora o descarga nuestra aplicación para acceder fácilmente mientras viajas.",
+    "searchButton": "Buscar Baños Cercanos",
+    "downloadApp": "Descargar la Aplicación (Próximamente)"
+  }
+} 

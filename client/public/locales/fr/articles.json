@@ -1,0 +1,59 @@
+{
+  "featured": {
+    "title": "Ressources d'Hygiène et de Bien-être",
+    "subtitle": "Explorez des conseils, des guides et des histoires sur les toilettes publiques et l'hygiène personnelle.",
+    "readArticle": "Lire l'Article",
+    "viewAll": "Voir Tous les Articles",
+    "imageAlt": "Image pour {{title}}"
+  },
+  "categories": {
+    "all": "Toutes",
+    "hygienetips": "Conseils d'Hygiène",
+    "accessibility": "Accessibilité",
+    "ecofriendly": "Écologique"
+  },
+  "listing": {
+    "title": "Articles et Ressources",
+    "subtitle": "Explorez notre collection d'articles sur l'hygiène, l'accessibilité et le bien-être dans les toilettes",
+    "searchPlaceholder": "Rechercher des articles...",
+    "filter": "Filtrer par catégorie",
+    "all": "Toutes les Catégories",
+    "noResults": "Aucun article trouvé correspondant à votre recherche ou filtre.",
+    "noResultsHint": "Essayez d'effacer votre recherche ou de sélectionner une autre catégorie.",
+    "clearSearch": "Effacer Recherche & Filtres",
+    "published": "Publié",
+    "category": "Catégorie",
+    "imageAlt": "Image pour {{title}}"
+  },
+  "detail": {
+    "author": "Par",
+    "authorLabel": "Auteur",
+    "publishedOn": "Publié le",
+    "category": "Catégorie",
+    "readingTime": "{{minutes}} min de lecture",
+    "relatedArticles": "Articles Connexes",
+    "backToArticles": "Retour aux Articles",
+    "backButton": "Retour aux Articles",
+    "imageAlt": "Image pour {{title}}",
+    "error": {
+        "title": "Article Non Trouvé",
+        "description": "L'article que vous recherchez a peut-être été supprimé ou n'existe pas.",
+        "button": "Parcourir d'autres Articles"
+    },
+    "related": {
+        "title": "Recommandé Pour Vous",
+        "card1": {
+            "category": "Conseils d'Hygiène",
+            "title": "Maintenir l'hygiène en déplacement : Conseils de voyage",
+            "description": "Pratiques d'hygiène essentielles à suivre lors de l'utilisation des installations publiques en voyage.",
+            "button": "Parcourir les Articles sur l'Hygiène"
+        },
+        "card2": {
+            "category": "Écologique",
+            "title": "Produits d'hygiène durables d'Injoy Bio",
+            "description": "Découvrez des alternatives écologiques meilleures pour vous et l'environnement.",
+            "button": "Visitez Injoy Bio"
+        }
+    }
+  }
+} 

@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "title": "Find Your Next Rest Stop with Confidence",
+    "subtitle": "Access a community-driven database of public restrooms, reviewed for cleanliness and accessibility.",
+    "cta": "Find Restrooms Now",
+    "locationPlaceholder": "Enter city, address, or landmark",
+    "badgeReviews": "10,000+ Reviews",
+    "badgeRestrooms": "25,000+ Restrooms",
+    "badgeCommunity": "Community Driven",
+    "imageAlt": "Clean, modern public restroom interior with accessibility features"
+  },
+  "submitListing": {
+    "title": "Help Grow Our Directory",
+    "description": "Know of a public restroom that's not in our database? Submit it to help others find clean, accessible facilities.",
+    "button": "Submit a New Restroom"
+  },
+  "testimonials": {
+    "title": "What Our Community Says",
+    "subtitle": "Join thousands of users who rely on Toilette Guilt to find clean, accessible facilities wherever they go.",
+    "commentQuote": "\"{{comment}}\"",
+    "viewAll": "View All Testimonials"
+  },
+  "articles": {
+    "title": "Latest Articles",
+    "subtitle": "Educational content about hygiene, accessibility, and more",
+    "viewAll": "View All Articles"
+  },
+  "features": {
+    "title": "Key Features",
+    "subtitle": "Everything you need to find the perfect restroom.",
+    "search": {
+      "title": "Easy Search",
+      "description": "Find nearby restrooms quickly with our intuitive search and filters."
+    },
+    "ratings": {
+      "title": "User Ratings",
+      "description": "Check honest ratings and reviews from other users to make informed decisions."
+    },
+    "details": {
+      "title": "Detailed Information",
+      "description": "Access details like cleanliness, accessibility, amenity availability, and photos."
+    },
+    "contribute": {
+        "title": "Contribute & Improve",
+        "description": "Add new restrooms, update information, and share your experiences to help the community."
+    }
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "step1": {
+      "title": "Search",
+      "description": "Enter your location or browse the map to find nearby restrooms."
+    },
+    "step2": {
+      "title": "Filter",
+      "description": "Use filters to find restrooms with specific features like accessibility or changing tables."
+    },
+    "step3": {
+      "title": "Choose",
+      "description": "View ratings, reviews, and photos to select the best restroom for your needs."
+    },
+    "step4": {
+        "title": "Contribute",
+        "description": "Add new restrooms or rate existing ones to help others."
+    }
+  },
+  "featuredArticles": {
+    "title": "Featured Articles",
+    "subtitle": "Read our latest news, guides, and tips on public hygiene and travel.",
+    "viewAll": "View All Articles"
+  },
+  "cta": {
+    "title": "Ready to Find Your Next Restroom?",
+    "subtitle": "Start searching now or download our app for easy access on the go.",
+    "searchButton": "Search Nearby Restrooms",
+    "downloadApp": "Download the App (Coming Soon)"
+  }
+} 

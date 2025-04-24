@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "title": "自信地找到您的下一个休息站",
+    "subtitle": "访问由社区驱动的公共洗手间数据库，评估其清洁度和无障碍性。",
+    "cta": "立即查找洗手间",
+    "locationPlaceholder": "输入城市、地址或地标",
+    "badgeReviews": "10,000+ 评论",
+    "badgeRestrooms": "25,000+ 洗手间",
+    "badgeCommunity": "社区驱动",
+    "imageAlt": "干净、现代的公共洗手间内部，具有无障碍设施"
+  },
+  "submitListing": {
+    "title": "帮助扩展我们的目录",
+    "description": "知道有一个尚未收录在我们数据库中的公共洗手间？提交它以帮助他人找到干净、无障碍的设施。",
+    "button": "提交新洗手间"
+  },
+  "testimonials": {
+    "title": "社区的评价",
+    "subtitle": "加入数千名依靠Toilette Guilt找到干净、无障碍设施的用户。",
+    "commentQuote": "\"{{comment}}\"",
+    "viewAll": "查看所有评价"
+  },
+  "articles": {
+    "title": "最新文章",
+    "subtitle": "关于卫生、无障碍等的教育内容",
+    "viewAll": "查看所有文章"
+  },
+  "features": {
+    "title": "核心功能",
+    "subtitle": "寻找完美洗手间所需的一切。",
+    "search": {
+      "title": "轻松搜索",
+      "description": "通过我们直观的搜索和过滤器快速找到附近的洗手间。"
+    },
+    "ratings": {
+      "title": "用户评分",
+      "description": "查看其他用户的诚实评分和评论，做出明智的决定。"
+    },
+    "details": {
+      "title": "详细信息",
+      "description": "获取清洁度、无障碍性、设施可用性和照片等详细信息。"
+    },
+    "contribute": {
+        "title": "贡献与改进",
+        "description": "添加新洗手间，更新信息，分享您的体验，帮助社区。"
+    }
+  },
+  "howItWorks": {
+    "title": "工作原理",
+    "step1": {
+      "title": "搜索",
+      "description": "输入您的位置或浏览地图以找到附近的洗手间。"
+    },
+    "step2": {
+      "title": "筛选",
+      "description": "使用过滤器查找具有特定功能的洗手间，如无障碍通道或尿布台。"
+    },
+    "step3": {
+      "title": "选择",
+      "description": "查看评分、评论和照片，选择最适合您需求的洗手间。"
+    },
+    "step4": {
+        "title": "贡献",
+        "description": "添加新洗手间或为现有洗手间评分，帮助他人。"
+    }
+  },
+  "featuredArticles": {
+    "title": "特色文章",
+    "subtitle": "阅读我们关于公共卫生和旅行的最新新闻、指南和提示。",
+    "viewAll": "查看所有文章"
+  },
+  "cta": {
+    "title": "准备寻找您的下一个洗手间？",
+    "subtitle": "立即开始搜索或下载我们的应用，方便随时访问。",
+    "searchButton": "搜索附近洗手间",
+    "downloadApp": "下载应用（即将推出）"
+  }
+} 

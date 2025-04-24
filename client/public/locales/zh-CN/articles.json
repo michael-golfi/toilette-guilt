@@ -1,0 +1,59 @@
+{
+  "featured": {
+    "title": "洗手间卫生与健康资源",
+    "subtitle": "探索关于公共洗手间和个人卫生的提示、指南和故事。",
+    "readArticle": "阅读文章",
+    "viewAll": "查看所有文章",
+    "imageAlt": "{{title}}的图片"
+  },
+  "categories": {
+    "all": "全部",
+    "hygienetips": "卫生提示",
+    "accessibility": "无障碍",
+    "ecofriendly": "环保"
+  },
+  "listing": {
+    "title": "文章和资源",
+    "subtitle": "探索我们关于洗手间卫生、无障碍和健康的文章集合",
+    "searchPlaceholder": "搜索文章...",
+    "filter": "按类别筛选",
+    "all": "所有类别",
+    "noResults": "没有找到符合您搜索或筛选条件的文章。",
+    "noResultsHint": "尝试清除您的搜索或选择不同的类别。",
+    "clearSearch": "清除搜索和筛选",
+    "published": "发布于",
+    "category": "类别",
+    "imageAlt": "{{title}}的图片"
+  },
+  "detail": {
+    "author": "作者",
+    "authorLabel": "作者",
+    "publishedOn": "发布于",
+    "category": "类别",
+    "readingTime": "阅读时间：{{minutes}}分钟",
+    "relatedArticles": "相关文章",
+    "backToArticles": "返回文章列表",
+    "backButton": "返回文章列表",
+    "imageAlt": "{{title}}的图片",
+    "error": {
+        "title": "文章未找到",
+        "description": "您查找的文章可能已被删除或不存在。",
+        "button": "浏览其他文章"
+    },
+    "related": {
+        "title": "为您推荐",
+        "card1": {
+            "category": "卫生提示",
+            "title": "在途中保持卫生：旅行提示",
+            "description": "在旅行时使用公共设施应遵循的基本卫生实践。",
+            "button": "浏览卫生文章"
+        },
+        "card2": {
+            "category": "环保",
+            "title": "Injoy Bio的可持续卫生产品",
+            "description": "探索对您和环境都更好的环保替代品。",
+            "button": "访问Injoy Bio"
+        }
+    }
+  }
+} 

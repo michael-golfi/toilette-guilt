@@ -13,6 +13,7 @@ import Articles from "@/pages/Articles";
 import ArticleDetail from "@/pages/ArticleDetail";
 import SubmitForm from "@/pages/SubmitForm";
 import About from "@/pages/About";
+import { Suspense } from "react";
 
 function Router() {
   return (
@@ -33,12 +34,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Header />
-        <main className="min-h-screen">
-          <Router />
-        </main>
-        <Footer />
-        <Toaster />
+        <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
+          <Header />
+          <main className="min-h-screen">
+            <Router />
+          </main>
+          <Footer />
+          <Toaster />
+        </Suspense>
       </TooltipProvider>
     </QueryClientProvider>
   );

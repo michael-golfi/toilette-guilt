@@ -2,8 +2,10 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@/components/ui/card';
 import { type Testimonial } from '@shared/schema';
+import { useTranslation } from 'react-i18next';
 
 const UserTestimonials: React.FC = () => {
+  const { t } = useTranslation('home');
   const { data: testimonials, isLoading } = useQuery<Testimonial[]>({
     queryKey: ['/api/testimonials'],
   });
@@ -28,9 +30,9 @@ const UserTestimonials: React.FC = () => {
     <section className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold mb-3">What Our Community Says</h2>
+          <h2 className="text-3xl font-bold mb-3">{t('testimonials.title')}</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Join thousands of users who rely on Toilette Guilt to find clean, accessible facilities wherever they go.
+            {t('testimonials.subtitle')}
           </p>
         </div>
         
@@ -62,7 +64,9 @@ const UserTestimonials: React.FC = () => {
                   <div className="flex items-center mb-4">
                     {renderStars(testimonial.rating)}
                   </div>
-                  <p className="text-gray-700 mb-4">"{testimonial.comment}"</p>
+                  <p className="text-gray-700 mb-4 italic">
+                    {t('testimonials.commentQuote', { comment: testimonial.comment })}
+                  </p>
                   <div className="flex items-center">
                     <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-600">
                       <i className="fas fa-user"></i>

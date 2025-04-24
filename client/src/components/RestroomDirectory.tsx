@@ -10,12 +10,14 @@ import Filters, { FilterOptions } from './Filters';
 import Map from './Map';
 import RestroomListing from './RestroomListing';
 import { apiRequest } from '@/lib/queryClient';
+import { useTranslation } from 'react-i18next';
 
 interface RestroomDirectoryProps {
   initialLocation?: string;
 }
 
 const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }) => {
+  const { t } = useTranslation(['restrooms', 'common']);
   const [sortOption, setSortOption] = useState<string>("nearest");
   const [filteredRestrooms, setFilteredRestrooms] = useState<RestroomWithRating[]>([]);
   const [displayCount, setDisplayCount] = useState<number>(3);
@@ -132,9 +134,9 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
             {/* Injoy Bio Promo */}
             <Card className="bg-gradient-to-r from-accent to-primary rounded-lg shadow-md">
               <CardContent className="p-5">
-                <h3 className="font-semibold text-lg text-white mb-2">Discover Injoy Bio</h3>
+                <h3 className="font-semibold text-lg text-white mb-2">{t('promo.title')}</h3>
                 <p className="text-white text-sm mb-4 opacity-90">
-                  Premium hygiene products for your personal comfort and wellness.
+                  {t('promo.description')}
                 </p>
                 <Button 
                   asChild
@@ -145,7 +147,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
-                    Learn More
+                    {t('promo.learnMore')}
                   </a>
                 </Button>
               </CardContent>
@@ -155,17 +157,17 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
           {/* Listings Section */}
           <div className="md:w-2/3 lg:w-3/4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold mb-2 sm:mb-0">Public Restrooms Near You</h2>
+              <h2 className="text-2xl font-bold mb-2 sm:mb-0">{t('directory.title', { ns: 'restrooms' })}</h2>
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">Sort by:</label>
+                <label htmlFor="sort-select" className="text-sm font-medium text-gray-700">{t('directory.sortByLabel', {defaultValue: 'Sort by:'})}</label>
                 <Select defaultValue={sortOption} onValueChange={handleSortChange}>
-                  <SelectTrigger className="w-[140px]">
-                    <SelectValue placeholder="Sort by" />
+                  <SelectTrigger id="sort-select" className="w-[140px]">
+                    <SelectValue placeholder={t('directory.sortBy')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="nearest">Nearest</SelectItem>
-                    <SelectItem value="highest-rated">Highest Rated</SelectItem>
-                    <SelectItem value="most-reviewed">Most Reviewed</SelectItem>
+                    <SelectItem value="nearest">{t('directory.sortOptions.nearest')}</SelectItem>
+                    <SelectItem value="highest-rated">{t('directory.sortOptions.highestRated')}</SelectItem>
+                    <SelectItem value="most-reviewed">{t('directory.sortOptions.mostReviewed')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -178,7 +180,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input 
                     type="text"
-                    placeholder="Search by city, address or name..." 
+                    placeholder={t('directory.searchPlaceholder', { ns: 'restrooms' })}
                     className="pl-10 pr-24"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -193,7 +195,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
                   onClick={handleSearch}
                   className="ml-2 bg-primary text-white"
                 >
-                  Search
+                  {t('directory.searchButton', { ns: 'restrooms' })}
                 </Button>
               </div>
             </div>
@@ -236,7 +238,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
                       onClick={loadMore}
                       className="bg-primary text-white hover:bg-primary/80"
                     >
-                      Load More Restrooms
+                      {t('buttons.loadMore', { ns: 'common' })}
                     </Button>
                   </div>
                 )}
@@ -248,10 +250,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
                   <div className="text-6xl mb-4">
                     <i className="fas fa-toilet text-gray-300"></i>
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">No Restrooms Found</h3>
-                  <p className="text-gray-600">
-                    We couldn't find any restrooms matching your criteria. Try adjusting your filters or adding a new listing.
-                  </p>
+                  <h3 className="text-xl font-bold mb-2">{t('directory.noResults', { ns: 'restrooms' })}</h3>
                 </CardContent>
               </Card>
             )}

@@ -1,0 +1,59 @@
+{
+  "featured": {
+    "title": "Recursos de Higiene y Bienestar en Baños",
+    "subtitle": "Explora consejos, guías e historias sobre baños públicos e higiene personal.",
+    "readArticle": "Leer Artículo",
+    "viewAll": "Ver Todos los Artículos",
+    "imageAlt": "Imagen para {{title}}"
+  },
+  "categories": {
+    "all": "Todos",
+    "hygienetips": "Consejos de Higiene",
+    "accessibility": "Accesibilidad",
+    "ecofriendly": "Ecológico"
+  },
+  "listing": {
+    "title": "Todos los Artículos",
+    "subtitle": "Explora nuestra colección de artículos sobre higiene pública, viajes y más.",
+    "searchPlaceholder": "Buscar artículos...",
+    "filter": "Filtrar por categoría",
+    "all": "Todas las Categorías",
+    "noResults": "No se encontraron artículos que coincidan con tus criterios.",
+    "noResultsHint": "Intenta borrar tu búsqueda o seleccionar una categoría diferente.",
+    "clearSearch": "Borrar Búsqueda y Filtros",
+    "published": "Publicado",
+    "category": "Categoría",
+    "imageAlt": "Imagen para {{title}}"
+  },
+  "detail": {
+    "author": "Por",
+    "authorLabel": "Autor",
+    "publishedOn": "Publicado el {{date}}",
+    "category": "Categoría",
+    "readingTime": "{{minutes}} min de lectura",
+    "relatedArticles": "Artículos Relacionados",
+    "backToArticles": "Volver a Todos los Artículos",
+    "backButton": "Volver a los Artículos",
+    "imageAlt": "Imagen del artículo para {{title}}",
+    "error": {
+        "title": "Artículo No Encontrado",
+        "description": "El artículo que buscas puede haber sido eliminado o no existe.",
+        "button": "Explorar Otros Artículos"
+    },
+    "related": {
+        "title": "Recomendado Para Ti",
+        "card1": {
+            "category": "Consejos de Higiene",
+            "title": "Mantener la Higiene en Movimiento: Consejos de Viaje",
+            "description": "Prácticas de higiene esenciales a seguir al usar instalaciones públicas durante el viaje.",
+            "button": "Explorar Artículos de Higiene"
+        },
+        "card2": {
+            "category": "Ecológico",
+            "title": "Productos de Higiene Sostenibles de Injoy Bio",
+            "description": "Descubre alternativas ecológicas que son mejores para ti y para el medio ambiente.",
+            "button": "Visita Injoy Bio"
+        }
+    }
+  }
+} 

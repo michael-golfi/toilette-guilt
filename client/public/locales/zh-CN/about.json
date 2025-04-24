@@ -1,0 +1,70 @@
+{
+  "hero": {
+    "title": "关于 Toilette Guilt",
+    "subtitle": "我们的使命是消除如厕话题的污名化，改善对干净设施的使用体验。"
+  },
+  "mission": {
+    "title": "我们的使命",
+    "paragraph1": "在 Toilette Guilt，我们认为获得干净、安全的洗手间是人类的基本需求。然而，有关如厕需求的对话常常被污名化，给许多人带来不必要的焦虑和不适。",
+    "paragraph2": "我们的平台旨在打破这些障碍，创建一个开放的社区，人们可以在此找到、评论和分享有关公共洗手间的信息。通过使这些讨论正常化，我们希望改善全球洗手间的无障碍性和清洁标准。",
+    "paragraph3": "无论您是因医疗状况而经常需要使用洗手间，还是与年幼的孩子一起旅行，或者只是欣赏干净的设施，我们的目标是帮助您在任何地方找到合适的洗手间。",
+    "imageAlt": "无障碍洗手间功能，包括扶手和升高的马桶座"
+  },
+  "story": {
+    "title": "我们的故事",
+    "paragraph1": "Toilette Guilt 成立于2021年，由一个在旅行中寻找合适洗手间时遇到挫折的小团队创建。从一个标记干净、无障碍设施的个人项目，发展成为一个服务于全球数千用户的成长平台。",
+    "paragraph2": "'Toilette Guilt'的名字承认了许多人在满足基本人类需求时感到的不必要的尴尬。我们的团队致力于通过教育、社区和倡导来消除这种尴尬。",
+    "imageAlt": "一个现代、干净的公共洗手间，有多个隔间"
+  },
+  "values": {
+    "title": "我们的价值观",
+    "accessibility": {
+      "title": "无障碍",
+      "description": "我们相信每个人都应该有平等的机会使用干净的洗手间，无论能力、性别认同或健康状况如何。"
+    },
+    "transparency": {
+      "title": "透明度",
+      "description": "我们提倡诚实的评论和事实信息，帮助用户做出明智的决定。"
+    },
+    "community": {
+      "title": "社区",
+      "description": "我们的平台是由用户建立、为用户服务的，营造一个人们可以分享经验的支持性环境。"
+    },
+    "advocacy": {
+      "title": "倡导",
+      "description": "我们积极推动改善公共和私人设施的洗手间标准和无障碍性。"
+    }
+  },
+  "team": {
+    "title": "我们的团队",
+    "description": "Toilette Guilt 由一群致力于对公共健康和无障碍性产生积极影响的专业人士组成。"
+  },
+  "contact": {
+    "title": "联系我们",
+    "description": "有问题、建议或想要参与？我们很乐意听取您的意见！",
+    "emailLabel": "电子邮件",
+    "emailAddress": "contact@toiletteguilt.com",
+    "phoneLabel": "电话",
+    "phoneNumber": "(555) 123-4567",
+    "addressLabel": "地址",
+    "addressValue": "123 Bathroom Blvd, New York, NY 10001",
+    "followUs": "关注我们",
+    "form": {
+      "title": "给我们发送消息",
+      "name": "您的姓名",
+      "namePlaceholder": "您的姓名",
+      "email": "电子邮件地址",
+      "emailPlaceholder": "your.email@example.com",
+      "subject": "主题",
+      "message": "消息",
+      "messagePlaceholder": "在此输入您的消息...",
+      "submit": "发送消息",
+      "submitAlert": "感谢您的消息！（占位符 - 表单尚未激活）"
+    }
+  },
+  "cta": {
+    "title": "加入我们的使命",
+    "description": "帮助我们扩展我们的目录，消除与洗手间相关话题的污名。一起，我们可以为每个人创造一个更无障碍、更舒适的世界。",
+    "button": "提交列表"
+  }
+} 

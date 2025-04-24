@@ -1,0 +1,144 @@
+{
+  "brandName": "Toilette Guilt",
+  "unknownDate": "Date inconnue",
+  "submitting": "Soumission en cours...",
+  "navigation": {
+    "home": "Accueil",
+    "findRestrooms": "Trouver des Toilettes",
+    "articles": "Articles",
+    "submitListing": "Ajouter une Liste",
+    "about": "À Propos",
+    "login": "Se Connecter",
+    "signup": "S'inscrire",
+    "mostReviewed": "Les plus commentées",
+    "topRated": "Les mieux notées",
+    "recentlyAdded": "Ajouts récents"
+  },
+  "footer": {
+    "tagline": "Déstigmatiser les conversations sur les toilettes, un avis à la fois. Trouvez des toilettes propres et accessibles où que vous alliez.",
+    "links": "Liens Rapides",
+    "resources": "Ressources",
+    "about": "À Propos de Nous",
+    "contact": "Contactez-nous",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "copyright": "© {{year}} Toilette Guilt. Tous droits réservés.",
+    "hygieneArticles": "Articles sur l'hygiène",
+    "accessibilityGuide": "Guide d'accessibilité",
+    "bathroomEtiquette": "Étiquette aux toilettes",
+    "travelTips": "Conseils de voyage",
+    "ourMission": "Notre mission",
+    "mobileCtaAriaLabel": "Visitez Injoy Bio"
+  },
+  "buttons": {
+    "submit": "Soumettre",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "search": "Rechercher",
+    "readMore": "Lire Plus",
+    "viewAll": "Voir Tout",
+    "leaveReview": "Laisser un Avis",
+    "loadMore": "Charger plus"
+  },
+  "form": {
+    "required": "Obligatoire",
+    "invalidEmail": "Adresse e-mail invalide",
+    "passwordLength": "Le mot de passe doit contenir au moins 8 caractères"
+  },
+  "social": {
+    "facebook": "Visitez notre page Facebook",
+    "twitter": "Visitez notre profil Twitter",
+    "instagram": "Visitez notre profil Instagram",
+    "pinterest": "Visitez notre profil Pinterest",
+    "linkedin": "Visitez notre page LinkedIn"
+  },
+  "validation": {
+    "ratingAndCommentRequired": "Veuillez sélectionner une note et entrer un commentaire.",
+    "reviewSubmitted": "Avis soumis avec succès !",
+    "reviewError": "Échec de la soumission de l'avis. Veuillez réessayer."
+  },
+  "notFound": {
+    "title": "Page Non Trouvée",
+    "message": "Oups ! La page que vous recherchez n'existe pas ou a été déplacée.",
+    "goHome": "Retour à l'accueil"
+  },
+  "header": {
+    "toggleMenuAriaLabel": "Basculer le menu de navigation"
+  },
+  "toast": {
+    "successTitle": "Soumission réussie !",
+    "successDescription": "Merci de contribuer à notre répertoire de toilettes !",
+    "errorTitle": "Échec de la soumission",
+    "errorDescription": "Une erreur s'est produite : {{error}}. Veuillez réessayer."
+  },
+  "siteName": "Toilette Guilt",
+  "tagline": "Trouvez des toilettes publiques propres et accessibles près de chez vous",
+  "nav": {
+    "home": "Accueil",
+    "restrooms": "Toilettes",
+    "articles": "Articles",
+    "about": "À Propos",
+    "contact": "Contact",
+    "submit": "Ajouter des Toilettes",
+    "signIn": "Se Connecter",
+    "signOut": "Se Déconnecter",
+    "dashboard": "Tableau de Bord",
+    "language": "Langue"
+  },
+  "search": {
+    "placeholder": "Rechercher des toilettes...",
+    "button": "Rechercher",
+    "locationError": "Impossible d'obtenir la localisation.",
+    "geolocationDenied": "Permission de géolocalisation refusée.",
+    "geolocationUnavailable": "La géolocalisation n'est pas disponible sur ce navigateur.",
+    "geolocationTimeout": "La demande de géolocalisation a expiré.",
+    "geolocationUnknown": "Une erreur de géolocalisation inconnue s'est produite."
+  },
+  "pagination": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {page}",
+    "goToPage": "Aller à la page {page}",
+    "of": "sur {totalPages}"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Page non trouvée",
+      "message": "Désolé, la page que vous recherchez n'existe pas.",
+      "backHome": "Retour à l'Accueil"
+    },
+    "generic": "Une erreur inattendue s'est produite.",
+    "loading": "Chargement..."
+  },
+  "accessibility": {
+    "skipToContent": "Passer au contenu principal"
+  },
+  "user": {
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "contributions": "Mes Contributions"
+  },
+  "general": {
+    "yes": "Oui",
+    "no": "Non",
+    "unknown": "Inconnu",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "close": "Fermer",
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "confirm": "Confirmer",
+    "optional": "(optionnel)"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "zh-CN": "简体中文",
+    "ar": "العربية"
+  }
+} 

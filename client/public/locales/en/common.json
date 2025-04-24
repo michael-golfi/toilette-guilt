@@ -1,0 +1,144 @@
+{
+  "brandName": "Toilette Guilt",
+  "unknownDate": "Unknown date",
+  "submitting": "Submitting...",
+  "navigation": {
+    "home": "Home",
+    "findRestrooms": "Find Restrooms",
+    "articles": "Articles",
+    "submitListing": "Add Listing",
+    "about": "About Us",
+    "login": "Log In",
+    "signup": "Sign Up",
+    "mostReviewed": "Most Reviewed",
+    "topRated": "Top Rated",
+    "recentlyAdded": "Recently Added"
+  },
+  "footer": {
+    "tagline": "Destigmatizing bathroom conversations one review at a time. Find clean, accessible restrooms wherever you go.",
+    "links": "Quick Links",
+    "resources": "Resources",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "© {{year}} Toilette Guilt. All rights reserved.",
+    "hygieneArticles": "Hygiene Articles",
+    "accessibilityGuide": "Accessibility Guide",
+    "bathroomEtiquette": "Bathroom Etiquette",
+    "travelTips": "Travel Tips",
+    "ourMission": "Our Mission",
+    "mobileCtaAriaLabel": "Visit Injoy Bio"
+  },
+  "buttons": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "leaveReview": "Leave a Review",
+    "loadMore": "Load More"
+  },
+  "form": {
+    "required": "Required",
+    "invalidEmail": "Invalid email address",
+    "passwordLength": "Password must be at least 8 characters"
+  },
+  "social": {
+    "facebook": "Visit our Facebook page",
+    "twitter": "Visit our Twitter profile",
+    "instagram": "Visit our Instagram profile",
+    "pinterest": "Visit our Pinterest profile",
+    "linkedin": "Visit our LinkedIn page"
+  },
+  "validation": {
+    "ratingAndCommentRequired": "Please select a rating and enter a comment.",
+    "reviewSubmitted": "Review submitted successfully!",
+    "reviewError": "Failed to submit review. Please try again."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "Oops! The page you are looking for does not exist or has been moved.",
+    "goHome": "Back to Home"
+  },
+  "header": {
+    "toggleMenuAriaLabel": "Toggle navigation menu"
+  },
+  "toast": {
+    "successTitle": "Submission Successful!",
+    "successDescription": "Thanks for contributing to our restroom directory!",
+    "errorTitle": "Submission Failed",
+    "errorDescription": "An error occurred: {{error}}. Please try again."
+  },
+  "siteName": "Toilette Guilt",
+  "tagline": "Find clean, accessible public restrooms near you",
+  "nav": {
+    "home": "Home",
+    "restrooms": "Restrooms",
+    "articles": "Articles",
+    "about": "About",
+    "contact": "Contact",
+    "submit": "Add Restroom",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "dashboard": "Dashboard",
+    "language": "Language"
+  },
+  "search": {
+    "placeholder": "Search for restrooms...",
+    "button": "Search",
+    "locationError": "Could not get location.",
+    "geolocationDenied": "Geolocation permission denied.",
+    "geolocationUnavailable": "Geolocation is not available on this browser.",
+    "geolocationTimeout": "Geolocation request timed out.",
+    "geolocationUnknown": "An unknown geolocation error occurred."
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {page}",
+    "goToPage": "Go to page {page}",
+    "of": "of {totalPages}"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Page not found",
+      "message": "Sorry, the page you are looking for does not exist.",
+      "backHome": "Back to Home"
+    },
+    "generic": "An unexpected error occurred.",
+    "loading": "Loading..."
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content"
+  },
+  "user": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "contributions": "My Contributions"
+  },
+  "general": {
+    "yes": "Yes",
+    "no": "No",
+    "unknown": "Unknown",
+    "loading": "Loading...",
+    "error": "Error",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "optional": "(optional)"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "zh-CN": "简体中文",
+    "ar": "العربية"
+  }
+} 
