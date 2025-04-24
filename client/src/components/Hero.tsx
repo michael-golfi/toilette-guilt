@@ -29,7 +29,6 @@ const Hero: React.FC = () => {
               Destigmatizing bathroom conversations one review at a time. Join our community dedicated to finding clean, accessible facilities everywhere.
             </p>
             
-            {/* Search Form */}
             <form 
               className="bg-white rounded-lg shadow-lg p-4 flex flex-col md:flex-row items-center" 
               onSubmit={handleSubmit}

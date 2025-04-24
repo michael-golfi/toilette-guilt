@@ -1,10 +1,8 @@
-import React from 'react';
-import Hero from '@/components/Hero';
 import FeaturedArticles from '@/components/FeaturedArticles';
-import InjoyPromotion from '@/components/InjoyPromotion';
-import UserTestimonials from '@/components/UserTestimonials';
-import SubmitListing from '@/components/SubmitListing';
+import Hero from '@/components/Hero';
 import RestroomDirectory from '@/components/RestroomDirectory';
+import SubmitListing from '@/components/SubmitListing';
+import React from 'react';
 
 const Home: React.FC = () => {
   return (
@@ -12,8 +10,6 @@ const Home: React.FC = () => {
       <Hero />
       <RestroomDirectory />
       <FeaturedArticles />
-      <InjoyPromotion />
-      <UserTestimonials />
       <SubmitListing />
     </>
   );

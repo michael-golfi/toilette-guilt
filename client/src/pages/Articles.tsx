@@ -180,37 +180,7 @@ const Articles: React.FC = () => {
             </CardContent>
           </Card>
         )}
-        
-        {/* Call to Action for Injoy */}
-        <div className="mt-16 bg-gradient-to-r from-blue-800 to-primary text-white rounded-lg p-8">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-2/3 mb-6 md:mb-0 md:pr-8">
-              <h3 className="text-2xl font-bold mb-3">Enhance Your Personal Hygiene Routine</h3>
-              <p className="mb-4 opacity-90">
-                Discover premium products from Injoy Bio that complement the hygiene practices discussed in our articles.
-              </p>
-              <Button 
-                asChild
-                className="bg-white text-primary hover:bg-gray-100"
-              >
-                <a 
-                  href="https://injoy.bio" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  Visit Injoy Bio
-                </a>
-              </Button>
-            </div>
-            <div className="md:w-1/3">
-              <img 
-                src="https://images.unsplash.com/photo-1615900119312-2acd3a71f3aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80" 
-                alt="Premium bathroom hygiene products" 
-                className="rounded-lg shadow-lg"
-              />
-            </div>
-          </div>
-        </div>
+
       </div>
     </div>
   );

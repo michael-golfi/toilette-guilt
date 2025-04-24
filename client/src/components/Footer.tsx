@@ -85,9 +85,9 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <a href="https://injoy.bio" className="text-gray-400 hover:text-white transition" target="_blank" rel="noopener noreferrer">
+                {/* <a href="https://injoy.bio" className="text-gray-400 hover:text-white transition" target="_blank" rel="noopener noreferrer">
                   Injoy Bio Products
-                </a>
+                </a> */}
               </li>
             </ul>
           </div>
@@ -127,12 +127,12 @@ const Footer: React.FC = () => {
         <div className="border-t border-gray-800 pt-6 mt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm mb-4 md:mb-0">&copy; {new Date().getFullYear()} Toilette Guilt. All rights reserved.</p>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <span className="text-gray-500 text-sm mr-2">In partnership with:</span>
               <a href="https://injoy.bio" className="text-primary hover:text-blue-400 font-medium" target="_blank" rel="noopener noreferrer">
                 Injoy Bio
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

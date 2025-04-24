@@ -49,14 +49,6 @@ const Header: React.FC = () => {
           </nav>
           
           <div className="flex items-center space-x-4">
-            <a 
-              href="https://injoy.bio" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="hidden md:block bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition"
-            >
-              Visit Injoy
-            </a>
             <Button 
               variant="ghost" 
               size="icon" 
@@ -105,15 +97,6 @@ const Header: React.FC = () => {
                   About
                 </a>
               </Link>
-              <a 
-                href="https://injoy.bio" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition text-center mt-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Visit Injoy
-              </a>
             </nav>
           </div>
         )}

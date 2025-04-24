@@ -68,43 +68,7 @@ const About: React.FC = () => {
             </div>
           </div>
         </section>
-        
-        {/* Our Partnership Section */}
-        <section className="mb-16">
-          <Card className="bg-gradient-to-r from-blue-800 to-primary text-white overflow-hidden">
-            <div className="flex flex-col md:flex-row">
-              <div className="md:w-1/2 p-8">
-                <h2 className="text-3xl font-bold mb-4">Our Partnership with Injoy Bio</h2>
-                <p className="mb-4 opacity-90">
-                  We've partnered with Injoy Bio to bring you premium hygiene products that complement our mission of promoting wellness and comfort.
-                </p>
-                <p className="mb-6 opacity-90">
-                  Injoy Bio shares our commitment to breaking taboos around personal hygiene and offers innovative products that enhance comfort and well-being.
-                </p>
-                <Button 
-                  asChild
-                  className="bg-white text-primary hover:bg-gray-100"
-                >
-                  <a 
-                    href="https://injoy.bio" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                  >
-                    Discover Injoy Bio
-                  </a>
-                </Button>
-              </div>
-              <div className="md:w-1/2">
-                <img 
-                  src={imageUrls.hygieneProducts[1]}
-                  alt="Injoy Bio products" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </Card>
-        </section>
-        
+                
         {/* Contact Section */}
         <section id="contact" className="mb-16">
           <h2 className="text-3xl font-bold mb-6 text-center">Get In Touch</h2>
