@@ -155,7 +155,7 @@ const Articles: React.FC = () => {
                   onClick={() => navigateToArticle(article.id)}
                 >
                   <img
-                    src={article.imageUrl || 'https://via.placeholder.com/400x200.png'}
+                    src={article.image_url || 'https://via.placeholder.com/400x200.png'}
                     alt={t('listing.imageAlt', { title: article.title, defaultValue: `Image for ${article.title}` })}
                     className="w-full h-48 object-cover bg-gray-200"
                   />

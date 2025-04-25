@@ -84,7 +84,7 @@ const Hero: React.FC = () => {
               className="bg-white rounded-lg shadow-lg p-4 md:p-5" 
               onSubmit={handleSubmit}
             >
-              <div className="flex flex-col md:flex-row gap-3">
+              <div className="flex flex-col-reverse md:flex-row gap-3">
                 <Button
                   type="button"
                   variant="default"
