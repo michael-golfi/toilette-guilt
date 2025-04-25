@@ -39,11 +39,11 @@ const Header: React.FC = () => {
                 {t('navigation.articles')}
               </a>
             </Link>
-            <Link href="/submit-listing">
+            {/* <Link href="/submit-listing">
               <a className={`text-gray-600 hover:text-primary font-medium ${location === '/submit-listing' ? 'text-primary' : ''}`}>
                 {t('navigation.submitListing')}
               </a>
-            </Link>
+            </Link> */}
             <Link href="/about">
               <a className={`text-gray-600 hover:text-primary font-medium ${location === '/about' ? 'text-primary' : ''}`}>
                 {t('navigation.about')}
@@ -51,7 +51,7 @@ const Header: React.FC = () => {
             </Link>
           </nav>
           
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center md:space-x-4">
             <LanguageSwitcher />
             <Button 
               variant="ghost" 
@@ -85,14 +85,14 @@ const Header: React.FC = () => {
                   {t('navigation.articles')}
                 </a>
               </Link>
-              <Link href="/submit-listing">
+              {/* <Link href="/submit-listing">
                 <a 
                   className={`text-gray-600 hover:text-primary font-medium px-2 py-1 ${location === '/submit-listing' ? 'text-primary' : ''}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {t('navigation.submitListing')}
                 </a>
-              </Link>
+              </Link> */}
               <Link href="/about">
                 <a 
                   className={`text-gray-600 hover:text-primary font-medium px-2 py-1 ${location === '/about' ? 'text-primary' : ''}`}
@@ -101,9 +101,6 @@ const Header: React.FC = () => {
                   {t('navigation.about')}
                 </a>
               </Link>
-              <div className="px-2 py-1">
-                <LanguageSwitcher />
-              </div>
             </nav>
           </div>
         )}

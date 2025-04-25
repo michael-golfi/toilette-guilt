@@ -19,20 +19,6 @@ const Footer: React.FC = () => {
             <p className="text-gray-400 mb-4">
               {t('footer.tagline', { defaultValue: 'Destigmatizing bathroom conversations one review at a time. Find clean, accessible restrooms wherever you go.'})}
             </p>
-            <div className="flex space-x-4">
-              <a href="#" aria-label={t('social.facebook', {defaultValue: 'Visit our Facebook page'})} className="text-gray-400 hover:text-white transition">
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a href="#" aria-label={t('social.twitter', {defaultValue: 'Visit our Twitter profile'})} className="text-gray-400 hover:text-white transition">
-                <i className="fab fa-twitter"></i>
-              </a>
-              <a href="#" aria-label={t('social.instagram', {defaultValue: 'Visit our Instagram profile'})} className="text-gray-400 hover:text-white transition">
-                <i className="fab fa-instagram"></i>
-              </a>
-              <a href="#" aria-label={t('social.pinterest', {defaultValue: 'Visit our Pinterest profile'})} className="text-gray-400 hover:text-white transition">
-                <i className="fab fa-pinterest-p"></i>
-              </a>
-            </div>
           </div>
           
           <div>
@@ -43,11 +29,11 @@ const Footer: React.FC = () => {
                   <a className="text-gray-400 hover:text-white transition">{t('navigation.findRestrooms')}</a>
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/submit-listing">
                   <a className="text-gray-400 hover:text-white transition">{t('navigation.submitListing')}</a>
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/find-restrooms?sort=most-reviewed">
                   <a className="text-gray-400 hover:text-white transition">{t('navigation.mostReviewed', {defaultValue: 'Most Reviewed'})}</a>

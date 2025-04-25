@@ -14,9 +14,15 @@ import { PublicBathroomWithRating } from '@shared/schema';
 
 interface RestroomDirectoryProps {
   initialLocation?: string;
+  initialLatitude?: number;
+  initialLongitude?: number;
 }
 
-const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }) => {
+const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ 
+  initialLocation,
+  initialLatitude,
+  initialLongitude
+}) => {
   const { t } = useTranslation(['restrooms', 'common']);
   const [sortOption, setSortOption] = useState<string>("nearest");
   const [filteredRestrooms, setFilteredRestrooms] = useState<PublicBathroomWithRating[]>([]);
@@ -147,14 +153,24 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
 
   // Get user's location if available
   useEffect(() => {
-    if (initialLocation) {
+    // Check if we have initial coordinates from URL params
+    if (initialLatitude && initialLongitude) {
+      setCoordinates({
+        latitude: initialLatitude,
+        longitude: initialLongitude
+      });
+    } 
+    // Otherwise check if we have a location name to geocode
+    else if (initialLocation) {
       // This would typically geocode the initialLocation to get coordinates
       // For demo purposes, using mock coordinates
       setCoordinates({
         latitude: 40.7128,
         longitude: -74.0060
       });
-    } else if (navigator.geolocation) {
+    } 
+    // If no location info provided, try to get user's current location
+    else if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setCoordinates({
@@ -167,10 +183,10 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ initialLocation }
         }
       );
     }
-  }, [initialLocation]);
+  }, [initialLocation, initialLatitude, initialLongitude]);
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Filters and Map Section */}

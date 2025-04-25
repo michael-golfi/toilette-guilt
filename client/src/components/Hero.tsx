@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { imageUrls } from '@/lib/imageUrls';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { Loader2, MapPin } from 'lucide-react';
 
 const Hero: React.FC = () => {
   const [, setLocation] = useLocation();
   const [searchLocation, setSearchLocation] = useState('');
+  const [isLocating, setIsLocating] = useState(false);
   const { t } = useTranslation('home');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -15,6 +18,52 @@ const Hero: React.FC = () => {
     } else {
       setLocation('/find-restrooms');
     }
+  };
+
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      // Geolocation is not supported by the browser
+      alert(t('hero.geolocationNotSupported', { defaultValue: 'Geolocation is not supported by your browser' }));
+      return;
+    }
+
+    setIsLocating(true);
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        // Success - we have the coordinates
+        const { latitude, longitude } = position.coords;
+        setIsLocating(false);
+        setLocation(`/find-restrooms?latitude=${latitude}&longitude=${longitude}`);
+      },
+      (error) => {
+        // Error getting location
+        setIsLocating(false);
+        console.error('Error getting location:', error);
+        
+        let errorMessage = '';
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = t('hero.geolocationDenied', { defaultValue: 'Location permission denied' });
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = t('hero.geolocationUnavailable', { defaultValue: 'Location information is unavailable' });
+            break;
+          case error.TIMEOUT:
+            errorMessage = t('hero.geolocationTimeout', { defaultValue: 'Location request timed out' });
+            break;
+          default:
+            errorMessage = t('hero.geolocationError', { defaultValue: 'An unknown error occurred' });
+        }
+        
+        alert(errorMessage);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    );
   };
 
   return (
@@ -32,27 +81,45 @@ const Hero: React.FC = () => {
             </p>
             
             <form 
-              className="bg-white rounded-lg shadow-lg p-4 flex flex-col md:flex-row items-center" 
+              className="bg-white rounded-lg shadow-lg p-4 md:p-5" 
               onSubmit={handleSubmit}
             >
-              <div className="flex-1 mb-3 md:mb-0 w-full">
-                <div className="relative">
-                  <input 
-                    type="text" 
-                    placeholder={t('hero.locationPlaceholder')} 
-                    className="w-full py-3 px-4 pr-10 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary bg-gray-50 text-gray-800" 
-                    value={searchLocation}
-                    onChange={(e) => setSearchLocation(e.target.value)}
-                  />
-                  <i className="fas fa-map-marker-alt absolute right-3 top-3.5 text-gray-400"></i>
+              <div className="flex flex-col md:flex-row gap-3">
+                <Button
+                  type="button"
+                  variant="default"
+                  size="icon"
+                  className="bg-primary hover:bg-primary/90 text-white rounded-md h-12 min-w-[46px] flex-shrink-0"
+                  onClick={handleUseCurrentLocation}
+                  disabled={isLocating}
+                  title={t('hero.useMyLocation', { defaultValue: 'Use my location' })}
+                >
+                  {isLocating ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <MapPin className="h-5 w-5" />
+                  )}
+                </Button>
+                
+                <div className="flex-1 relative">
+                  <div className="flex h-12 w-full">
+                    <input 
+                      type="text" 
+                      placeholder={t('hero.locationPlaceholder')} 
+                      className="w-full h-full px-4 rounded-l-md border-0 shadow-none focus:ring-0 bg-gray-50 text-gray-800 text-sm md:text-base" 
+                      value={searchLocation}
+                      onChange={(e) => setSearchLocation(e.target.value)}
+                    />
+                    
+                    <button 
+                      type="submit" 
+                      className="bg-secondary text-white px-3 md:px-6 py-3 rounded-r-md rounded-l-none font-medium hover:bg-green-600 transition h-full whitespace-nowrap flex-shrink-0"
+                    >
+                      {t('hero.cta')}
+                    </button>
+                  </div>
                 </div>
               </div>
-              <button 
-                type="submit" 
-                className="bg-secondary text-white px-6 py-3 rounded-md font-medium hover:bg-green-600 transition w-full md:w-auto md:ml-3"
-              >
-                {t('hero.cta')}
-              </button>
             </form>
             
             <div className="mt-6 flex flex-wrap gap-3">

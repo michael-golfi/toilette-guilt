@@ -30,11 +30,12 @@ const LanguageSwitcher: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="flex items-center gap-1 px-2">
+        <Button variant="ghost" size="sm" className="flex items-center gap-1 md:gap-4 px-2">
           <Globe className="h-4 w-4" />
-          <span>{currentLanguageLabel}</span>
+          <span className="hidden md:block">{currentLanguageLabel}</span>
         </Button>
       </DropdownMenuTrigger>
+     
       <DropdownMenuContent align="end">
         {languages.map((language) => (
           <DropdownMenuItem

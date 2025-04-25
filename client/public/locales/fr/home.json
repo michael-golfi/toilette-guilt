@@ -69,6 +69,11 @@
     "subtitle": "Lisez nos dernières actualités, guides et conseils sur l'hygiène publique et les voyages.",
     "viewAll": "Voir Tous les Articles"
   },
+  "bathroomResources": {
+    "title": "Ressources et Guides sur les Toilettes",
+    "subtitle": "Conseils d'experts sur la recherche et l'utilisation des toilettes publiques, l'hygiène des salles de bain et la résolution des problèmes courants.",
+    "readMore": "Lire Plus →"
+  },
   "cta": {
     "title": "Prêt à Trouver Vos Prochaines Toilettes ?",
     "subtitle": "Commencez à chercher maintenant ou téléchargez notre application pour un accès facile en déplacement.",

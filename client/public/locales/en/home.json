@@ -4,8 +4,8 @@
     "subtitle": "Access a community-driven database of public restrooms, reviewed for cleanliness and accessibility.",
     "cta": "Find Restrooms Now",
     "locationPlaceholder": "Enter city, address, or landmark",
-    "badgeReviews": "10,000+ Reviews",
-    "badgeRestrooms": "25,000+ Restrooms",
+    "badgeReviews": "100,000+ Reviews",
+    "badgeRestrooms": "1,000,000+ Restrooms",
     "badgeCommunity": "Community Driven",
     "imageAlt": "Clean, modern public restroom interior with accessibility features"
   },
@@ -68,6 +68,11 @@
     "title": "Featured Articles",
     "subtitle": "Read our latest news, guides, and tips on public hygiene and travel.",
     "viewAll": "View All Articles"
+  },
+  "bathroomResources": {
+    "title": "Bathroom Resources & Guides",
+    "subtitle": "Expert advice on finding and using public restrooms, bathroom hygiene, and solving common toilet problems.",
+    "readMore": "Read More →"
   },
   "cta": {
     "title": "Ready to Find Your Next Restroom?",

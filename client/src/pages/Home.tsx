@@ -1,6 +1,5 @@
-import FeaturedArticles from '@/components/FeaturedArticles';
+import ArticleShowcase from '@/components/ArticleShowcase';
 import Hero from '@/components/Hero';
-import UserTestimonials from '@/components/UserTestimonials';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'wouter';
@@ -13,44 +12,46 @@ const Home: React.FC = () => {
     setLocation('/find-restrooms');
   };
 
+  // Articles data with targeted keywords for SEO
+  const featuredArticles = [
+    {
+      id: 1,
+      title: 'Finding Public Bathrooms Near Me - Complete Guide',
+      description: 'Discover how to locate clean public bathrooms and restrooms wherever you go.',
+      keywords: ['Public bathroom', 'Restroom public', 'Toilets near me', 'Washroom'],
+      image: '/images/articles/public-bathrooms.jpg',
+      slug: '/articles/finding-public-bathrooms'
+    },
+    {
+      id: 2,
+      title: 'How to Deal with a Clogged Toilet When You\'re Out',
+      description: 'Learn what to do when facing toilet problems in public restrooms.',
+      keywords: ['Clogged toilet', 'Toilet not flushing', 'Toilet plunger', 'Blocked toilet'],
+      image: '/images/articles/toilet-problems.jpg',
+      slug: '/articles/clogged-toilet-solutions'
+    },
+    {
+      id: 3,
+      title: 'Bathroom Hygiene Essentials: What You Should Know',
+      description: 'Essential tips for maintaining proper bathroom hygiene and cleanliness.',
+      keywords: ['Bathroom hygiene', 'Bathroom cleanliness', 'Toilet brush', 'Bathroom ventilation'],
+      image: '/images/articles/bathroom-hygiene.jpg',
+      slug: '/articles/bathroom-hygiene-essentials'
+    },
+    {
+      id: 4,
+      title: 'Portable Toilet Options for Outdoor Events',
+      description: 'Comprehensive guide to portable toilet solutions for various needs.',
+      keywords: ['Portable toilet', 'Porta potties', 'Portable restrooms', 'Chemical toilet'],
+      image: '/images/articles/portable-toilets.jpg',
+      slug: '/articles/portable-toilet-guide'
+    }
+  ];
+
   return (
     <>
       <Hero />
-
-      {/* Top Restrooms CTA Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
-            <div className="text-center p-6 border border-gray-100 rounded-lg shadow-sm bg-gray-50">
-              <div className="w-16 h-16 bg-blue-100 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fas fa-map-marker-alt text-2xl"></i>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{t('features.location.title', { defaultValue: 'Location-Based Search' })}</h3>
-              <p className="text-gray-600">{t('features.location.description', { defaultValue: 'Find the nearest restrooms based on your current location or any address you enter.' })}</p>
-            </div>
-
-            <div className="text-center p-6 border border-gray-100 rounded-lg shadow-sm bg-gray-50">
-              <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fas fa-star text-2xl"></i>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{t('features.ratings.title', { defaultValue: 'User Ratings & Reviews' })}</h3>
-              <p className="text-gray-600">{t('features.ratings.description', { defaultValue: 'See what others think about restroom cleanliness, accessibility, and overall quality.' })}</p>
-            </div>
-
-            <div className="text-center p-6 border border-gray-100 rounded-lg shadow-sm bg-gray-50">
-              <div className="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fas fa-filter text-2xl"></i>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{t('features.filters.title', { defaultValue: 'Advanced Filters' })}</h3>
-              <p className="text-gray-600">{t('features.filters.description', { defaultValue: 'Filter by accessibility features, cleanliness ratings, and more to find exactly what you need.' })}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <UserTestimonials />
-      <FeaturedArticles />
+      <ArticleShowcase articles={featuredArticles} />
     </>
   );
 };
