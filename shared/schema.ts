@@ -1,161 +1,101 @@
-import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { relations } from "drizzle-orm";
 
-// Users schema
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-  email: text("email").notNull().unique(),
-  createdAt: timestamp("created_at").defaultNow(),
+// Shared schemas for validation
+export const searchParamsSchema = z.object({
+  query: z.string().min(1, "Search query is required"),
+  wheelchairAccessible: z.boolean().optional(),
+  minRating: z.number().min(0).max(5).optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-  email: true,
-});
-
-// Restrooms schema
-export const restrooms = pgTable("restrooms", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  address: text("address").notNull(),
-  city: text("city").notNull(),
-  state: text("state").notNull(),
-  zipCode: text("zip_code").notNull(),
-  latitude: text("latitude").notNull(),
-  longitude: text("longitude").notNull(),
-  description: text("description").notNull(),
-  hours: text("hours").notNull(),
-  accessibilityFeatures: boolean("accessibility_features").default(false),
-  babyChanging: boolean("baby_changing").default(false),
-  genderNeutral: boolean("gender_neutral").default(false),
-  freeToUse: boolean("free_to_use").default(false),
-  changingRoom: boolean("changing_room").default(false),
-  singleOccupancy: boolean("single_occupancy").default(false),
-  customerOnly: boolean("customer_only").default(false),
-  codeRequired: boolean("code_required").default(false),
-  attendantPresent: boolean("attendant_present").default(false),
-  familyFriendly: boolean("family_friendly").default(false),
-  soapAvailable: boolean("soap_available").default(false),
-  wellStocked: boolean("well_stocked").default(false),
-  premiumProducts: boolean("premium_products").default(false),
-  imageUrl: text("image_url"),
-  createdAt: timestamp("created_at").defaultNow(),
-  createdBy: integer("created_by").references(() => users.id),
-});
-
-export const insertRestroomSchema = createInsertSchema(restrooms).omit({
-  id: true,
-  createdAt: true,
-});
-
-// Reviews schema
-export const reviews = pgTable("reviews", {
-  id: serial("id").primaryKey(),
-  restroomId: integer("restroom_id")
-    .notNull()
-    .references(() => restrooms.id),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id),
-  rating: integer("rating").notNull(),
-  comment: text("comment"),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
-export const insertReviewSchema = createInsertSchema(reviews).omit({
-  id: true,
-  createdAt: true,
-});
-
-// Articles schema
-export const articles = pgTable("articles", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  content: text("content").notNull(),
-  excerpt: text("excerpt").notNull(),
-  imageUrl: text("image_url"),
-  category: text("category").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  authorId: integer("author_id").references(() => users.id),
-});
-
-export const insertArticleSchema = createInsertSchema(articles).omit({
-  id: true,
-  createdAt: true,
-});
-
-// Testimonials schema
-export const testimonials = pgTable("testimonials", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  location: text("location").notNull(),
-  rating: integer("rating").notNull(),
-  comment: text("comment").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
-export const insertTestimonialSchema = createInsertSchema(testimonials).omit({
-  id: true,
-  createdAt: true,
-});
-
-// Relations definitions
-export const usersRelations = relations(users, ({ many }) => ({
-  reviews: many(reviews),
-  restrooms: many(restrooms),
-  articles: many(articles)
-}));
-
-export const restroomsRelations = relations(restrooms, ({ one, many }) => ({
-  creator: one(users, {
-    fields: [restrooms.createdBy],
-    references: [users.id]
+export const nearbyParamsSchema = z.object({
+  latitude: z.number({
+    required_error: "Latitude is required",
+    invalid_type_error: "Latitude must be a number"
   }),
-  reviews: many(reviews)
-}));
-
-export const reviewsRelations = relations(reviews, ({ one }) => ({
-  restroom: one(restrooms, {
-    fields: [reviews.restroomId],
-    references: [restrooms.id]
+  longitude: z.number({
+    required_error: "Longitude is required",
+    invalid_type_error: "Longitude must be a number"
   }),
-  user: one(users, {
-    fields: [reviews.userId],
-    references: [users.id]
-  })
-}));
+  limit: z.number().min(1).max(50).optional(),
+});
 
-export const articlesRelations = relations(articles, ({ one }) => ({
-  author: one(users, {
-    fields: [articles.authorId],
-    references: [users.id]
-  })
-}));
+export const restroomIdSchema = z.object({
+  id: z.string().min(1, "Restroom ID is required")
+});
 
-// Export types
-export type User = typeof users.$inferSelect;
-export type InsertUser = z.infer<typeof insertUserSchema>;
+export const articleIdSchema = z.object({
+  id: z.number().int().positive("Article ID must be a positive integer")
+});
 
-export type Restroom = typeof restrooms.$inferSelect;
-export type InsertRestroom = z.infer<typeof insertRestroomSchema>;
+export const categoryParamSchema = z.object({
+  category: z.string().min(1, "Category is required")
+});
 
-export type Review = typeof reviews.$inferSelect;
-export type InsertReview = z.infer<typeof insertReviewSchema>;
+// Result schemas for type safety on responses
+export const publicBathroomSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  link: z.string().optional(),
+  status: z.string().optional(),
+  address: z.string().optional(),
+  data_id: z.string().optional(),
+  category: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  timezone: z.string().optional(),
+  web_site: z.string().optional(),
+  plus_code: z.string().optional(),
+  thumbnail: z.string().optional(),
+  description: z.string().optional(),
+  price_range: z.string().optional(),
+  review_count: z.number(),
+  review_rating: z.number(),
+  distance: z.number().optional(),
+  created_at: z.date(),
+  updated_at: z.date(),
+});
 
-export type Article = typeof articles.$inferSelect;
-export type InsertArticle = z.infer<typeof insertArticleSchema>;
+export const articleSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  content: z.string(),
+  excerpt: z.string(),
+  image_url: z.string().optional(),
+  category: z.string(),
+  created_at: z.date(),
+  author_id: z.number().optional(),
+});
 
-export type Testimonial = typeof testimonials.$inferSelect;
-export type InsertTestimonial = z.infer<typeof insertTestimonialSchema>;
+export const reviewSchema = z.object({
+  id: z.string(),
+  public_bathroom_id: z.string(),
+  reviewer_name: z.string().optional(),
+  review_date: z.string().optional(),
+  rating: z.number().optional(),
+  description: z.string().optional(),
+  profile_picture: z.string().optional(),
+  created_at: z.date(),
+  updated_at: z.date(),
+});
 
-// Extended type for restroom with average rating
-export type RestroomWithRating = Restroom & {
-  averageRating: number;
-  reviewCount: number;
-  distance?: number;
-};
+export const testimonialSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  location: z.string(),
+  rating: z.number(),
+  comment: z.string(),
+  created_at: z.date(),
+});
+
+// Input types
+export type SearchParams = z.infer<typeof searchParamsSchema>;
+export type NearbyParams = z.infer<typeof nearbyParamsSchema>;
+
+// Output types
+export type PublicBathroom = z.infer<typeof publicBathroomSchema>;
+export type PublicBathroomWithRating = PublicBathroom & { distance?: number };
+export type Article = z.infer<typeof articleSchema>;
+export type PublicBathroomReview = z.infer<typeof reviewSchema>;
+export type Testimonial = z.infer<typeof testimonialSchema>; 

@@ -1,8 +1,13 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
+import {
+  searchParamsSchema,
+  nearbyParamsSchema,
+  restroomIdSchema,
+  articleIdSchema,
+  categoryParamSchema,
+} from "../shared/schema";
 import { storage } from "./storage";
-import { z } from "zod";
-import { insertRestroomSchema, insertReviewSchema, insertArticleSchema, insertUserSchema, insertTestimonialSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API prefix
@@ -13,31 +18,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: "ok" });
   });
   
-  // User endpoints
-  app.post(`${apiPrefix}/users`, async (req: Request, res: Response) => {
-    try {
-      const userData = insertUserSchema.parse(req.body);
-      const existingUser = await storage.getUserByUsername(userData.username);
-      
-      if (existingUser) {
-        return res.status(409).json({ message: "Username already exists" });
-      }
-      
-      const user = await storage.createUser(userData);
-      res.status(201).json(user);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Invalid input", errors: error.errors });
-      } else {
-        res.status(500).json({ message: "Server error" });
-      }
-    }
-  });
-  
   // Restroom endpoints
   app.get(`${apiPrefix}/restrooms`, async (req: Request, res: Response) => {
     try {
-      const restrooms = await storage.getRestrooms();
+      const restrooms = await storage.getPublicBathrooms();
+      res.json(restrooms);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get(`${apiPrefix}/restrooms/nearby`, async (req: Request, res: Response) => {
+    try {
+      // Parsing and validating query parameters
+      const result = nearbyParamsSchema.safeParse({
+        latitude: req.query.latitude ? parseFloat(req.query.latitude as string) : undefined,
+        longitude: req.query.longitude ? parseFloat(req.query.longitude as string) : undefined,
+        limit: req.query.limit ? parseInt(req.query.limit as string) : undefined
+      });
+      
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: "Invalid parameters", 
+          errors: result.error.format() 
+        });
+      }
+      
+      const { latitude, longitude, limit = 20 } = result.data;
+      const limitValue = Math.min(limit, 20); // Cap at 20
+      
+      const restrooms = await storage.getNearbyPublicBathrooms(latitude, longitude, limitValue);
+      res.json(restrooms);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get(`${apiPrefix}/restrooms/search`, async (req: Request, res: Response) => {
+    try {
+      const { query, wheelchairAccessible, minRating, latitude, longitude } = req.query;
+      
+      // Require search query
+      if (!query || typeof query !== 'string') {
+        return res.status(400).json({ message: "Search query is required" });
+      }
+      
+      // Validate search parameters
+      const searchParams = {
+        query: query as string,
+        wheelchairAccessible: wheelchairAccessible === 'true',
+        minRating: minRating ? parseFloat(minRating as string) : undefined,
+        latitude: latitude ? parseFloat(latitude as string) : undefined,
+        longitude: longitude ? parseFloat(longitude as string) : undefined
+      };
+      
+      const result = searchParamsSchema.safeParse(searchParams);
+      
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: "Invalid search parameters", 
+          errors: result.error.format() 
+        });
+      }
+      
+      const { wheelchairAccessible: isAccessible, minRating: rating, latitude: lat, longitude: lng } = result.data;
+      
+      // Build filters object
+      const filters: Record<string, any> = {};
+      
+      if (isAccessible) {
+        filters.wheelchairAccessible = true;
+      }
+      
+      if (rating !== undefined) {
+        filters.minRating = rating;
+      }
+      
+      if (lat !== undefined && lng !== undefined) {
+        filters.latitude = lat;
+        filters.longitude = lng;
+      }
+      
+      const restrooms = await storage.searchPublicBathrooms(query, filters);
       res.json(restrooms);
     } catch (error) {
       res.status(500).json({ message: "Server error" });
@@ -46,12 +108,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   app.get(`${apiPrefix}/restrooms/:id`, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid ID format" });
+      const result = restroomIdSchema.safeParse({ id: req.params.id });
+      
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: "Invalid restroom ID", 
+          errors: result.error.format() 
+        });
       }
       
-      const restroom = await storage.getRestroomById(id);
+      const { id } = result.data;
+      
+      const restroom = await storage.getPublicBathroomById(id);
       if (!restroom) {
         return res.status(404).json({ message: "Restroom not found" });
       }
@@ -62,92 +130,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post(`${apiPrefix}/restrooms`, async (req: Request, res: Response) => {
-    try {
-      const restroomData = insertRestroomSchema.parse(req.body);
-      const restroom = await storage.createRestroom(restroomData);
-      res.status(201).json(restroom);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Invalid input", errors: error.errors });
-      } else {
-        res.status(500).json({ message: "Server error" });
-      }
-    }
-  });
-  
-  app.get(`${apiPrefix}/restrooms/nearby`, async (req: Request, res: Response) => {
-    try {
-      const { latitude, longitude } = req.query;
-      
-      if (!latitude || !longitude || typeof latitude !== 'string' || typeof longitude !== 'string') {
-        return res.status(400).json({ message: "Latitude and longitude are required" });
-      }
-      
-      const restrooms = await storage.getNearbyRestrooms(latitude, longitude);
-      res.json(restrooms);
-    } catch (error) {
-      res.status(500).json({ message: "Server error" });
-    }
-  });
-  
-  app.get(`${apiPrefix}/restrooms/search`, async (req: Request, res: Response) => {
-    try {
-      const { query } = req.query;
-      
-      if (!query || typeof query !== 'string') {
-        return res.status(400).json({ message: "Search query is required" });
-      }
-      
-      const restrooms = await storage.searchRestrooms(query);
-      res.json(restrooms);
-    } catch (error) {
-      res.status(500).json({ message: "Server error" });
-    }
-  });
-  
-  app.post(`${apiPrefix}/restrooms/filter`, async (req: Request, res: Response) => {
-    try {
-      const filters = req.body;
-      
-      // Basic validation that filters object exists
-      if (!filters || typeof filters !== 'object') {
-        return res.status(400).json({ message: "Filter criteria are required" });
-      }
-      
-      const restrooms = await storage.filterRestrooms(filters);
-      res.json(restrooms);
-    } catch (error) {
-      res.status(500).json({ message: "Server error" });
-    }
-  });
-  
-  // Review endpoints
   app.get(`${apiPrefix}/restrooms/:id/reviews`, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid ID format" });
+      const result = restroomIdSchema.safeParse({ id: req.params.id });
+      
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: "Invalid restroom ID", 
+          errors: result.error.format() 
+        });
       }
       
-      const reviews = await storage.getReviews(id);
+      const { id } = result.data;
+      
+      const reviews = await storage.getPublicBathroomReviews(id);
       res.json(reviews);
     } catch (error) {
       res.status(500).json({ message: "Server error" });
-    }
-  });
-  
-  app.post(`${apiPrefix}/reviews`, async (req: Request, res: Response) => {
-    try {
-      const reviewData = insertReviewSchema.parse(req.body);
-      const review = await storage.createReview(reviewData);
-      res.status(201).json(review);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Invalid input", errors: error.errors });
-      } else {
-        res.status(500).json({ message: "Server error" });
-      }
     }
   });
   
@@ -161,12 +160,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  app.get(`${apiPrefix}/articles/category/:category`, async (req: Request, res: Response) => {
+    try {
+      const result = categoryParamSchema.safeParse({ category: req.params.category });
+      
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: "Invalid category", 
+          errors: result.error.format() 
+        });
+      }
+      
+      const { category } = result.data;
+      
+      const articles = await storage.getArticlesByCategory(category);
+      res.json(articles);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
   app.get(`${apiPrefix}/articles/:id`, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid ID format" });
+      const idParam = parseInt(req.params.id);
+      const result = articleIdSchema.safeParse({ id: idParam });
+      
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: "Invalid article ID", 
+          errors: result.error.format() 
+        });
       }
+      
+      const { id } = result.data;
       
       const article = await storage.getArticleById(id);
       if (!article) {
@@ -179,35 +205,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.get(`${apiPrefix}/articles/category/:category`, async (req: Request, res: Response) => {
-    try {
-      const { category } = req.params;
-      
-      if (!category) {
-        return res.status(400).json({ message: "Category is required" });
-      }
-      
-      const articles = await storage.getArticlesByCategory(category);
-      res.json(articles);
-    } catch (error) {
-      res.status(500).json({ message: "Server error" });
-    }
-  });
-  
-  app.post(`${apiPrefix}/articles`, async (req: Request, res: Response) => {
-    try {
-      const articleData = insertArticleSchema.parse(req.body);
-      const article = await storage.createArticle(articleData);
-      res.status(201).json(article);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Invalid input", errors: error.errors });
-      } else {
-        res.status(500).json({ message: "Server error" });
-      }
-    }
-  });
-  
   // Testimonial endpoints
   app.get(`${apiPrefix}/testimonials`, async (req: Request, res: Response) => {
     try {
@@ -215,20 +212,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(testimonials);
     } catch (error) {
       res.status(500).json({ message: "Server error" });
-    }
-  });
-  
-  app.post(`${apiPrefix}/testimonials`, async (req: Request, res: Response) => {
-    try {
-      const testimonialData = insertTestimonialSchema.parse(req.body);
-      const testimonial = await storage.createTestimonial(testimonialData);
-      res.status(201).json(testimonial);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Invalid input", errors: error.errors });
-      } else {
-        res.status(500).json({ message: "Server error" });
-      }
     }
   });
 

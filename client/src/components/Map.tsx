@@ -3,8 +3,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
 
 interface MapProps {
-  latitude?: string;
-  longitude?: string;
+  latitude?: string | number;
+  longitude?: string | number;
 }
 
 const Map: React.FC<MapProps> = ({ latitude, longitude }) => {

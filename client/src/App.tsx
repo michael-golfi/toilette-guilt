@@ -11,7 +11,7 @@ import FindRestrooms from "@/pages/FindRestrooms";
 import RestroomDetail from "@/pages/RestroomDetail";
 import Articles from "@/pages/Articles";
 import ArticleDetail from "@/pages/ArticleDetail";
-import SubmitForm from "@/pages/SubmitForm";
+// import SubmitForm from "@/pages/SubmitForm";
 import About from "@/pages/About";
 import { Suspense } from "react";
 
@@ -23,7 +23,7 @@ function Router() {
       <Route path="/restroom/:id" component={RestroomDetail} />
       <Route path="/articles" component={Articles} />
       <Route path="/article/:id" component={ArticleDetail} />
-      <Route path="/submit-listing" component={SubmitForm} />
+      {/* <Route path="/submit-listing" component={SubmitForm} /> */}
       <Route path="/about" component={About} />
       <Route component={NotFound} />
     </Switch>

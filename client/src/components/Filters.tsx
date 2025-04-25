@@ -104,66 +104,6 @@ const Filters: React.FC<FiltersProps> = ({ onApplyFilters }) => {
               />
               <Label htmlFor="accessibility" className="ml-2 text-sm font-normal">{t('filters.wheelchairAccessible')}</Label>
             </div>
-
-            {/* Baby Changing */}
-            <div className="flex items-center">
-              <Checkbox
-                id="babyChanging"
-                checked={!!filters.babyChanging}
-                onCheckedChange={() => handleCheckboxChange('babyChanging')}
-              />
-              <Label htmlFor="babyChanging" className="ml-2 text-sm font-normal">{t('filters.changingTable')}</Label>
-            </div>
-
-            {/* Gender Neutral */}
-            <div className="flex items-center">
-              <Checkbox
-                id="genderNeutral"
-                checked={!!filters.genderNeutral}
-                onCheckedChange={() => handleCheckboxChange('genderNeutral')}
-              />
-              <Label htmlFor="genderNeutral" className="ml-2 text-sm font-normal">{t('filters.genderNeutral')}</Label>
-            </div>
-
-            {/* Free To Use */}
-            <div className="flex items-center">
-              <Checkbox
-                id="freeToUse"
-                checked={!!filters.freeToUse}
-                onCheckedChange={() => handleCheckboxChange('freeToUse')}
-              />
-              <Label htmlFor="freeToUse" className="ml-2 text-sm font-normal">{t('filters.free')}</Label>
-            </div>
-
-            {/* Changing Room / Family Friendly */}
-            <div className="flex items-center">
-              <Checkbox
-                id="changingRoom"
-                checked={!!filters.changingRoom}
-                onCheckedChange={() => handleCheckboxChange('changingRoom')}
-              />
-              <Label htmlFor="changingRoom" className="ml-2 text-sm font-normal">{t('filters.familyFriendly')}</Label>
-            </div>
-
-            {/* Single Occupancy */}
-            <div className="flex items-center">
-              <Checkbox
-                id="singleOccupancy"
-                checked={!!filters.singleOccupancy}
-                onCheckedChange={() => handleCheckboxChange('singleOccupancy')}
-              />
-              <Label htmlFor="singleOccupancy" className="ml-2 text-sm font-normal">{t('filters.singleOccupancy')}</Label> 
-            </div>
-
-            {/* Customer Only */}
-            <div className="flex items-center">
-              <Checkbox
-                id="customerOnly"
-                checked={!!filters.customerOnly}
-                onCheckedChange={() => handleCheckboxChange('customerOnly')}
-              />
-              <Label htmlFor="customerOnly" className="ml-2 text-sm font-normal">{t('filters.customerOnly')}</Label>
-            </div>
           </div>
         </div>
 
