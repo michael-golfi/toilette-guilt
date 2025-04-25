@@ -58,7 +58,7 @@ const ArticleShowcase: React.FC = () => {
   }
 
   if (error || articles.length === 0) {
-    return null; // Hide section if there's an error or no articles
+    return null;
   }
 
   return (
@@ -71,7 +71,11 @@ const ArticleShowcase: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {articles.map(article => (
-            <div key={article.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all">
+            <div 
+              key={article.id} 
+              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all cursor-pointer"
+              onClick={() => setLocation(article.slug)}
+            >
               <img src={article.image} alt={article.title} className="w-full h-48 object-cover" />
               <div className="p-6">
                 <h3 className="text-xl font-semibold mb-2">{article.title}</h3>
@@ -79,15 +83,14 @@ const ArticleShowcase: React.FC = () => {
                 <div className="flex flex-wrap gap-2 mb-4">
                   {article.keywords.slice(0, 2).map((keyword, idx) => (
                     <span key={idx} className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs">
-                      {keyword}
+                      {t(`categories.${keyword}`, { ns: 'articles' })}
                     </span>
                   ))}
                 </div>
-                <button
-                  onClick={() => setLocation(article.slug)}
-                  className="text-blue-600 font-medium hover:underline">
+
+                <span className="text-blue-600 font-medium inline-flex items-center">
                   {t('bathroomResources.readMore')}
-                </button>
+                </span>
               </div>
             </div>
           ))}
