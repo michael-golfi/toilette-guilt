@@ -1,4 +1,5 @@
-import { Pool, neonConfig } from "@neondatabase/serverless";
+import { neonConfig } from "@neondatabase/serverless";
+import pg from "pg";
 import ws from "ws";
 
 neonConfig.webSocketConstructor = ws;
@@ -27,6 +28,8 @@ import type {
   PublicBathroomOpeningHour,
 } from "./types";
 
+const { Pool } = pg;
+
 function calculateDistance(
   lat1: number,
   lon1: number,
@@ -38,7 +41,7 @@ function calculateDistance(
   }
 
   // Haversine formula for calculating distance between two points on Earth
-  const R = 6371; // Earth's radius in km
+  const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
@@ -48,22 +51,50 @@ function calculateDistance(
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c; // Distance in km
+  return R * c;
 }
 
 export class SqlStorage implements IStorage {
-  private pool: Pool;
+  private pool: pg.Pool;
 
   constructor(connectionString: string) {
-    if (!process.env.DATABASE_URL) {
+    if (!connectionString) {
       throw new Error(
         "DATABASE_URL must be set. Did you forget to provision a database?"
       );
     }
 
-    this.pool = new Pool({
-      connectionString,
-    });
+    console.log("Initializing database connection pool...", connectionString);
+
+    try {
+      this.pool = new Pool({ connectionString });
+
+      // Test connection on startup
+      this.testConnection();
+    } catch (error) {
+      console.error("Failed to initialize database connection:", error);
+      throw error;
+    }
+  }
+
+  // Method to test database connection
+  async testConnection(): Promise<void> {
+    try {
+      const client = await this.pool.connect();
+      const result = await client.query("SELECT NOW()");
+      console.log("Database connection successful:", result.rows[0]);
+      client.release();
+    } catch (error) {
+      console.error(
+        "Database connection test failed:",
+        JSON.stringify(error, null, 2)
+      );
+      throw new Error(
+        `Database connection failed: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
   }
 
   // Public bathroom methods
@@ -432,8 +463,15 @@ export class SqlStorage implements IStorage {
 
     for (const row of rows) {
       try {
+        // Convert date strings to Date objects
+        const processedRow = {
+          ...row,
+          created_at: new Date(row.created_at),
+          updated_at: new Date(row.updated_at),
+        };
+
         // Validate using the schema
-        const validatedArticle = articleSchema.parse(row);
+        const validatedArticle = articleSchema.parse(processedRow);
         validatedArticles.push(validatedArticle);
       } catch (error) {
         console.error("Invalid article data:", error, row);
@@ -463,9 +501,16 @@ export class SqlStorage implements IStorage {
       return null;
     }
 
+    // Convert date strings to Date objects
+    const processedRow = {
+      ...rows[0],
+      created_at: new Date(rows[0].created_at),
+      updated_at: new Date(rows[0].updated_at),
+    };
+
     // Validate the article data
     try {
-      return articleSchema.parse(rows[0]);
+      return articleSchema.parse(processedRow);
     } catch (error) {
       console.error("Invalid article data:", error, rows[0]);
       return null;
@@ -480,21 +525,127 @@ export class SqlStorage implements IStorage {
       throw new Error(`Invalid category: ${error}`);
     }
 
+    // Search for articles with matching category (including comma-separated values)
     const query = `
       select * from app_public.articles
-      where category = $1
+      where category = $1 
+      or category like $2
+      or category like $3
+      or category like $4
       order by created_at desc
     `;
 
-    const { rows } = await this.pool.query(query, [category]);
+    // Parameters to match different positions of the category in the comma-separated list
+    const { rows } = await this.pool.query(query, [
+      category, // Exact match
+      `${category},%`, // Category at start
+      `%,${category},%`, // Category in middle
+      `%,${category}`, // Category at end
+    ]);
 
     // Validate each article with Zod
     const validatedArticles: Article[] = [];
 
     for (const row of rows) {
       try {
+        // Convert date strings to Date objects
+        const processedRow = {
+          ...row,
+          created_at: new Date(row.created_at),
+          updated_at: new Date(row.updated_at),
+        };
+
         // Validate using the schema
-        const validatedArticle = articleSchema.parse(row);
+        const validatedArticle = articleSchema.parse(processedRow);
+        validatedArticles.push(validatedArticle);
+      } catch (error) {
+        console.error("Invalid article data:", error, row);
+        // Skip invalid data
+      }
+    }
+
+    return validatedArticles;
+  }
+
+  async getArticlesWithPagination(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ articles: Article[]; total: number }> {
+    const offset = (page - 1) * limit;
+
+    // Get total count
+    const countQuery = `
+    select count(*) as total from app_public.articles
+  `;
+
+    // Get paginated articles
+    const articlesQuery = `
+    select * from app_public.articles
+    order by created_at desc
+    limit $1 offset $2
+  `;
+
+    const [countResult, articlesResult] = await Promise.all([
+      this.pool.query(countQuery),
+      this.pool.query(articlesQuery, [limit, offset]),
+    ]);
+
+    const total = parseInt(countResult.rows[0].total) || 0;
+
+    // Validate each article with Zod
+    const validatedArticles: Article[] = [];
+
+    for (const row of articlesResult.rows) {
+      try {
+        // Convert date strings to Date objects
+        const processedRow = {
+          ...row,
+          created_at: new Date(row.created_at),
+          updated_at: new Date(row.updated_at),
+        };
+
+        // Validate using the schema
+        const validatedArticle = articleSchema.parse(processedRow);
+        validatedArticles.push(validatedArticle);
+      } catch (error) {
+        console.error("Invalid article data:", error, row);
+        // Skip invalid data
+      }
+    }
+
+    return {
+      articles: validatedArticles,
+      total,
+    };
+  }
+
+  async searchArticles(searchTerm: string): Promise<Article[]> {
+    const query = `
+      select * from app_public.articles
+      where 
+        title ilike $1 or 
+        content ilike $1 or 
+        excerpt ilike $1 or
+        category ilike $1
+      order by created_at desc
+    `;
+
+    const { rows } = await this.pool.query(query, [`%${searchTerm}%`]);
+
+    // Validate each article with Zod
+    const validatedArticles: Article[] = [];
+
+    for (const row of rows) {
+      try {
+        // Convert date strings to Date objects
+        const processedRow = {
+          ...row,
+          created_at: new Date(row.created_at),
+          updated_at: new Date(row.updated_at),
+        };
+
+        // Validate using the schema
+        const validatedArticle = articleSchema.parse(processedRow);
         validatedArticles.push(validatedArticle);
       } catch (error) {
         console.error("Invalid article data:", error, row);
@@ -667,7 +818,7 @@ export class SqlStorage implements IStorage {
   }
 }
 
-export const storage = new SqlStorage(process.env.DATABASE_URL ?? "");
+export const storage = new SqlStorage(process.env.DATABASE_URL!);
 
 // For testing purposes only
 export function getTestStorage(connectionString: string): IStorage {

@@ -8,9 +8,9 @@
   },
   "categories": {
     "all": "Todos",
-    "hygienetips": "Consejos de Higiene",
+    "hygieneTips": "Consejos de Higiene",
     "accessibility": "Accesibilidad",
-    "ecofriendly": "Ecológico"
+    "ecoFriendly": "Ecológico"
   },
   "listing": {
     "title": "Todos los Artículos",

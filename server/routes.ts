@@ -10,12 +10,46 @@ import {
 import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Test database connection on startup
+  try {
+    // If storage class has a testConnection method, call it
+    if (typeof storage.testConnection === 'function') {
+      await storage.testConnection();
+      console.log("Database connection verified");
+    }
+  } catch (error) {
+    console.error("Failed to connect to database:", error);
+    // Register a fallback route to return database error
+    app.use((req: Request, res: Response) => {
+      res.status(500).json({ 
+        message: "Database connection error", 
+        details: error instanceof Error ? error.message : String(error)
+      });
+    });
+    // Still create the server but with error state
+    return createServer(app);
+  }
+
   // API prefix
   const apiPrefix = "/api";
   
-  // Health check endpoint
-  app.get(`${apiPrefix}/health`, (req: Request, res: Response) => {
-    res.json({ status: "ok" });
+  // Health check endpoint with DB status
+  app.get(`${apiPrefix}/health`, async (req: Request, res: Response) => {
+    try {
+      // Test DB connection
+      if (typeof storage.testConnection === 'function') {
+        await storage.testConnection();
+        res.json({ status: "ok", database: "connected" });
+      } else {
+        res.json({ status: "ok", database: "unknown" });
+      }
+    } catch (error) {
+      res.json({ 
+        status: "degraded", 
+        database: "disconnected",
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
   });
   
   // Restroom endpoints
@@ -153,7 +187,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Article endpoints
   app.get(`${apiPrefix}/articles`, async (req: Request, res: Response) => {
     try {
-      const articles = await storage.getArticles();
+      // Check if pagination parameters are provided
+      const page = req.query.page ? parseInt(req.query.page as string) : 1;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      
+      console.log(`Fetching articles page ${page}, limit ${limit}`);
+      
+      // Get articles with pagination
+      const { articles, total } = await storage.getArticlesWithPagination(page, limit);
+      
+      console.log(`Articles fetched successfully: ${total} total, ${articles.length} returned`);
+      
+      // Return paginated response
+      res.json({
+        data: articles,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit)
+        }
+      });
+    } catch (error) {
+      console.error("Articles endpoint error:", error);
+      res.status(500).json({ message: "Server error", details: error instanceof Error ? error.message : String(error) });
+    }
+  });
+  
+  app.get(`${apiPrefix}/articles/search`, async (req: Request, res: Response) => {
+    try {
+      const { q } = req.query;
+      
+      if (!q || typeof q !== 'string') {
+        return res.status(400).json({ message: "Search query is required" });
+      }
+      
+      const articles = await storage.searchArticles(q);
       res.json(articles);
     } catch (error) {
       res.status(500).json({ message: "Server error" });

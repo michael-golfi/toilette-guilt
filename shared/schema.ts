@@ -65,7 +65,7 @@ export const articleSchema = z.object({
   image_url: z.string().optional(),
   category: z.string(),
   created_at: z.date(),
-  author_id: z.number().optional(),
+  updated_at: z.date(),
 });
 
 export const reviewSchema = z.object({

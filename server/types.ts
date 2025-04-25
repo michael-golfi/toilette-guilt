@@ -1,6 +1,6 @@
 import {
   Article,
-  Review as PublicBathroomReview,
+  PublicBathroomReview,
   PublicBathroomWithRating,
   Testimonial,
 } from "../shared/schema";
@@ -63,6 +63,9 @@ export type PublicBathroomReviewImage = {
 
 // Define the read-only storage interface
 export interface IStorage {
+  // Database connection test
+  testConnection?(): Promise<void>;
+
   // Public Bathroom methods
   getPublicBathrooms(): Promise<PublicBathroomWithRating[]>;
   getPublicBathroomById(id: string): Promise<PublicBathroomWithRating | null>;
@@ -88,6 +91,11 @@ export interface IStorage {
   getArticles(): Promise<Article[]>;
   getArticleById(id: number): Promise<Article | null>;
   getArticlesByCategory(category: string): Promise<Article[]>;
+  getArticlesWithPagination(
+    page?: number,
+    limit?: number
+  ): Promise<{ articles: Article[]; total: number }>;
+  searchArticles(searchTerm: string): Promise<Article[]>;
 
   // Testimonial methods
   getTestimonials(): Promise<Testimonial[]>;

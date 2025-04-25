@@ -8,9 +8,9 @@
   },
   "categories": {
     "all": "الكل",
-    "hygienetips": "نصائح النظافة",
+    "hygieneTips": "نصائح النظافة",
     "accessibility": "إمكانية الوصول",
-    "ecofriendly": "صديق للبيئة"
+    "ecoFriendly": "صديق للبيئة"
   },
   "listing": {
     "title": "المقالات والموارد",

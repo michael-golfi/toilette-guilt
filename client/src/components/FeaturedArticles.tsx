@@ -6,24 +6,18 @@ import { Button } from '@/components/ui/button';
 import { type Article } from '@shared/schema';
 import { useTranslation } from 'react-i18next';
 
-// Mapping from API category name (assumed English) to internal key
-const apiCategoryToKeyMap: { [key: string]: string } = {
-  'Hygiene Tips': 'hygienetips',
-  'Accessibility': 'accessibility',
-  'Eco-Friendly': 'ecofriendly',
-};
 
 // Mapping from internal key to CSS class
 const categoryKeyToCssMap: { [key: string]: string } = {
-  'hygienetips': 'article-tag-hygiene',
+  'hygieneTips': 'article-tag-hygiene',
   'accessibility': 'article-tag-accessibility',
-  'ecofriendly': 'article-tag-eco',
+  'ecoFriendly': 'article-tag-eco',
 };
 
 const FeaturedArticles: React.FC = () => {
   const [, setLocation] = useLocation();
   const { t } = useTranslation('articles');
-  
+
   const { data: articles, isLoading } = useQuery<Article[]>({
     queryKey: ['/api/articles'],
   });
@@ -49,7 +43,7 @@ const FeaturedArticles: React.FC = () => {
             {t('featured.subtitle')}
           </p>
         </div>
-        
+
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {Array.from({ length: 3 }).map((_, index) => (
@@ -68,25 +62,25 @@ const FeaturedArticles: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles?.slice(0, 3).map((article) => (
-              <Card 
-                key={article.id} 
+              <Card
+                key={article.id}
                 className="bg-gray-50 overflow-hidden shadow-md transition hover:shadow-lg"
               >
-                <img 
-                  src={article.imageUrl || ""} 
-                  alt={article.title} 
-                  className="w-full h-48 object-cover"
-                />
+                {article.image_url &&
+                  <img
+                    src={article.image_url}
+                    alt={article.title}
+                    className="w-full h-48 object-cover"
+                  />}
                 <CardContent className="p-6">
-                  {(() => { // IIFE to calculate category info
-                     const articleCategoryKey = apiCategoryToKeyMap[article.category];
-                     const categoryClassName = getCategoryClassNameByKey(articleCategoryKey);
-                     const translatedCategoryName = articleCategoryKey ? t(`categories.${articleCategoryKey}`) : article.category;
-                     return <span className={categoryClassName}>{translatedCategoryName}</span>
+                  {(() => {
+                    const categoryClassName = getCategoryClassNameByKey(article.category);
+                    const translatedCategoryName = article.category ? t(`categories.${article.category}`) : article.category;
+                    return <span className={categoryClassName}>{translatedCategoryName}</span>
                   })()}
                   <h3 className="text-xl font-semibold mt-3 mb-2">{article.title}</h3>
                   <p className="text-gray-600 text-sm mb-4">{article.excerpt}</p>
-                  <button 
+                  <button
                     onClick={() => navigateToArticle(article.id)}
                     className="text-primary font-medium hover:text-blue-700 inline-flex items-center"
                   >
@@ -97,10 +91,10 @@ const FeaturedArticles: React.FC = () => {
             ))}
           </div>
         )}
-        
+
         <div className="text-center mt-10">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="border-primary text-primary hover:bg-primary hover:text-white"
             onClick={navigateToAllArticles}
           >

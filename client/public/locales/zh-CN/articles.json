@@ -8,9 +8,9 @@
   },
   "categories": {
     "all": "全部",
-    "hygienetips": "卫生提示",
+    "hygieneTips": "卫生提示",
     "accessibility": "无障碍",
-    "ecofriendly": "环保"
+    "ecoFriendly": "环保"
   },
   "listing": {
     "title": "文章和资源",

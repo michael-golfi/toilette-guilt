@@ -120,13 +120,13 @@ const ArticleDetail: React.FC = () => {
           </div>
           <div className="flex items-center">
             <Calendar className="h-4 w-4 mr-1.5" />
-            <span>{article.createdAt ? formatDate(article.createdAt) : t('common:unknownDate')}</span>
+            <span>{article.created_at ? formatDate(article.created_at) : t('common:unknownDate')}</span>
           </div>
         </div>
         
-        {article.imageUrl && (
+        {article.image_url && (
           <img 
-            src={article.imageUrl} 
+            src={article.image_url} 
             alt={t('detail.imageAlt', { title: article.title })} 
             className="w-full h-auto rounded-lg mb-8 shadow-md object-cover bg-gray-200"
           />
