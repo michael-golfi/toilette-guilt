@@ -13,7 +13,11 @@ import Articles from "@/pages/Articles";
 import ArticleDetail from "@/pages/ArticleDetail";
 // import SubmitForm from "@/pages/SubmitForm";
 import About from "@/pages/About";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
+import { initGA } from "./lib/analytics";
+import AnalyticsWrapper from "./components/AnalyticsWrapper";
+
+const GA_MEASUREMENT_ID = 'G-4BT2M0NZQ8';
 
 function Router() {
   return (
@@ -31,17 +35,24 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    // Initialize Google Analytics
+    initGA(GA_MEASUREMENT_ID);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
-          <Header />
-          <main className="min-h-screen">
-            <Router />
-          </main>
-          <Footer />
-          <Toaster />
-        </Suspense>
+        <AnalyticsWrapper>
+          <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
+            <Header />
+            <main className="min-h-screen">
+              <Router />
+            </main>
+            <Footer />
+            <Toaster />
+          </Suspense>
+        </AnalyticsWrapper>
       </TooltipProvider>
     </QueryClientProvider>
   );
