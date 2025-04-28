@@ -103,8 +103,8 @@ export class SqlStorage implements IStorage {
       select pb.*, 
         coalesce(avg(r.rating), 0) as average_rating,
         count(r.id) as review_count
-      from app_public.public_bathrooms pb
-      left join app_public.public_bathroom_reviews r on r.public_bathroom_id = pb.id
+      from public_bathrooms pb
+      left join public_bathroom_reviews r on r.public_bathroom_id = pb.id
       group by pb.id
     `;
 
@@ -144,8 +144,8 @@ export class SqlStorage implements IStorage {
       select pb.*, 
         coalesce(avg(r.rating), 0) as average_rating,
         count(r.id) as review_count
-      from app_public.public_bathrooms pb
-      left join app_public.public_bathroom_reviews r on r.public_bathroom_id = pb.id
+      from public_bathrooms pb
+      left join public_bathroom_reviews r on r.public_bathroom_id = pb.id
       where pb.id = $1
       group by pb.id
     `;
@@ -253,15 +253,15 @@ export class SqlStorage implements IStorage {
       select distinct pb.*, 
         coalesce(avg(r.rating), 0) as average_rating,
         count(r.id) as review_count
-      from app_public.public_bathrooms pb
-      left join app_public.public_bathroom_reviews r on r.public_bathroom_id = pb.id
-      left join app_public.public_bathroom_addresses addr on addr.public_bathroom_id = pb.id
+      from public_bathrooms pb
+      left join public_bathroom_reviews r on r.public_bathroom_id = pb.id
+      left join public_bathroom_addresses addr on addr.public_bathroom_id = pb.id
     `;
 
     // Add join for wheelchair accessibility filter if needed
     if (filters.wheelchairAccessible) {
       sqlQuery += `
-        left join app_public.public_bathroom_accessibility_features af on af.public_bathroom_id = pb.id
+        left join public_bathroom_accessibility_features af on af.public_bathroom_id = pb.id
       `;
     }
 
@@ -364,8 +364,8 @@ export class SqlStorage implements IStorage {
       select pb.*, 
         coalesce(avg(r.rating), 0) as average_rating,
         count(r.id) as review_count
-      from app_public.public_bathrooms pb
-      left join app_public.public_bathroom_reviews r on r.public_bathroom_id = pb.id
+      from public_bathrooms pb
+      left join public_bathroom_reviews r on r.public_bathroom_id = pb.id
     `;
 
     // Add WHERE clauses based on filters
@@ -382,7 +382,7 @@ export class SqlStorage implements IStorage {
 
     // If we have accessibility feature filters
     if (filters.hasAccessibility) {
-      query += ` left join app_public.public_bathroom_accessibility_features af on af.public_bathroom_id = pb.id`;
+      query += ` left join public_bathroom_accessibility_features af on af.public_bathroom_id = pb.id`;
       conditions.push(
         `(af.enabled = true and af.feature_name = $${paramCount})`
       );
@@ -428,7 +428,7 @@ export class SqlStorage implements IStorage {
     }
 
     const query = `
-      select * from app_public.public_bathroom_reviews
+      select * from public_bathroom_reviews
       where public_bathroom_id = $1
       order by review_date desc
     `;
@@ -455,7 +455,7 @@ export class SqlStorage implements IStorage {
   // Article methods
   async getArticles(): Promise<Article[]> {
     const query = `
-      select * from app_public.articles
+      select * from articles
       order by created_at desc
     `;
 
@@ -494,7 +494,7 @@ export class SqlStorage implements IStorage {
     }
 
     const query = `
-      select * from app_public.articles
+      select * from articles
       where id = $1
     `;
 
@@ -530,7 +530,7 @@ export class SqlStorage implements IStorage {
 
     // Search for articles with matching category (including comma-separated values)
     const query = `
-      select * from app_public.articles
+      select * from articles
       where category = $1 
       or category like $2
       or category like $3
@@ -578,12 +578,12 @@ export class SqlStorage implements IStorage {
 
     // Get total count
     const countQuery = `
-    select count(*) as total from app_public.articles
+    select count(*) as total from articles
   `;
 
     // Get paginated articles
     const articlesQuery = `
-    select * from app_public.articles
+    select * from articles
     order by created_at desc
     limit $1 offset $2
   `;
@@ -624,7 +624,7 @@ export class SqlStorage implements IStorage {
 
   async searchArticles(searchTerm: string): Promise<Article[]> {
     const query = `
-      select * from app_public.articles
+      select * from articles
       where 
         title ilike $1 or 
         content ilike $1 or 
@@ -662,7 +662,7 @@ export class SqlStorage implements IStorage {
   // Testimonial methods
   async getTestimonials(): Promise<Testimonial[]> {
     const query = `
-      select * from app_public.testimonials
+      select * from testimonials
       order by created_at desc
     `;
 
@@ -697,7 +697,7 @@ export class SqlStorage implements IStorage {
     }
 
     const query = `
-      select * from app_public.public_bathroom_images
+      select * from public_bathroom_images
       where public_bathroom_id = $1
     `;
 
@@ -716,7 +716,7 @@ export class SqlStorage implements IStorage {
     }
 
     const query = `
-      select * from app_public.public_bathroom_addresses
+      select * from public_bathroom_addresses
       where public_bathroom_id = $1
     `;
 
@@ -740,7 +740,7 @@ export class SqlStorage implements IStorage {
     }
 
     const query = `
-      select * from app_public.public_bathroom_accessibility_features
+      select * from public_bathroom_accessibility_features
       where public_bathroom_id = $1
     `;
 
@@ -759,7 +759,7 @@ export class SqlStorage implements IStorage {
     }
 
     const query = `
-      select * from app_public.public_bathroom_categories
+      select * from public_bathroom_categories
       where public_bathroom_id = $1
     `;
 
@@ -778,7 +778,7 @@ export class SqlStorage implements IStorage {
     }
 
     const query = `
-      select * from app_public.public_bathroom_opening_hours
+      select * from public_bathroom_opening_hours
       where public_bathroom_id = $1
       order by 
         case 
