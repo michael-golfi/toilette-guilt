@@ -10,14 +10,20 @@ import {
   MapPinIcon,
   ClockIcon 
 } from 'lucide-react';
-import { RestroomWithRating } from '@shared/schema';
+import { PublicBathroomWithRating } from '@shared/schema';
 import { useTranslation } from 'react-i18next';
 
 export interface RestroomListingProps {
-  restroom: RestroomWithRating;
+  restroom: PublicBathroomWithRating;
+  accessibilityFeatures?: string[];
+  openingHours?: string[];
 }
 
-const RestroomListing: React.FC<RestroomListingProps> = ({ restroom }) => {
+const RestroomListing: React.FC<RestroomListingProps> = ({ 
+  restroom,
+  accessibilityFeatures = [],
+  openingHours = []
+}) => {
   const { t } = useTranslation(['restrooms', 'common']);
 
   // Format distance with units
@@ -31,76 +37,84 @@ const RestroomListing: React.FC<RestroomListingProps> = ({ restroom }) => {
 
   return (
     <Link href={`/restroom/${restroom.id}`}>
-      <Card className="mb-4 cursor-pointer hover:shadow-md transition-shadow">
+      <Card className="mb-6 cursor-pointer hover:shadow-lg transition-all duration-200 border-0">
         <CardContent className="p-0">
-          <div className="flex">
+          <div className="flex flex-col md:flex-row">
             {/* Image */}
-            <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 flex items-center justify-center bg-gray-100 relative overflow-hidden">
-              {restroom.imageUrl ? (
+            <div className="w-full md:w-48 h-48 md:h-auto flex-shrink-0 relative overflow-hidden bg-gray-100">
+              {restroom.thumbnail ? (
                 <img 
-                  src={restroom.imageUrl} 
-                  alt={restroom.name}
+                  src={restroom.thumbnail} 
+                  alt={restroom.title}
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="text-gray-400 text-4xl">🚽</div>
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="text-gray-400 text-6xl">🚽</div>
+                </div>
               )}
             </div>
             
             {/* Content */}
-            <div className="flex-1">
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold">{restroom.name}</h3>
-                  <p className="text-sm text-gray-500 mb-2">{restroom.address}, {restroom.city}</p>
+            <div className="flex-1 p-6">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-gray-900">{restroom.title}</h3>
+                  <p className="text-sm text-gray-500 flex items-center">
+                    <MapPinIcon className="h-4 w-4 mr-1" />
+                    {restroom.address}
+                  </p>
                 </div>
                 
-                <div className="flex items-center mt-1 md:mt-0 space-x-1">
-                  <StarIcon className="h-4 w-4 text-yellow-500" />
-                  <span className="font-medium">{restroom.averageRating?.toFixed(1) || t('ratings.noRatings')}</span>
+                <div className="flex items-center space-x-2">
+                  <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full">
+                    <StarIcon className="h-4 w-4 text-yellow-500" />
+                    <span className="ml-1 font-medium text-yellow-700">
+                      {restroom.review_rating?.toFixed(1) || t('ratings.noRatings')}
+                    </span>
+                  </div>
                   <span className="text-gray-500 text-sm">
-                    ({restroom.reviewCount || 0} {t('ratings.reviews', { count: restroom.reviewCount || 0 })})
+                    ({restroom.review_count || 0} {t('ratings.reviews', { count: restroom.review_count || 0 })})
                   </span>
                 </div>
               </div>
               
-              <div className="flex flex-wrap gap-1 mb-2">
-                {restroom.freeToUse && 
-                  <Badge variant="outline" className="flex items-center gap-1">
+              <div className="flex flex-wrap gap-2 my-4">
+                {restroom.price_range === 'Free' && 
+                  <Badge variant="secondary" className="flex items-center gap-1 bg-green-50 text-green-700 hover:bg-green-100">
                     <BanknoteIcon className="h-3 w-3" />
                     {t('listing.free')}
                   </Badge>
                 }
                 
-                {restroom.customerOnly && 
-                  <Badge variant="outline" className="flex items-center gap-1">
+                {restroom.price_range === 'Customer Only' && 
+                  <Badge variant="secondary" className="flex items-center gap-1 bg-blue-50 text-blue-700 hover:bg-blue-100">
                     <UserIcon className="h-3 w-3" />
                     {t('listing.customerOnly')}
                   </Badge>
                 }
                 
-                {restroom.accessibilityFeatures && 
-                  <Badge variant="outline" className="flex items-center gap-1">
+                {accessibilityFeatures.length > 0 && 
+                  <Badge variant="secondary" className="flex items-center gap-1 bg-purple-50 text-purple-700 hover:bg-purple-100">
                     <AccessibilityIcon className="h-3 w-3" />
                     {t('features.accessible')}
                   </Badge>
                 }
                 
-                {restroom.hours?.toLowerCase().includes('24') && 
-                  <Badge variant="outline" className="flex items-center gap-1">
+                {openingHours.some(hour => hour.toLowerCase().includes('24')) && 
+                  <Badge variant="secondary" className="flex items-center gap-1 bg-orange-50 text-orange-700 hover:bg-orange-100">
                     <ClockIcon className="h-3 w-3" />
                     {t('listing.open24Hours')}
                   </Badge>
                 }
               </div>
               
-              <div className="flex justify-between items-center">
-                <div className="flex items-center text-sm text-gray-500">
-                  <MapPinIcon className="h-3 w-3 mr-1" />
+              <div className="flex justify-between items-center mt-4">
+                <div className="text-sm text-gray-500">
                   {restroom.distance !== undefined && formatDistance(restroom.distance)}
                 </div>
                 
-                <Badge variant="secondary" className="hover:bg-primary hover:text-primary-foreground">
+                <Badge variant="default" className="bg-primary hover:bg-primary/90">
                   {t('listing.viewDetails')}
                 </Badge>
               </div>

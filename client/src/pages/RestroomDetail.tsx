@@ -5,11 +5,23 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { AlertCircle, Clock, MapPin, Star } from 'lucide-react';
-import { RestroomWithRating, Review } from '@shared/schema';
+import { AlertCircle, Clock, MapPin, Star, ChevronLeft, Accessibility, Baby, Users, Lock, LockOpen, Droplets, Paperclip, User, Sparkles } from 'lucide-react';
+import { PublicBathroom, PublicBathroomReview } from '@shared/schema';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import Map from '@/components/Map';
 import { useTranslation } from 'react-i18next';
+import { Badge } from '@/components/ui/badge';
+
+interface AccessibilityFeature {
+  id: string;
+  feature_name: string;
+}
+
+interface OpeningHour {
+  id: string;
+  day_of_week: string;
+  hours_text: string;
+}
 
 const RestroomDetail: React.FC = () => {
   const { t, i18n } = useTranslation(['restrooms', 'common'], { 
@@ -21,16 +33,62 @@ const RestroomDetail: React.FC = () => {
   const [selectedRating, setSelectedRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const restroomId = match ? parseInt(params.id) : -1;
+  const restroomId = match ? params.id : null;
 
-  const { data: restroom, isLoading, error } = useQuery<RestroomWithRating>({
+  const { data: restroom, isLoading, error } = useQuery<PublicBathroom>({
     queryKey: [`/api/restrooms/${restroomId}`],
-    enabled: restroomId > 0,
+    queryFn: async () => {
+      if (!restroomId) throw new Error('No restroom ID provided');
+      
+      try {
+        const response = await apiRequest('GET', `/api/restrooms/${restroomId}`);
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Restroom fetch error:', errorData);
+          throw new Error(errorData.message || 'Failed to fetch restroom');
+        }
+        return response.json();
+      } catch (err) {
+        console.error('Error fetching restroom:', err);
+        throw err;
+      }
+    },
+    enabled: !!restroomId,
   });
 
-  const { data: reviews, isLoading: isLoadingReviews } = useQuery<Review[]>({
+  const { data: address } = useQuery({
+    queryKey: [`/api/restrooms/${restroomId}/address`],
+    queryFn: async () => {
+      if (!restroomId) throw new Error('No restroom ID provided');
+      const response = await apiRequest('GET', `/api/restrooms/${restroomId}/address`);
+      return response.json();
+    },
+    enabled: !!restroomId,
+  });
+
+  const { data: accessibilityFeatures } = useQuery<AccessibilityFeature[]>({
+    queryKey: [`/api/restrooms/${restroomId}/accessibility`],
+    queryFn: async () => {
+      if (!restroomId) throw new Error('No restroom ID provided');
+      const response = await apiRequest('GET', `/api/restrooms/${restroomId}/accessibility`);
+      return response.json();
+    },
+    enabled: !!restroomId,
+  });
+
+  const { data: openingHours } = useQuery<OpeningHour[]>({
+    queryKey: [`/api/restrooms/${restroomId}/hours`],
+    queryFn: async () => {
+      if (!restroomId) throw new Error('No restroom ID provided');
+      const response = await apiRequest('GET', `/api/restrooms/${restroomId}/hours`);
+      return response.json();
+    },
+    enabled: !!restroomId,
+  });
+
+  const { data: reviews, isLoading: isLoadingReviews } = useQuery<PublicBathroomReview[]>({
     queryKey: [`/api/restrooms/${restroomId}/reviews`],
-    enabled: restroomId > 0,
+    enabled: !!restroomId,
   });
 
   const handleSubmitReview = async (e: React.FormEvent) => {
@@ -106,7 +164,7 @@ const RestroomDetail: React.FC = () => {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Card>
+        <Card className="max-w-2xl mx-auto">
           <CardContent className="p-8 text-center">
             <AlertCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
             <h1 className="text-2xl font-bold mb-2">{t('notFound')}</h1>
@@ -120,7 +178,7 @@ const RestroomDetail: React.FC = () => {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || !restroom) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="animate-pulse">
@@ -143,150 +201,149 @@ const RestroomDetail: React.FC = () => {
     );
   }
 
-  if (!restroom) {
-    return null;
-  }
+  const formatAddress = () => {
+    if (!address) return restroom.address || '';
+    const parts = [
+      address.street,
+      address.city,
+      address.state,
+      address.postal_code,
+      address.country
+    ].filter(Boolean);
+    return parts.join(', ');
+  };
 
-  const displayHours = restroom.hours ? restroom.hours : t('hoursUnknown', { defaultValue: 'Hours not available' });
+  const formatHours = () => {
+    if (!openingHours || openingHours.length === 0) {
+      return t('hoursUnknown', { defaultValue: 'Hours not available' });
+    }
+    return openingHours.map((hour: OpeningHour) => `${hour.day_of_week}: ${hour.hours_text}`).join('\n');
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
+      <div className="mb-8">
         <Button 
           variant="ghost" 
-          className="mb-4 text-primary hover:bg-primary/10"
+          className="mb-6 text-primary hover:bg-primary/10"
           onClick={() => setLocation('/find-restrooms')}
         >
-          <i className="fas fa-arrow-left mr-2"></i> {t('backToResults')}
+          <ChevronLeft className="h-4 w-4 mr-2" />
+          {t('backToResults')}
         </Button>
         
-        <h1 className="text-3xl font-bold">{restroom.name}</h1>
-        <p className="text-gray-600 flex items-center mt-1">
-          <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
-          <span>{restroom.address}, {restroom.city}, {restroom.state} {restroom.zipCode}</span>
-        </p>
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">{restroom.title}</h1>
+            <p className="text-gray-600 flex items-center mt-2">
+              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+              <span>{formatAddress()}</span>
+            </p>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center bg-yellow-50 px-4 py-2 rounded-full">
+              <div className="flex text-yellow-500 mr-2" aria-label={t('averageRatingLabel', { rating: restroom.review_rating.toFixed(1), defaultValue: `Average rating: ${restroom.review_rating.toFixed(1)} out of 5` })}>
+                {renderDisplayStars(restroom.review_rating)}
+              </div>
+              <span className="font-medium text-yellow-700">{restroom.review_rating.toFixed(1)}</span>
+              <span className="text-gray-600 text-sm ml-1">
+                ({t('reviewCount', { count: restroom.review_count, ns: 'restrooms' })})
+              </span>
+            </div>
+            
+            <div className="flex items-center text-gray-700 bg-gray-50 px-4 py-2 rounded-full">
+              <Clock className="h-4 w-4 mr-1 flex-shrink-0" />
+              <span className="text-sm whitespace-pre-line">{formatHours()}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:w-2/3">
-          <Card className="mb-6 overflow-hidden shadow-md">
+        <div className="lg:w-2/3 space-y-6">
+          {/* Main Image */}
+          <Card className="overflow-hidden shadow-md">
             <img 
-              src={restroom.imageUrl || 'https://via.placeholder.com/800x400.png'} 
-              alt={t('imageAlt', { name: restroom.name, defaultValue: `Image of ${restroom.name}` })}
+              src={restroom.thumbnail || 'https://via.placeholder.com/800x400.png'} 
+              alt={t('imageAlt', { name: restroom.title, defaultValue: `Image of ${restroom.title}` })}
               className="w-full h-64 md:h-80 object-cover bg-gray-200"
             />
-            
+          </Card>
+          
+          {/* Features and Amenities */}
+          <Card className="shadow-md">
             <CardContent className="p-6">
-              <div className="flex flex-wrap justify-between items-start gap-y-2 mb-4">
-                <div className="flex items-center">
-                  <div className="flex text-yellow-500 mr-2" aria-label={t('averageRatingLabel', { rating: restroom.averageRating.toFixed(1), defaultValue: `Average rating: ${restroom.averageRating.toFixed(1)} out of 5` })}>
-                    {renderDisplayStars(restroom.averageRating)}
-                  </div>
-                  <span className="font-medium">{restroom.averageRating.toFixed(1)}</span>
-                  <span className="text-gray-600 text-sm ml-1">
-                    ({t('reviewCount', { count: restroom.reviewCount, ns: 'restrooms' })}) 
-                  </span>
-                </div>
-                
-                <div className="flex items-center text-gray-700">
-                  <Clock className="h-4 w-4 mr-1 flex-shrink-0" />
-                  <span className="text-sm">{displayHours}</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap gap-2 mb-4">
-                {restroom.accessibilityFeatures && (
-                  <span className="feature-tag feature-tag-accessibility">{t('features.accessible', { ns: 'restrooms' })}</span>
-                )}
-                {restroom.babyChanging && (
-                  <span className="feature-tag feature-tag-baby-changing">{t('features.changingTable', { ns: 'restrooms' })}</span>
-                )}
-                {restroom.genderNeutral && (
-                  <span className="feature-tag feature-tag-gender-neutral">{t('features.genderNeutral', { ns: 'restrooms' })}</span>
-                )}
-                {restroom.freeToUse && (
-                  <span className="feature-tag feature-tag-free">{t('listing.free', { ns: 'restrooms' })}</span>
-                )}
-                {restroom.changingRoom && (
-                  <span className="feature-tag feature-tag-changing-room">{t('features.changingRoom', { ns: 'restrooms', defaultValue: 'Changing Room'})}</span>
-                )}
-                {restroom.customerOnly && (
-                  <span className="feature-tag feature-tag-customer-only">{t('listing.customerOnly', { ns: 'restrooms' })}</span>
-                )}
-                {restroom.singleOccupancy && (
-                  <span className="feature-tag feature-tag-single-occupancy">{t('features.singleOccupancy', { ns: 'restrooms', defaultValue: 'Single Occupancy'})}</span>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {accessibilityFeatures?.map((feature: AccessibilityFeature) => (
+                  <Badge 
+                    key={feature.id} 
+                    variant="secondary" 
+                    className="bg-purple-50 text-purple-700 hover:bg-purple-100"
+                  >
+                    <Accessibility className="h-4 w-4 mr-1" />
+                    {feature.feature_name}
+                  </Badge>
+                ))}
+                {restroom.price_range === 'Free' && (
+                  <Badge variant="secondary" className="bg-green-50 text-green-700 hover:bg-green-100">
+                    {t('listing.free', { ns: 'restrooms' })}
+                  </Badge>
                 )}
               </div>
               
               {restroom.description && (
-                <>
-                  <h2 className="text-xl font-semibold mb-2">{t('overview')}</h2>
-                  <p className="text-gray-700 mb-4">{restroom.description}</p>
-                </>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold mb-3">{t('overview')}</h2>
+                  <p className="text-gray-700">{restroom.description}</p>
+                </div>
               )}
               
-              <h3 className="font-semibold text-lg mb-2">{t('amenities')}</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                {restroom.soapAvailable && (
+              <div>
+                <h3 className="text-lg font-semibold mb-4">{t('amenities')}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex items-center text-sm text-gray-700">
-                    <i className="fas fa-soap text-primary w-4 text-center mr-2"></i>
+                    <Droplets className="h-4 w-4 mr-2 text-primary" />
                     <span>{t('amenitiesList.soapAvailable', { ns: 'restrooms', defaultValue: 'Soap Available'})}</span>
                   </div>
-                )}
-                {restroom.wellStocked && (
                   <div className="flex items-center text-sm text-gray-700">
-                    <i className="fas fa-toilet-paper text-primary w-4 text-center mr-2"></i>
+                    <Paperclip className="h-4 w-4 mr-2 text-primary" />
                     <span>{t('amenitiesList.wellStocked', { ns: 'restrooms', defaultValue: 'Well Stocked (TP, etc.)'})}</span>
                   </div>
-                )}
-                {restroom.codeRequired !== undefined && (
                   <div className="flex items-center text-sm text-gray-700">
-                    <i className={`fas ${restroom.codeRequired ? 'fa-lock' : 'fa-lock-open'} text-primary w-4 text-center mr-2`}></i>
-                    <span>{restroom.codeRequired ? t('amenitiesList.codeRequired', { ns: 'restrooms', defaultValue: 'Code Required'}) : t('amenitiesList.noCodeRequired', { ns: 'restrooms', defaultValue: 'No Code Required'})}</span>
-                  </div>
-                )}
-                {restroom.attendantPresent && (
-                  <div className="flex items-center text-sm text-gray-700">
-                    <i className="fas fa-user-tie text-primary w-4 text-center mr-2"></i>
+                    <Users className="h-4 w-4 mr-2 text-primary" />
                     <span>{t('amenitiesList.attendantPresent', { ns: 'restrooms', defaultValue: 'Attendant Present'})}</span>
                   </div>
-                )}
-                {restroom.familyFriendly && (
                   <div className="flex items-center text-sm text-gray-700">
-                    <i className="fas fa-baby text-primary w-4 text-center mr-2"></i>
-                    <span>{t('amenitiesList.familyFriendly', { ns: 'restrooms', defaultValue: 'Family Friendly'})}</span>
-                  </div>
-                )}
-                {restroom.premiumProducts && (
-                  <div className="flex items-center text-sm text-gray-700">
-                    <i className="fas fa-hand-sparkles text-primary w-4 text-center mr-2"></i>
+                    <Sparkles className="h-4 w-4 mr-2 text-primary" />
                     <span>{t('amenitiesList.premiumProducts', { ns: 'restrooms', defaultValue: 'Premium Products'})}</span>
                   </div>
-                )}
+                </div>
               </div>
             </CardContent>
           </Card>
           
+          {/* Reviews Section */}
           <Card className="shadow-md">
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">{t('reviews')}</h2>
+              <h2 className="text-xl font-semibold mb-6">{t('reviews')}</h2>
               
-              <form onSubmit={handleSubmitReview} className="mb-6 border border-gray-200 rounded-lg p-4">
-                <h3 className="text-lg font-medium mb-3">{t('writeReview')}</h3>
-                <div className="mb-3">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('yourRating')}</label>
+              <form onSubmit={handleSubmitReview} className="mb-8 border border-gray-200 rounded-lg p-6">
+                <h3 className="text-lg font-medium mb-4">{t('writeReview')}</h3>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t('yourRating')}</label>
                   <div className="flex">
                     {renderRatingInputStars()}
                   </div>
                 </div>
-                <div className="mb-3">
-                   <label htmlFor="reviewText" className="block text-sm font-medium text-gray-700 mb-1">{t('yourComment')}</label>
+                <div className="mb-4">
+                   <label htmlFor="reviewText" className="block text-sm font-medium text-gray-700 mb-2">{t('yourComment')}</label>
                    <Textarea
                      id="reviewText"
                      value={reviewText}
                      onChange={(e) => setReviewText(e.target.value)}
                      placeholder={t('shareExperiencePlaceholder')}
-                     className="mb-3 min-h-[80px]"
+                     className="min-h-[100px]"
                      required
                    />
                 </div>
@@ -294,7 +351,7 @@ const RestroomDetail: React.FC = () => {
                   type="submit" 
                   disabled={isSubmitting || !reviewText.trim() || selectedRating === 0}
                   className="w-full sm:w-auto"
-                 >
+                >
                   {isSubmitting 
                     ? t('submitting', { ns: 'common', defaultValue: 'Submitting...' }) 
                     : t('submitReview')}
@@ -303,7 +360,7 @@ const RestroomDetail: React.FC = () => {
               
               <Separator className="my-6" />
               
-              <h3 className="text-lg font-semibold mb-4">{t('communityReviews')}</h3>
+              <h3 className="text-lg font-semibold mb-6">{t('communityReviews')}</h3>
               {isLoadingReviews ? (
                 <div className="space-y-4">
                   {[1, 2].map((i) => (
@@ -318,19 +375,17 @@ const RestroomDetail: React.FC = () => {
               ) : reviews && reviews.length > 0 ? (
                 <div className="space-y-6">
                   {reviews.map((review) => (
-                    <div key={review.id} className="border-b border-gray-100 pb-4 last:border-0">
-                      <div className="flex items-center mb-2">
-                         <div className="flex text-yellow-500 mr-2" aria-label={t('reviewRatingLabel', { rating: review.rating, defaultValue: `Rated ${review.rating} out of 5 stars` })}>
-                           {renderDisplayStars(review.rating)}
+                    <div key={review.id} className="border-b border-gray-100 pb-6 last:border-0">
+                      <div className="flex items-center mb-3">
+                         <div className="flex text-yellow-500 mr-2" aria-label={t('reviewRatingLabel', { rating: review.rating || 0, defaultValue: `Rated ${review.rating || 0} out of 5 stars` })}>
+                           {renderDisplayStars(review.rating || 0)}
                          </div>
-                         {/* Optionally display user name if available */}
-                         {/* <span className="font-medium text-sm">- {review.userName || 'Anonymous'}</span> */} 
                       </div>
-                      <p className="text-gray-700 mb-2">{review.comment}</p>
+                      <p className="text-gray-700 mb-2">{review.description || ''}</p>
                       <p className="text-gray-500 text-sm">
                         {t('postedOn', {
-                          date: review.createdAt 
-                                ? new Intl.DateTimeFormat(i18n.language).format(new Date(review.createdAt))
+                          date: review.created_at 
+                                ? new Intl.DateTimeFormat(i18n.language).format(new Date(review.created_at))
                                 : t('unknownDate', { ns: 'common', defaultValue: 'Unknown date' })
                         })}
                       </p>
@@ -346,36 +401,14 @@ const RestroomDetail: React.FC = () => {
           </Card>
         </div>
         
-        <div className="lg:w-1/3">
+        {/* <div className="lg:w-1/3">
           <div className="sticky top-24 space-y-6">
             <Map 
               latitude={restroom.latitude} 
               longitude={restroom.longitude} 
             />
-            
-            <Card className="bg-gradient-to-br from-accent to-primary text-white shadow-lg">
-              <CardContent className="p-5">
-                <h3 className="font-semibold text-lg mb-2">{t('promoSidebar.title', {defaultValue: 'Enhance Your Well-being'})}</h3>
-                <p className="text-sm mb-4 opacity-90">
-                  {t('promoSidebar.description', {defaultValue: 'Explore premium hygiene and wellness products from our partner, Injoy Bio.'})}
-                </p>
-                <Button 
-                  asChild
-                  variant="secondary"
-                  className="w-full bg-white text-primary hover:bg-gray-100 font-semibold"
-                >
-                  <a 
-                    href="https://injoy.bio" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                  >
-                    {t('promoSidebar.button', {defaultValue: 'Visit Injoy Bio'})}
-                  </a>
-                </Button>
-              </CardContent>
-            </Card>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

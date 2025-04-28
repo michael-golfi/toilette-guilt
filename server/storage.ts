@@ -192,8 +192,7 @@ export class SqlStorage implements IStorage {
         ) as distance
       from public_bathrooms pb
       left join public_bathroom_reviews r on r.public_bathroom_id = pb.id
-      where pb.location && st_expand(st_makepoint($2, $1)::geography, $4 * 1000)
-        and st_dwithin(
+      where st_dwithin(
           st_makepoint($2, $1)::geography,
           pb.location,
           $4 * 1000,  -- Convert km to meters
@@ -805,8 +804,8 @@ export class SqlStorage implements IStorage {
       address: row.address,
       data_id: row.data_id,
       category: row.category,
-      latitude: row.latitude,
-      longitude: row.longitude,
+      latitude: parseFloat(row.latitude),
+      longitude: parseFloat(row.longitude),
       timezone: row.timezone,
       web_site: row.web_site,
       plus_code: row.plus_code,

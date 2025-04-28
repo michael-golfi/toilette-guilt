@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { apiRequest } from '@/lib/queryClient';
+import { PublicBathroomWithRating } from '@shared/schema';
+import { useQuery } from '@tanstack/react-query';
 import { Search } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Filters, { FilterOptions } from './Filters';
 import Map from './Map';
 import RestroomListing from './RestroomListing';
-import { apiRequest } from '@/lib/queryClient';
-import { useTranslation } from 'react-i18next';
-import { PublicBathroomWithRating } from '@shared/schema';
 
 interface RestroomDirectoryProps {
   initialLocation?: string;
@@ -18,7 +18,7 @@ interface RestroomDirectoryProps {
   initialLongitude?: number;
 }
 
-const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({ 
+const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
   initialLocation,
   initialLatitude,
   initialLongitude
@@ -27,44 +27,79 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
   const [sortOption, setSortOption] = useState<string>("nearest");
   const [filteredRestrooms, setFilteredRestrooms] = useState<PublicBathroomWithRating[]>([]);
   const [displayCount, setDisplayCount] = useState<number>(3);
-  const [currentFilters, setCurrentFilters] = useState<FilterOptions>({});
+  const [currentFilters, setCurrentFilters] = useState<FilterOptions>({
+    accessibilityFeatures: false,
+    babyChanging: false,
+    genderNeutral: false,
+    freeToUse: false,
+    changingRoom: false,
+    singleOccupancy: false,
+    customerOnly: false,
+    cleanliness: 0,
+    distance: 'any'
+  });
   const [coordinates, setCoordinates] = useState<{ latitude?: number, longitude?: number }>({});
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [maxDistance, setMaxDistance] = useState(5);
+  const [showFreeOnly, setShowFreeOnly] = useState(false);
+  const [showAccessibleOnly, setShowAccessibleOnly] = useState(false);
+  const [show24HoursOnly, setShow24HoursOnly] = useState(false);
 
   // Fetch filtered nearby restrooms
   const { data: restrooms, isLoading, refetch: refetchRestrooms } = useQuery<PublicBathroomWithRating[]>({
     queryKey: ['/api/restrooms/nearby', coordinates.latitude, coordinates.longitude, currentFilters],
     queryFn: async () => {
       if (!coordinates.latitude || !coordinates.longitude) return [];
-      
+
       // Build nearby URL with filters
       let nearbyUrl = `/api/restrooms/nearby?latitude=${coordinates.latitude}&longitude=${coordinates.longitude}`;
-      
+
       // Add filters if they exist
       if (currentFilters.accessibilityFeatures) {
         nearbyUrl += '&wheelchairAccessible=true';
       }
-      
+
       if (currentFilters.distance && currentFilters.distance !== 'any') {
         nearbyUrl += `&radius=${currentFilters.distance}`;
       }
-      
+
       if (currentFilters.cleanliness) {
         nearbyUrl += `&minRating=${currentFilters.cleanliness}`;
       }
-      
+
       const response = await apiRequest('GET', nearbyUrl);
-      return response.json();
+      const data = await response.json();
+      return data.map((restroom: any) => ({
+        ...restroom,
+        review_rating: parseFloat(restroom.review_rating) || 0,
+        review_count: parseInt(restroom.review_count) || 0
+      }));
     },
     enabled: !!coordinates.latitude && !!coordinates.longitude
+  });
+
+  const { data: accessibilityFeatures } = useQuery<Record<string, string[]>>({
+    queryKey: ['accessibilityFeatures'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/restrooms/accessibility-features');
+      return response.json();
+    },
+  });
+
+  const { data: openingHours } = useQuery<Record<string, string[]>>({
+    queryKey: ['openingHours'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/restrooms/opening-hours');
+      return response.json();
+    },
   });
 
   // Apply filters when filter state changes
   const applyFilters = async (filters: FilterOptions) => {
     setCurrentFilters(filters);
     setIsSearching(true);
-    
+
     try {
       const response = await apiRequest('POST', '/api/restrooms/filter', filters);
       const data = await response.json();
@@ -79,9 +114,9 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
   // Sort restrooms based on the selected option
   const sortRestrooms = (restroomsToSort: PublicBathroomWithRating[], sortBy: string) => {
     if (!restroomsToSort) return [];
-    
+
     const sorted = [...restroomsToSort];
-    
+
     switch (sortBy) {
       case "highest-rated":
         return sorted.sort((a, b) => b.review_rating - a.review_rating);
@@ -108,7 +143,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
   // Handle search input
   const handleSearch = async () => {
     setIsSearching(true);
-    
+
     try {
       if (searchTerm.trim() === '') {
         // If search is empty, reset to all restrooms
@@ -117,23 +152,23 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
         }
         return;
       }
-      
+
       // Add location to search if available
       let searchUrl = `/api/restrooms/search?query=${encodeURIComponent(searchTerm)}`;
-      
+
       if (coordinates.latitude && coordinates.longitude) {
         searchUrl += `&latitude=${coordinates.latitude}&longitude=${coordinates.longitude}`;
       }
-      
+
       // Add any active filters
       if (currentFilters.accessibilityFeatures) {
         searchUrl += '&wheelchairAccessible=true';
       }
-      
+
       if (currentFilters.cleanliness) {
         searchUrl += `&minRating=${currentFilters.cleanliness}`;
       }
-      
+
       const response = await apiRequest('GET', searchUrl);
       const data = await response.json();
       setFilteredRestrooms(sortRestrooms(data, sortOption));
@@ -151,7 +186,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
         setIsSearching(true);
         try {
           const response = await apiRequest(
-            'GET', 
+            'GET',
             `/api/restrooms/nearby?latitude=${coordinates.latitude}&longitude=${coordinates.longitude}&limit=20`
           );
           const data = await response.json();
@@ -162,7 +197,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
           setIsSearching(false);
         }
       };
-      
+
       fetchNearbyRestrooms();
     }
   }, [coordinates, sortOption]);
@@ -182,7 +217,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
         latitude: initialLatitude,
         longitude: initialLongitude
       });
-    } 
+    }
     // Otherwise check if we have a location name to geocode
     else if (initialLocation) {
       // This would typically geocode the initialLocation to get coordinates
@@ -191,7 +226,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
         latitude: 40.7128,
         longitude: -74.0060
       });
-    } 
+    }
     // If no location info provided, try to get user's current location
     else if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -208,6 +243,61 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
     }
   }, [initialLocation, initialLatitude, initialLongitude]);
 
+  const filteredRestroomsMemo = React.useMemo(() => {
+    if (!restrooms) return [];
+
+    return restrooms
+      .filter(restroom => {
+        if (showFreeOnly && restroom.price_range !== 'Free') return false;
+        if (showAccessibleOnly && !accessibilityFeatures?.[restroom.id]?.length) return false;
+        if (show24HoursOnly && !openingHours?.[restroom.id]?.some(hour => hour.toLowerCase().includes('24'))) return false;
+        if (searchTerm && !restroom.title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+        return true;
+      })
+      .sort((a, b) => {
+        if (sortOption === "nearest") {
+          return (a.distance || Infinity) - (b.distance || Infinity);
+        }
+        return (b.review_rating || 0) - (a.review_rating || 0);
+      });
+  }, [restrooms, searchTerm, sortOption, showFreeOnly, showAccessibleOnly, show24HoursOnly, accessibilityFeatures, openingHours]);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Side Panel */}
+          <div className="w-full md:w-64 space-y-6">
+            <Filters onApplyFilters={applyFilters} />
+            {/* <Map latitude={coordinates.latitude} longitude={coordinates.longitude} /> */}
+          </div>
+
+          {/* Loading Content */}
+          <div className="flex-1">
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="flex flex-col md:flex-row gap-4 p-6 bg-white rounded-lg shadow">
+                    <div className="w-full md:w-48 h-48 bg-gray-200 rounded-lg"></div>
+                    <div className="flex-1 space-y-4">
+                      <div className="h-6 w-3/4 bg-gray-200 rounded"></div>
+                      <div className="h-4 w-1/2 bg-gray-200 rounded"></div>
+                      <div className="flex gap-2">
+                        <div className="h-6 w-20 bg-gray-200 rounded-full"></div>
+                        <div className="h-6 w-24 bg-gray-200 rounded-full"></div>
+                      </div>
+                      <div className="h-4 w-1/4 bg-gray-200 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
@@ -215,14 +305,14 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
           {/* Filters and Map Section */}
           <div className="md:w-1/3 lg:w-1/4">
             <Filters onApplyFilters={applyFilters} />
-            <Map latitude={coordinates.latitude} longitude={coordinates.longitude} />
+            {/* <Map latitude={coordinates.latitude} longitude={coordinates.longitude} /> */}
           </div>
-          
+
           {/* Listings Section */}
           <div className="md:w-2/3 lg:w-3/4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
               <h2 className="text-2xl font-bold mb-2 sm:mb-0">{t('directory.title', { ns: 'restrooms' })}</h2>
-              
+
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
                 {/* Sort Dropdown */}
                 <div className="flex items-center gap-2">
@@ -267,7 +357,7 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
                 </Button>
               </div>
             </div>
-            
+
             {isLoading || isSearching ? (
               // Loading skeleton
               Array.from({ length: 3 }).map((_, index) => (
@@ -292,17 +382,22 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
                   </div>
                 </Card>
               ))
-            ) : filteredRestrooms.length > 0 ? (
+            ) : filteredRestroomsMemo.length > 0 ? (
               // Display restrooms
               <>
-                {filteredRestrooms.slice(0, displayCount).map((restroom) => (
-                  <RestroomListing key={restroom.id} restroom={restroom} />
+                {filteredRestroomsMemo.slice(0, displayCount).map((restroom) => (
+                  <RestroomListing
+                    key={restroom.id}
+                    restroom={restroom}
+                    accessibilityFeatures={accessibilityFeatures?.[restroom.id] || []}
+                    openingHours={openingHours?.[restroom.id] || []}
+                  />
                 ))}
-                
+
                 {/* Load More Button */}
-                {displayCount < filteredRestrooms.length && (
+                {displayCount < filteredRestroomsMemo.length && (
                   <div className="text-center mt-6">
-                    <Button 
+                    <Button
                       onClick={loadMore}
                       className="bg-primary text-white hover:bg-primary/80"
                     >
