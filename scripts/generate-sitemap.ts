@@ -7,7 +7,7 @@ import ws from "ws";
 neonConfig.webSocketConstructor = ws;
 const { Pool } = pg;
 
-const MAX_ENTRIES_PER_SITEMAP = 50000;
+const MAX_ENTRIES_PER_SITEMAP = 10000;
 const BASE_URL = "https://toiletguilt.com";
 
 interface SitemapEntry {
