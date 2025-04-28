@@ -32,15 +32,29 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
 
-  // Fetch nearby restrooms
+  // Fetch filtered nearby restrooms
   const { data: restrooms, isLoading, refetch: refetchRestrooms } = useQuery<PublicBathroomWithRating[]>({
-    queryKey: ['/api/restrooms/nearby', coordinates.latitude, coordinates.longitude],
+    queryKey: ['/api/restrooms/nearby', coordinates.latitude, coordinates.longitude, currentFilters],
     queryFn: async () => {
       if (!coordinates.latitude || !coordinates.longitude) return [];
-      const response = await apiRequest(
-        'GET', 
-        `/api/restrooms/nearby?latitude=${coordinates.latitude}&longitude=${coordinates.longitude}&limit=20`
-      );
+      
+      // Build nearby URL with filters
+      let nearbyUrl = `/api/restrooms/nearby?latitude=${coordinates.latitude}&longitude=${coordinates.longitude}`;
+      
+      // Add filters if they exist
+      if (currentFilters.accessibilityFeatures) {
+        nearbyUrl += '&wheelchairAccessible=true';
+      }
+      
+      if (currentFilters.distance && currentFilters.distance !== 'any') {
+        nearbyUrl += `&radius=${currentFilters.distance}`;
+      }
+      
+      if (currentFilters.cleanliness) {
+        nearbyUrl += `&minRating=${currentFilters.cleanliness}`;
+      }
+      
+      const response = await apiRequest('GET', nearbyUrl);
       return response.json();
     },
     enabled: !!coordinates.latitude && !!coordinates.longitude
