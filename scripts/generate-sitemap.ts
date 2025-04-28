@@ -1,11 +1,20 @@
 import { neonConfig } from "@neondatabase/serverless";
-import { writeFileSync } from "fs";
+import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
 import pg from "pg";
 import ws from "ws";
 
 neonConfig.webSocketConstructor = ws;
 const { Pool } = pg;
+
+const MAX_ENTRIES_PER_SITEMAP = 50000;
+const BASE_URL = "https://toiletguilt.com";
+
+interface SitemapEntry {
+  path: string;
+  lastmod: string;
+}
+
 async function generateSitemap() {
   if (!process.env.DATABASE_URL) {
     throw new Error("DATABASE_URL environment variable is not set");
@@ -27,7 +36,7 @@ async function generateSitemap() {
     `);
 
     // Generate sitemap entries
-    const sitemapEntries = [
+    const sitemapEntries: SitemapEntry[] = [
       // Static routes
       { path: "/", lastmod: new Date().toISOString() },
       { path: "/about", lastmod: new Date().toISOString() },
@@ -47,14 +56,27 @@ async function generateSitemap() {
       })),
     ];
 
-    // Generate sitemap XML
-    const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+    // Create sitemaps directory if it doesn't exist
+    const sitemapsDir = join(process.cwd(), "dist/public/sitemaps");
+    mkdirSync(sitemapsDir, { recursive: true });
+
+    // Split entries into chunks
+    const chunks: SitemapEntry[][] = [];
+    for (let i = 0; i < sitemapEntries.length; i += MAX_ENTRIES_PER_SITEMAP) {
+      chunks.push(sitemapEntries.slice(i, i + MAX_ENTRIES_PER_SITEMAP));
+    }
+
+    // Generate individual sitemap files
+    const sitemapFiles: string[] = [];
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemapEntries
+${chunk
   .map(
     (entry) => `
   <url>
-    <loc>https://toiletguilt.com${entry.path}</loc>
+    <loc>${BASE_URL}${entry.path}</loc>
     <lastmod>${entry.lastmod}</lastmod>
     <changefreq>daily</changefreq>
     <priority>${entry.path === "/" ? "1.0" : "0.8"}</priority>
@@ -63,10 +85,32 @@ ${sitemapEntries
   .join("")}
 </urlset>`;
 
-    // Write sitemap to file
-    const outputPath = join(process.cwd(), "dist/public/sitemap.xml");
-    writeFileSync(outputPath, sitemapXml);
-    console.log("Sitemap generated successfully at:", outputPath);
+      const filename = `sitemap-${i + 1}.xml`;
+      const outputPath = join(sitemapsDir, filename);
+      writeFileSync(outputPath, sitemapXml);
+      sitemapFiles.push(filename);
+      console.log(`Generated sitemap file: ${filename}`);
+    }
+
+    // Generate sitemap index
+    const sitemapIndexXml = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapFiles
+  .map(
+    (filename) => `
+  <sitemap>
+    <loc>${BASE_URL}/sitemaps/${filename}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+  </sitemap>`
+  )
+  .join("")}
+</sitemapindex>`;
+
+    // Write sitemap index
+    const indexOutputPath = join(process.cwd(), "dist/public/sitemap.xml");
+    writeFileSync(indexOutputPath, sitemapIndexXml);
+    console.log("Generated sitemap index at:", indexOutputPath);
+
   } catch (error) {
     console.error("Error generating sitemap:", error);
     throw error;
