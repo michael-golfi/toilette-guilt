@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { useRoute, useLocation } from 'wouter';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { AlertCircle, Clock, MapPin, Star, ChevronLeft, Accessibility, Baby, Users, Lock, LockOpen, Droplets, Paperclip, User, Sparkles } from 'lucide-react';
+import { AlertCircle, Clock, MapPin, Star, ChevronLeft, Accessibility, Baby, Users, Lock, LockOpen, Droplets, Paperclip, User, Sparkles, ChevronRight, ChevronLeft as ChevronLeftIcon, Activity } from 'lucide-react';
 import { PublicBathroom, PublicBathroomReview } from '@shared/schema';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import Map from '@/components/Map';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 interface AccessibilityFeature {
   id: string;
@@ -23,6 +25,15 @@ interface OpeningHour {
   hours_text: string;
 }
 
+interface PublicBathroomExtended extends PublicBathroom {
+  images?: string[];
+}
+
+interface PoopCount {
+  count: number;
+  user_pooped: boolean;
+}
+
 const RestroomDetail: React.FC = () => {
   const { t, i18n } = useTranslation(['restrooms', 'common'], { 
     keyPrefix: 'detail'
@@ -32,10 +43,12 @@ const RestroomDetail: React.FC = () => {
   const [reviewText, setReviewText] = useState('');
   const [selectedRating, setSelectedRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { toast } = useToast();
   
   const restroomId = match ? params.id : null;
 
-  const { data: restroom, isLoading, error } = useQuery<PublicBathroom>({
+  const { data: restroom, isLoading, error } = useQuery<PublicBathroomExtended>({
     queryKey: [`/api/restrooms/${restroomId}`],
     queryFn: async () => {
       if (!restroomId) throw new Error('No restroom ID provided');
@@ -90,6 +103,40 @@ const RestroomDetail: React.FC = () => {
     queryKey: [`/api/restrooms/${restroomId}/reviews`],
     enabled: !!restroomId,
   });
+
+  const { data: poopCount, refetch: refetchPoopCount } = useQuery<PoopCount>({
+    queryKey: [`/api/restrooms/${restroomId}/poop-count`],
+    queryFn: async () => {
+      if (!restroomId) throw new Error('No restroom ID provided');
+      const response = await apiRequest('GET', `/api/restrooms/${restroomId}/poop-count`);
+      return response.json();
+    },
+    enabled: !!restroomId,
+  });
+
+  const trackPoopMutation = useMutation({
+    mutationFn: async () => {
+      if (!restroomId) throw new Error('No restroom ID provided');
+      const response = await apiRequest('POST', `/api/restrooms/${restroomId}/track-poop`);
+      return response.json();
+    },
+    onSuccess: () => {
+      refetchPoopCount();
+      toast({
+        title: t('poop.tracked', { defaultValue: 'Poop tracked!' }),
+        description: t('poop.thanks', { defaultValue: 'Thanks for sharing your experience!' }),
+      });
+    },
+    onError: () => {
+      toast({
+        title: t('poop.error', { defaultValue: 'Error' }),
+        description: t('poop.tryAgain', { defaultValue: 'Failed to track poop. Please try again.' }),
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const images = restroom?.images || [restroom?.thumbnail].filter(Boolean) as string[];
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -159,6 +206,14 @@ const RestroomDetail: React.FC = () => {
 
   const handleRatingClick = (rating: number) => {
     setSelectedRating(rating);
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
   if (error) {
@@ -262,13 +317,106 @@ const RestroomDetail: React.FC = () => {
 
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="lg:w-2/3 space-y-6">
-          {/* Main Image */}
-          <Card className="overflow-hidden shadow-md">
-            <img 
-              src={restroom.thumbnail || 'https://via.placeholder.com/800x400.png'} 
-              alt={t('imageAlt', { name: restroom.title, defaultValue: `Image of ${restroom.title}` })}
-              className="w-full h-64 md:h-80 object-cover bg-gray-200"
-            />
+          {/* Image Gallery */}
+          <Card className="overflow-hidden shadow-md relative group">
+            <div className="relative aspect-video">
+              <img 
+                src={images[currentImageIndex]} 
+                alt={t('imageAlt', { name: restroom.title, defaultValue: `Image of ${restroom.title}` })}
+                className="w-full h-full object-cover"
+              />
+              {images.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePrevImage}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeftIcon className="h-6 w-6" />
+                  </button>
+                  <button
+                    onClick={handleNextImage}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                    {images.map((value: string | undefined, index: number) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={cn(
+                          "w-2 h-2 rounded-full transition-colors",
+                          index === currentImageIndex ? "bg-white" : "bg-white/50"
+                        )}
+                        aria-label={`Go to image ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </Card>
+          
+          {/* Poop Stats */}
+          <Card className="shadow-md bg-gradient-to-r from-brown-50 to-brown-100">
+            <CardContent className="p-6">
+              <div className="flex flex-col items-center text-center">
+                <div className="bg-white rounded-full p-4 mb-4 shadow-sm">
+                  <Activity className="h-8 w-8 text-brown-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-brown-900 mb-2">
+                  {poopCount?.count || 0}
+                </h3>
+                <p className="text-brown-600 font-medium">
+                  {t('poop.stats.title', { defaultValue: 'Number of shits given' })}
+                </p>
+                <p className="text-sm text-brown-500 mt-2">
+                  {t('poop.stats.subtitle', { defaultValue: 'And counting...' })}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Poop Tracking CTA */}
+          <Card className="shadow-md border-2 border-brown-200">
+            <CardContent className="p-6">
+              <div className="flex flex-col items-center text-center gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-brown-100 p-3 rounded-full">
+                    <Activity className="h-6 w-6 text-brown-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-brown-900">
+                      {t('poop.cta.title', { defaultValue: 'Did you drop a deuce here?' })}
+                    </h3>
+                    <p className="text-sm text-brown-600">
+                      {t('poop.cta.subtitle', { defaultValue: 'Join the exclusive club of people who have pooped here' })}
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  size="lg"
+                  variant={poopCount?.user_pooped ? "default" : "outline"}
+                  className={cn(
+                    "flex items-center gap-2 min-w-[200px] text-lg py-6",
+                    poopCount?.user_pooped 
+                      ? "bg-brown-500 hover:bg-brown-600 text-white" 
+                      : "border-brown-500 text-brown-500 hover:bg-brown-50"
+                  )}
+                  onClick={() => trackPoopMutation.mutate()}
+                  disabled={trackPoopMutation.isPending || poopCount?.user_pooped}
+                >
+                  <Activity className="h-5 w-5" />
+                  <span className="font-semibold">
+                    {poopCount?.user_pooped 
+                      ? t('poop.tracked', { defaultValue: 'You pooped here!' })
+                      : t('poop.track', { defaultValue: 'I pooped here!' })}
+                  </span>
+                </Button>
+              </div>
+            </CardContent>
           </Card>
           
           {/* Features and Amenities */}
@@ -401,14 +549,30 @@ const RestroomDetail: React.FC = () => {
           </Card>
         </div>
         
-        {/* <div className="lg:w-1/3">
+        <div className="lg:w-1/3">
           <div className="sticky top-24 space-y-6">
-            <Map 
-              latitude={restroom.latitude} 
-              longitude={restroom.longitude} 
-            />
+            <Card className="shadow-md">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold mb-4">{t('location')}</h3>
+                <div className="aspect-square rounded-lg overflow-hidden">
+                  <Map 
+                    latitude={restroom.latitude} 
+                    longitude={restroom.longitude}
+                  />
+                </div>
+                <div className="mt-4">
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${restroom.latitude},${restroom.longitude}`, '_blank')}
+                  >
+                    {t('getDirections')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );

@@ -116,4 +116,8 @@ export interface IStorage {
   getPublicBathroomOpeningHours(
     publicBathroomId: string
   ): Promise<PublicBathroomOpeningHour[]>;
+
+  // Poop tracking methods
+  trackPoop(publicBathroomId: string): Promise<number>;
+  getPoopCount(publicBathroomId: string): Promise<number>;
 }

@@ -174,6 +174,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Track a poop at a restroom
+  app.post(`${apiPrefix}/restrooms/:id/track-poop`, async (req: Request, res: Response) => {
+    try {
+      const result = restroomIdSchema.safeParse({ id: req.params.id });
+      
+      if (!result.success) {
+        console.error('Invalid restroom ID:', result.error);
+        return res.status(400).json({ 
+          message: "Invalid restroom ID", 
+          errors: result.error.format(),
+          details: result.error.errors
+        });
+      }
+      
+      const { id } = result.data;
+      
+      const count = await storage.trackPoop(id);
+      res.json({ count });
+    } catch (error) {
+      console.error('Error in track-poop endpoint:', error);
+      if (error instanceof Error) {
+        if (error.message.includes('Restroom not found')) {
+          return res.status(404).json({ 
+            message: error.message,
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+          });
+        }
+        return res.status(500).json({ 
+          message: "Server error", 
+          error: error.message,
+          stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+      }
+      res.status(500).json({ 
+        message: "Server error", 
+        error: String(error)
+      });
+    }
+  });
+
+  // Get poop count for a restroom
+  app.get(`${apiPrefix}/restrooms/:id/poop-count`, async (req: Request, res: Response) => {
+    try {
+      const result = restroomIdSchema.safeParse({ id: req.params.id });
+      
+      if (!result.success) {
+        console.error('Invalid restroom ID:', result.error);
+        return res.status(400).json({ 
+          message: "Invalid restroom ID", 
+          errors: result.error.format(),
+          details: result.error.errors
+        });
+      }
+      
+      const { id } = result.data;
+      
+      const count = await storage.getPoopCount(id);
+      res.json({ count });
+    } catch (error) {
+      console.error('Error in poop-count endpoint:', error);
+      if (error instanceof Error) {
+        if (error.message.includes('Restroom not found')) {
+          return res.status(404).json({ 
+            message: error.message,
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+          });
+        }
+        return res.status(500).json({ 
+          message: "Server error", 
+          error: error.message,
+          stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+      }
+      res.status(500).json({ 
+        message: "Server error", 
+        error: String(error)
+      });
+    }
+  });
+  
   // Article endpoints
   app.get(`${apiPrefix}/articles`, async (req: Request, res: Response) => {
     try {

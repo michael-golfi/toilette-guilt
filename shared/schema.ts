@@ -52,6 +52,7 @@ export const publicBathroomSchema = z.object({
   price_range: z.string().optional(),
   review_count: z.number(),
   review_rating: z.number(),
+  poop_count: z.number(),
   distance: z.number().optional(),
   created_at: z.date(),
   updated_at: z.date(),

@@ -1,9 +1,14 @@
 import { neonConfig } from "@neondatabase/serverless";
 import pg from "pg";
 import ws from "ws";
-
-neonConfig.webSocketConstructor = ws;
-
+import { IStorage } from "./types";
+import type {
+  PublicBathroomAccessibilityFeature,
+  PublicBathroomAddress,
+  PublicBathroomCategory,
+  PublicBathroomImage,
+  PublicBathroomOpeningHour,
+} from "./types";
 import {
   Article,
   PublicBathroomReview,
@@ -19,14 +24,8 @@ import {
   searchParamsSchema,
   testimonialSchema,
 } from "../shared/schema";
-import type {
-  IStorage,
-  PublicBathroomAccessibilityFeature,
-  PublicBathroomAddress,
-  PublicBathroomCategory,
-  PublicBathroomImage,
-  PublicBathroomOpeningHour,
-} from "./types";
+
+neonConfig.webSocketConstructor = ws;
 
 const { Pool } = pg;
 
@@ -814,9 +813,68 @@ export class SqlStorage implements IStorage {
       price_range: row.price_range,
       review_count: parseInt(row.review_count) || 0,
       review_rating: parseFloat(row.average_rating) || 0,
+      poop_count: parseInt(row.poop_count) || 0,
       created_at: row.created_at,
       updated_at: row.updated_at,
     };
+  }
+
+  // Poop tracking methods
+  async trackPoop(publicBathroomId: string): Promise<number> {
+    try {
+      restroomIdSchema.parse({ id: publicBathroomId });
+    } catch (error) {
+      console.error('Invalid restroom ID:', error);
+      throw new Error(`Invalid restroom ID: ${error instanceof Error ? error.message : String(error)}`);
+    }
+
+    try {
+      const query = `
+        UPDATE public_bathrooms 
+        SET poop_count = poop_count + 1
+        WHERE id = $1
+        RETURNING poop_count
+      `;
+
+      const { rows } = await this.pool.query(query, [publicBathroomId]);
+
+      if (rows.length === 0) {
+        throw new Error(`Restroom not found with ID: ${publicBathroomId}`);
+      }
+
+      return parseInt(rows[0].poop_count);
+    } catch (error) {
+      console.error('Error tracking poop:', error);
+      throw new Error(`Failed to track poop: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  async getPoopCount(publicBathroomId: string): Promise<number> {
+    try {
+      restroomIdSchema.parse({ id: publicBathroomId });
+    } catch (error) {
+      console.error('Invalid restroom ID:', error);
+      throw new Error(`Invalid restroom ID: ${error instanceof Error ? error.message : String(error)}`);
+    }
+
+    try {
+      const query = `
+        SELECT poop_count 
+        FROM public_bathrooms 
+        WHERE id = $1
+      `;
+
+      const { rows } = await this.pool.query(query, [publicBathroomId]);
+
+      if (rows.length === 0) {
+        throw new Error(`Restroom not found with ID: ${publicBathroomId}`);
+      }
+
+      return parseInt(rows[0].poop_count);
+    } catch (error) {
+      console.error('Error getting poop count:', error);
+      throw new Error(`Failed to get poop count: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
 }
 

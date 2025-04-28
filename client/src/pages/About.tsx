@@ -64,9 +64,9 @@ const About: React.FC = () => {
             </div>
           </div>
         </section>
-                
+
         {/* Contact Section */}
-        <section id="contact" className="mb-16">
+        {/* <section id="contact" className="mb-16">
           <h2 className="text-3xl font-bold mb-6 text-center">{t('contact.title')}</h2>
           
           <Card className="shadow-md">
@@ -156,10 +156,10 @@ const About: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </section>
+        </section> */}
         
         {/* Call to Action */}
-        <section className="text-center bg-gradient-to-r from-blue-50 to-cyan-50 p-8 rounded-lg shadow-inner">
+        {/* <section className="text-center bg-gradient-to-r from-blue-50 to-cyan-50 p-8 rounded-lg shadow-inner">
           <h2 className="text-2xl font-bold mb-3 text-primary">{t('cta.title')}</h2>
           <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
             {t('cta.description')}
@@ -170,7 +170,7 @@ const About: React.FC = () => {
           >
             <Link href="/submit-listing">{t('cta.button')}</Link>
           </Button>
-        </section>
+        </section> */}
       </div>
     </div>
   );
