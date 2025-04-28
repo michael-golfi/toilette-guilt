@@ -8,7 +8,8 @@ import {
   BanknoteIcon, 
   UserIcon, 
   MapPinIcon,
-  ClockIcon 
+  ClockIcon,
+  Activity
 } from 'lucide-react';
 import { PublicBathroomWithRating } from '@shared/schema';
 import { useTranslation } from 'react-i18next';
@@ -75,6 +76,10 @@ const RestroomListing: React.FC<RestroomListingProps> = ({
                   </div>
                   <span className="text-gray-500 text-sm">
                     ({restroom.review_count || 0} {t('ratings.reviews', { count: restroom.review_count || 0 })})
+                  </span>
+                  <span className="text-gray-500 text-sm flex items-center">
+                    <span className="mr-1">💩</span>
+                    {restroom.poop_count || 0}
                   </span>
                 </div>
               </div>

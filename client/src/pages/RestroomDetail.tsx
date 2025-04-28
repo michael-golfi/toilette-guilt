@@ -316,7 +316,7 @@ const RestroomDetail: React.FC = () => {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:w-2/3 space-y-6">
+        <div className="lg:w-full space-y-6">
           {/* Image Gallery */}
           <Card className="overflow-hidden shadow-md relative group">
             <div className="relative aspect-video">
@@ -364,7 +364,7 @@ const RestroomDetail: React.FC = () => {
             <CardContent className="p-6">
               <div className="flex flex-col items-center text-center">
                 <div className="bg-white rounded-full p-4 mb-4 shadow-sm">
-                  <Activity className="h-8 w-8 text-brown-600" />
+                  <span className="text-2xl">💩</span>
                 </div>
                 <h3 className="text-2xl font-bold text-brown-900 mb-2">
                   {poopCount?.count || 0}
@@ -384,9 +384,6 @@ const RestroomDetail: React.FC = () => {
             <CardContent className="p-6">
               <div className="flex flex-col items-center text-center gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="bg-brown-100 p-3 rounded-full">
-                    <Activity className="h-6 w-6 text-brown-600" />
-                  </div>
                   <div>
                     <h3 className="text-lg font-semibold text-brown-900">
                       {t('poop.cta.title', { defaultValue: 'Did you drop a deuce here?' })}
@@ -408,7 +405,7 @@ const RestroomDetail: React.FC = () => {
                   onClick={() => trackPoopMutation.mutate()}
                   disabled={trackPoopMutation.isPending || poopCount?.user_pooped}
                 >
-                  <Activity className="h-5 w-5" />
+                  <span className="text-xl">💩</span>
                   <span className="font-semibold">
                     {poopCount?.user_pooped 
                       ? t('poop.tracked', { defaultValue: 'You pooped here!' })
@@ -549,7 +546,7 @@ const RestroomDetail: React.FC = () => {
           </Card>
         </div>
         
-        <div className="lg:w-1/3">
+        {/* <div className="lg:w-1/3">
           <div className="sticky top-24 space-y-6">
             <Card className="shadow-md">
               <CardContent className="p-6">
@@ -572,7 +569,7 @@ const RestroomDetail: React.FC = () => {
               </CardContent>
             </Card>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
