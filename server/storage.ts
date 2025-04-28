@@ -170,43 +170,52 @@ export class SqlStorage implements IStorage {
   async getNearbyPublicBathrooms(
     latitude: number,
     longitude: number,
-    limit: number = 20
+    limit: number = 20,
+    radius: number = 5  // Default radius in kilometers
   ): Promise<PublicBathroomWithRating[]> {
-    // Validate parameters
     try {
       nearbyParamsSchema.parse({ latitude, longitude, limit });
     } catch (error) {
       throw new Error(`Invalid nearby parameters: ${error}`);
     }
 
-    // PostgreSQL has extensions like PostGIS that would make this more efficient,
-    // but for now we'll use a simpler approach that works without extensions
+    // Optimized query using the spatial index with two-step filtering
     const query = `
-      select pb.*, 
+      select 
+        pb.*,
         coalesce(avg(r.rating), 0) as average_rating,
-        count(r.id) as review_count
-      from app_public.public_bathrooms pb
-      left join app_public.public_bathroom_reviews r on r.public_bathroom_id = pb.id
+        count(r.id) as review_count,
+        st_distance(
+          st_makepoint($2, $1)::geography,
+          pb.location,
+          true
+        ) as distance
+      from public_bathrooms pb
+      left join public_bathroom_reviews r on r.public_bathroom_id = pb.id
+      where pb.location && st_expand(st_makepoint($2, $1)::geography, $4 * 1000)
+        and st_dwithin(
+          st_makepoint($2, $1)::geography,
+          pb.location,
+          $4 * 1000,  -- Convert km to meters
+          true
+        )
       group by pb.id
+      order by distance
+      limit $3
     `;
 
-    const { rows } = await this.pool.query(query);
+    const { rows } = await this.pool.query(query, [latitude, longitude, limit, radius]);
 
-    // Map results to PublicBathroomWithRating objects and validate
+    // Map and validate results
     const validatedBathrooms: PublicBathroomWithRating[] = [];
 
     for (const row of rows) {
       try {
         const bathroom = this.mapToPublicBathroomWithRating(row);
-
-        // Calculate distance
-        bathroom.distance = calculateDistance(
-          latitude,
-          longitude,
-          bathroom.latitude,
-          bathroom.longitude
-        );
-
+        
+        // Set the distance from PostGIS calculation
+        bathroom.distance = parseFloat(row.distance) / 1000; // Convert meters to kilometers
+        
         // Validate using the schema
         const validatedBathroom = publicBathroomSchema.parse(bathroom);
         validatedBathrooms.push(validatedBathroom as PublicBathroomWithRating);
@@ -216,13 +225,7 @@ export class SqlStorage implements IStorage {
       }
     }
 
-    // Sort by distance and limit results
-    return validatedBathrooms
-      .sort(
-        (a, b) =>
-          (a.distance || Number.MAX_VALUE) - (b.distance || Number.MAX_VALUE)
-      )
-      .slice(0, limit);
+    return validatedBathrooms;
   }
 
   async searchPublicBathrooms(

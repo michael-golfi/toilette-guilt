@@ -79,7 +79,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const { latitude, longitude, limit = 20 } = result.data;
-      const limitValue = Math.min(limit, 20); // Cap at 20
+      const limitValue = Math.min(limit, 20);
       
       const restrooms = await storage.getNearbyPublicBathrooms(latitude, longitude, limitValue);
       res.json(restrooms);

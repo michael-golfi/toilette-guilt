@@ -18,7 +18,7 @@ export const nearbyParamsSchema = z.object({
     required_error: "Longitude is required",
     invalid_type_error: "Longitude must be a number"
   }),
-  limit: z.number().min(1).max(50).optional(),
+  limit: z.number().min(1).max(20).optional(),
 });
 
 export const restroomIdSchema = z.object({
