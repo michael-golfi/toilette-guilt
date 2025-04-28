@@ -32,9 +32,18 @@ const RestroomDirectory: React.FC<RestroomDirectoryProps> = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
 
-  // Fetch all restrooms
+  // Fetch nearby restrooms
   const { data: restrooms, isLoading, refetch: refetchRestrooms } = useQuery<PublicBathroomWithRating[]>({
-    queryKey: ['/api/restrooms'],
+    queryKey: ['/api/restrooms/nearby', coordinates.latitude, coordinates.longitude],
+    queryFn: async () => {
+      if (!coordinates.latitude || !coordinates.longitude) return [];
+      const response = await apiRequest(
+        'GET', 
+        `/api/restrooms/nearby?latitude=${coordinates.latitude}&longitude=${coordinates.longitude}&limit=20`
+      );
+      return response.json();
+    },
+    enabled: !!coordinates.latitude && !!coordinates.longitude
   });
 
   // Apply filters when filter state changes

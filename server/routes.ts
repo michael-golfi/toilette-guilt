@@ -52,16 +52,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Restroom endpoints
-  app.get(`${apiPrefix}/restrooms`, async (req: Request, res: Response) => {
-    try {
-      const restrooms = await storage.getPublicBathrooms();
-      res.json(restrooms);
-    } catch (error) {
-      res.status(500).json({ message: "Server error" });
-    }
-  });
-  
   app.get(`${apiPrefix}/restrooms/nearby`, async (req: Request, res: Response) => {
     try {
       // Parsing and validating query parameters
