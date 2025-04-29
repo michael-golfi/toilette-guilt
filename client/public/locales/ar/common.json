@@ -1,5 +1,5 @@
 {
-  "brandName": "Toilette Guilt",
+  "brandName": "Toilet Guilt",
   "unknownDate": "تاريخ غير معروف",
   "submitting": "جارٍ التقديم...",
   "navigation": {
@@ -12,7 +12,8 @@
     "signup": "التسجيل",
     "mostReviewed": "الأكثر تقييماً",
     "topRated": "الأعلى تقييماً",
-    "recentlyAdded": "أضيف مؤخراً"
+    "recentlyAdded": "أضيف مؤخراً",
+    "listYourBusiness": "سجل مؤسستك"
   },
   "footer": {
     "tagline": "إزالة وصمة العار عن محادثات المراحيض تقييمًا تلو الآخر. ابحث عن مراحيض نظيفة ويمكن الوصول إليها أينما كنت.",
@@ -22,7 +23,7 @@
     "contact": "اتصل بنا",
     "privacy": "سياسة الخصوصية",
     "terms": "شروط الخدمة",
-    "copyright": "© {{year}} Toilette Guilt. جميع الحقوق محفوظة.",
+    "copyright": "© {{year}} Toilet Guilt. جميع الحقوق محفوظة.",
     "hygieneArticles": "مقالات النظافة",
     "accessibilityGuide": "دليل إمكانية الوصول",
     "bathroomEtiquette": "آداب استخدام المرحاض",
@@ -73,7 +74,7 @@
     "errorTitle": "فشل الإرسال",
     "errorDescription": "حدث خطأ: {{error}}. الرجاء المحاولة مرة أخرى."
   },
-  "siteName": "Toilette Guilt",
+  "siteName": "Toilet Guilt",
   "tagline": "ابحث عن مراحيض عامة نظيفة ويمكن الوصول إليها بالقرب منك",
   "nav": {
     "home": "الرئيسية",

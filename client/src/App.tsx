@@ -16,6 +16,9 @@ import About from "@/pages/About";
 import { Suspense, useEffect } from "react";
 import { initGA } from "./lib/analytics";
 import AnalyticsWrapper from "./components/AnalyticsWrapper";
+import { BusinessRegistration } from "./pages/BusinessRegistration";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import TermsOfService from "@/pages/TermsOfService";
 
 const GA_MEASUREMENT_ID = 'G-4BT2M0NZQ8';
 
@@ -27,8 +30,10 @@ function Router() {
       <Route path="/restroom/:id" component={RestroomDetail} />
       <Route path="/articles" component={Articles} />
       <Route path="/article/:id" component={ArticleDetail} />
-      {/* <Route path="/submit-listing" component={SubmitForm} /> */}
+      <Route path="/business-registration" component={BusinessRegistration} />
       <Route path="/about" component={About} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
+      <Route path="/terms-of-service" component={TermsOfService} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,5 +1,5 @@
 {
-  "brandName": "Toilette Guilt",
+  "brandName": "Toilet Guilt",
   "unknownDate": "Fecha desconocida",
   "submitting": "Enviando...",
   "navigation": {
@@ -12,7 +12,8 @@
     "signup": "Registrarse",
     "mostReviewed": "Más comentados",
     "topRated": "Mejor valorados",
-    "recentlyAdded": "Añadidos recientemente"
+    "recentlyAdded": "Añadidos recientemente",
+    "listYourBusiness": "Registre su Negocio"
   },
   "footer": {
     "tagline": "Desestigmatizando las conversaciones sobre baños, una reseña a la vez. Encuentra baños limpios y accesibles dondequiera que vayas.",
@@ -22,7 +23,7 @@
     "contact": "Contáctenos",
     "privacy": "Política de Privacidad",
     "terms": "Términos de Servicio",
-    "copyright": "© {{year}} Toilette Guilt. Todos los derechos reservados.",
+    "copyright": "© {{year}} Toilet Guilt. Todos los derechos reservados.",
     "hygieneArticles": "Artículos de higiene",
     "accessibilityGuide": "Guía de accesibilidad",
     "bathroomEtiquette": "Etiqueta en el baño",
@@ -73,7 +74,7 @@
     "errorTitle": "Envío Fallido",
     "errorDescription": "Ocurrió un error: {{error}}. Por favor, inténtalo de nuevo."
   },
-  "siteName": "Toilette Guilt",
+  "siteName": "Toilet Guilt",
   "tagline": "Encuentra baños públicos limpios y accesibles cerca de ti",
   "nav": {
     "home": "Inicio",

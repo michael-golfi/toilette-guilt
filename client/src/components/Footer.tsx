@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <span className="text-primary text-2xl"><i className="fas fa-toilet"></i></span>
-              <span className="font-bold text-xl">{t('brandName', {defaultValue: 'Toilette Guilt'})}</span>
+              <span className="font-bold text-xl">{t('brandName', {defaultValue: 'Toilet Guilt'})}</span>
             </div>
             <p className="text-gray-400 mb-4">
               {t('footer.tagline', { defaultValue: 'Destigmatizing bathroom conversations one review at a time. Find clean, accessible restrooms wherever you go.'})}
@@ -97,12 +97,12 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/privacy">
+                <Link href="/privacy-policy">
                   <a className="text-gray-400 hover:text-white transition">{t('footer.privacy')}</a>
                 </Link>
               </li>
               <li>
-                <Link href="/terms">
+                <Link href="/terms-of-service">
                   <a className="text-gray-400 hover:text-white transition">{t('footer.terms')}</a>
                 </Link>
               </li>

@@ -1,19 +1,19 @@
 {
   "hero": {
-    "title": "À Propos de Toilette Guilt",
+    "title": "À Propos de Toilet Guilt",
     "subtitle": "Notre mission est de déstigmatiser les conversations sur les toilettes et d'améliorer l'accès à des installations propres."
   },
   "mission": {
     "title": "Notre Mission",
-    "paragraph1": "Chez Toilette Guilt, nous croyons que l'accès à des toilettes propres et sûres est une nécessité humaine fondamentale. Pourtant, les conversations sur les besoins liés aux toilettes sont souvent stigmatisées, causant anxiété et inconfort inutiles pour beaucoup de personnes.",
+    "paragraph1": "Chez Toilet Guilt, nous croyons que l'accès à des toilettes propres et sûres est une nécessité humaine fondamentale. Pourtant, les conversations sur les besoins liés aux toilettes sont souvent stigmatisées, causant anxiété et inconfort inutiles pour beaucoup de personnes.",
     "paragraph2": "Notre plateforme vise à briser ces barrières en créant une communauté ouverte où les gens peuvent trouver, évaluer et partager des informations sur les toilettes publiques. En normalisant ces discussions, nous espérons améliorer l'accessibilité des toilettes et les normes de propreté dans le monde entier.",
     "paragraph3": "Que vous viviez avec une condition médicale qui nécessite un accès fréquent aux toilettes, que vous voyagiez avec de jeunes enfants, ou que vous appréciez simplement des installations propres, notre objectif est de vous aider à trouver des toilettes adaptées où que vous alliez.",
     "imageAlt": "Caractéristiques des toilettes accessibles, y compris barres d'appui et siège de toilette surélevé"
   },
   "story": {
     "title": "Notre Histoire",
-    "paragraph1": "Toilette Guilt a été fondée en 2021 par une petite équipe qui partageait des expériences frustrantes pour trouver des toilettes adaptées lors de voyages. Ce qui a commencé comme un projet personnel pour cartographier des installations propres et accessibles s'est transformé en une plateforme en croissance servant des milliers d'utilisateurs dans le monde entier.",
-    "paragraph2": "Le nom 'Toilette Guilt' reconnaît l'embarras inutile que beaucoup de personnes ressentent lorsqu'elles abordent des besoins humains fondamentaux. Notre équipe s'engage à éliminer cette culpabilité par l'éducation, la communauté et le plaidoyer.",
+    "paragraph1": "Toilet Guilt a été fondée en 2021 par une petite équipe qui partageait des expériences frustrantes pour trouver des toilettes adaptées lors de voyages. Ce qui a commencé comme un projet personnel pour cartographier des installations propres et accessibles s'est transformé en une plateforme en croissance servant des milliers d'utilisateurs dans le monde entier.",
+    "paragraph2": "Le nom 'Toilet Guilt' reconnaît l'embarras inutile que beaucoup de personnes ressentent lorsqu'elles abordent des besoins humains fondamentaux. Notre équipe s'engage à éliminer cette culpabilité par l'éducation, la communauté et le plaidoyer.",
     "imageAlt": "Des toilettes publiques modernes et propres avec plusieurs cabines"
   },
   "values": {
@@ -37,7 +37,7 @@
   },
   "team": {
     "title": "Notre Équipe",
-    "description": "Toilette Guilt est animée par une équipe dévouée de professionnels passionnés par l'impact positif sur la santé publique et l'accessibilité."
+    "description": "Toilet Guilt est animée par une équipe dévouée de professionnels passionnés par l'impact positif sur la santé publique et l'accessibilité."
   },
   "contact": {
     "title": "Contactez-nous",

@@ -1,5 +1,5 @@
 {
-  "brandName": "Toilette Guilt",
+  "brandName": "Toilet Guilt",
   "unknownDate": "未知日期",
   "submitting": "提交中...",
   "navigation": {
@@ -12,7 +12,8 @@
     "signup": "注册",
     "mostReviewed": "最多评论",
     "topRated": "评分最高",
-    "recentlyAdded": "最近添加"
+    "recentlyAdded": "最近添加",
+    "listYourBusiness": "注册您的企业"
   },
   "footer": {
     "tagline": "一次消除如厕尴尬感，帮您找到干净、无障碍的洗手间。",
@@ -22,7 +23,7 @@
     "contact": "联系我们",
     "privacy": "隐私政策",
     "terms": "服务条款",
-    "copyright": "© {{year}} Toilette Guilt. 保留所有权利。",
+    "copyright": "© {{year}} Toilet Guilt. 保留所有权利。",
     "hygieneArticles": "卫生文章",
     "accessibilityGuide": "无障碍指南",
     "bathroomEtiquette": "洗手间礼仪",
@@ -73,7 +74,7 @@
     "errorTitle": "提交失败",
     "errorDescription": "发生错误：{{error}}。请重试。"
   },
-  "siteName": "Toilette Guilt",
+  "siteName": "Toilet Guilt",
   "tagline": "在您附近找到干净、无障碍的公共洗手间",
   "nav": {
     "home": "首页",

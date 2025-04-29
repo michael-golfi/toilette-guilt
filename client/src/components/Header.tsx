@@ -28,7 +28,7 @@ const Header: React.FC = () => {
           </div>
           
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-6">
+          <nav className="hidden md:flex items-center space-x-6">
             <Link href="/find-restrooms">
               <a className={`text-gray-600 hover:text-primary font-medium ${location === '/find-restrooms' ? 'text-primary' : ''}`}>
                 {t('navigation.findRestrooms')}
@@ -39,15 +39,15 @@ const Header: React.FC = () => {
                 {t('navigation.articles')}
               </a>
             </Link>
-            {/* <Link href="/submit-listing">
-              <a className={`text-gray-600 hover:text-primary font-medium ${location === '/submit-listing' ? 'text-primary' : ''}`}>
-                {t('navigation.submitListing')}
-              </a>
-            </Link> */}
             <Link href="/about">
               <a className={`text-gray-600 hover:text-primary font-medium ${location === '/about' ? 'text-primary' : ''}`}>
                 {t('navigation.about')}
               </a>
+            </Link>
+            <Link href="/business-registration">
+              <Button variant="default" className="bg-primary hover:bg-primary/90">
+                {t('navigation.listYourBusiness')}
+              </Button>
             </Link>
           </nav>
           
@@ -85,14 +85,6 @@ const Header: React.FC = () => {
                   {t('navigation.articles')}
                 </a>
               </Link>
-              {/* <Link href="/submit-listing">
-                <a 
-                  className={`text-gray-600 hover:text-primary font-medium px-2 py-1 ${location === '/submit-listing' ? 'text-primary' : ''}`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {t('navigation.submitListing')}
-                </a>
-              </Link> */}
               <Link href="/about">
                 <a 
                   className={`text-gray-600 hover:text-primary font-medium px-2 py-1 ${location === '/about' ? 'text-primary' : ''}`}
@@ -100,6 +92,15 @@ const Header: React.FC = () => {
                 >
                   {t('navigation.about')}
                 </a>
+              </Link>
+              <Link href="/business-registration">
+                <Button 
+                  variant="default" 
+                  className="w-full bg-primary hover:bg-primary/90"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {t('navigation.listYourBusiness')}
+                </Button>
               </Link>
             </nav>
           </div>

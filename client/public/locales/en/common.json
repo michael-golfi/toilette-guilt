@@ -1,5 +1,5 @@
 {
-  "brandName": "Toilette Guilt",
+  "brandName": "Toilet Guilt",
   "unknownDate": "Unknown date",
   "submitting": "Submitting...",
   "navigation": {
@@ -12,7 +12,8 @@
     "signup": "Sign Up",
     "mostReviewed": "Most Reviewed",
     "topRated": "Top Rated",
-    "recentlyAdded": "Recently Added"
+    "recentlyAdded": "Recently Added",
+    "listYourBusiness": "List Your Business"
   },
   "footer": {
     "tagline": "Destigmatizing bathroom conversations one review at a time. Find clean, accessible restrooms wherever you go.",
@@ -22,7 +23,7 @@
     "contact": "Contact Us",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "copyright": "© {{year}} Toilette Guilt. All rights reserved.",
+    "copyright": "© {{year}} Toilet Guilt. All rights reserved.",
     "hygieneArticles": "Hygiene Articles",
     "accessibilityGuide": "Accessibility Guide",
     "bathroomEtiquette": "Bathroom Etiquette",
@@ -73,7 +74,7 @@
     "errorTitle": "Submission Failed",
     "errorDescription": "An error occurred: {{error}}. Please try again."
   },
-  "siteName": "Toilette Guilt",
+  "siteName": "Toilet Guilt",
   "tagline": "Find clean, accessible public restrooms near you",
   "nav": {
     "home": "Home",
