@@ -29,7 +29,16 @@
         "babyChanging": "Estación para Cambiar Bebés",
         "familyRestroom": "Baño Familiar"
       },
-      "submit": "Enviar Solicitud"
+      "submit": "Enviar Solicitud",
+      "submitting": "Procesando..."
+    },
+    "payment": {
+      "title": "Tarifa Mensual de la Red",
+      "description": "Se cobrará una tarifa mensual de ${{amount}} para mantener su listado comercial y proporcionar acceso a nuestra red.",
+      "retry": "Reintentar Pago",
+      "failed": "El pago falló. Por favor, intente nuevamente o contacte al soporte.",
+      "processing": "Procesando pago...",
+      "success": "¡Pago exitoso! Su negocio ha sido registrado."
     },
     "success": {
       "title": "Solicitud Enviada",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
@@ -7,9 +7,13 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Checkbox } from '../components/ui/checkbox';
+import { loadStripe } from '@stripe/stripe-js';
 
 const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
 const MONTHLY_FEE = 50; // $50 per month
+
+// Initialize Stripe with the publishable key from environment variable
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 type DayOfWeek = typeof DAYS_OF_WEEK[number];
 
@@ -40,6 +44,7 @@ interface FormData {
 
 export const BusinessRegistration: React.FC = () => {
   const { t } = useTranslation('business');
+  const [, setLocation] = useLocation();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -62,6 +67,8 @@ export const BusinessRegistration: React.FC = () => {
   });
 
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Load Stripe Buy Button script
@@ -95,6 +102,8 @@ export const BusinessRegistration: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
     
     try {
       // First, create the business record
@@ -107,14 +116,39 @@ export const BusinessRegistration: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to register business');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to register business');
       }
 
-      // Redirect to Stripe Checkout
-      window.location.href = 'https://buy.stripe.com/28o5l24tu9Bh0b69AO';
+      const data = await response.json();
+      
+      // Initialize Stripe
+      const stripe = await stripePromise;
+      if (!stripe) {
+        throw new Error('Failed to initialize Stripe');
+      }
+
+      // Handle payment
+      const { error: stripeError } = await stripe.confirmPayment({
+        clientSecret: data.clientSecret,
+        confirmParams: {
+          return_url: `${window.location.origin}/business/success`,
+        },
+      });
+
+      if (stripeError) {
+        throw new Error(stripeError.message);
+      }
+
+      // If this is a retry, show success message
+      if (data.isRetry) {
+        setLocation('/business/success');
+      }
     } catch (error) {
       console.error('Registration error:', error);
-      // TODO: Show error message to user
+      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -158,6 +192,12 @@ export const BusinessRegistration: React.FC = () => {
           <p className="text-gray-600 text-center mb-8">
             {t('registration.description')}
           </p>
+
+          {error && (
+            <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-md">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -321,25 +361,15 @@ export const BusinessRegistration: React.FC = () => {
             </div>
 
             <div className="pt-4">
-              <Button type="submit" className="w-full">
-                {t('registration.form.submit')}
+              <Button 
+                type="submit" 
+                className="w-full"
+                disabled={!isFormValid || isSubmitting}
+              >
+                {isSubmitting ? t('registration.form.submitting') : t('registration.form.submit')}
               </Button>
             </div>
           </form>
-
-          {/* <div className="mt-8 text-center">
-            <p className="text-gray-600 mb-4">{t('registration.payment.title')}</p>
-            <stripe-buy-button
-              buy-button-id="buy_btn_1RJFDeBLg4DvqJoee2mnF7ny"
-              publishable-key=""
-              data-disabled={!isFormValid}
-            />
-            {!isFormValid && (
-              <p className="text-sm text-gray-500 mt-2">
-                {t('registration.payment.completeForm')}
-              </p>
-            )}
-          </div> */}
         </Card>
       </div>
     </div>

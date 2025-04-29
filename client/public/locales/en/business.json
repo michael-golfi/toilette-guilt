@@ -280,7 +280,16 @@
         "babyChanging": "Baby Changing Station",
         "familyRestroom": "Family Restroom"
       },
-      "submit": "Submit Application"
+      "submit": "Submit Application",
+      "submitting": "Processing..."
+    },
+    "payment": {
+      "title": "Monthly Network Fee",
+      "description": "A monthly fee of ${{amount}} will be charged to maintain your business listing and provide access to our network.",
+      "retry": "Retry Payment",
+      "failed": "Payment failed. Please try again or contact support.",
+      "processing": "Processing payment...",
+      "success": "Payment successful! Your business is now registered."
     },
     "success": {
       "title": "Application Submitted",

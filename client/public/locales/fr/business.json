@@ -1,7 +1,7 @@
 {
   "registration": {
     "title": "Rejoignez Notre Réseau",
-    "description": "Devenez partenaire du Réseau d'Accès aux Toilettes et offrez des toilettes propres et accessibles à nos membres.",
+    "description": "Devenez partenaire du Réseau d'Accès aux Toilettes et fournissez des toilettes propres et accessibles à nos membres.",
     "form": {
       "businessName": "Nom de l'Entreprise",
       "email": "Adresse E-mail",
@@ -12,10 +12,10 @@
       "postalCode": "Code Postal",
       "country": "Pays",
       "networkFee": {
-        "label": "Frais du Réseau",
+        "label": "Frais de Réseau",
         "amount": "50",
         "currency": "USD / mois",
-        "description": "Le Réseau d'Accès aux Toilettes facture des frais mensuels de 50 $ pour couvrir les coûts de la plateforme et les avantages des membres. Ces frais aident à maintenir le réseau et à fournir un soutien à nos entreprises partenaires."
+        "description": "Le Réseau d'Accès aux Toilettes facture des frais mensuels de 50 $ pour couvrir les coûts de la plateforme et les avantages des membres. Ces frais aident à maintenir le réseau et à fournir un soutien à nos partenaires commerciaux."
       },
       "businessHours": {
         "label": "Heures d'Ouverture",
@@ -25,15 +25,24 @@
       "bathroomFeatures": {
         "label": "Caractéristiques des Toilettes",
         "accessible": "Accessible aux Fauteuils Roulants",
-        "genderNeutral": "Mixte",
+        "genderNeutral": "Neutre en Terme de Genre",
         "babyChanging": "Table à Langer",
         "familyRestroom": "Toilettes Familiales"
       },
-      "submit": "Soumettre la Demande"
+      "submit": "Soumettre la Demande",
+      "submitting": "Traitement en cours..."
+    },
+    "payment": {
+      "title": "Frais Mensuels du Réseau",
+      "description": "Des frais mensuels de {{amount}} $ seront facturés pour maintenir votre inscription commerciale et fournir l'accès à notre réseau.",
+      "retry": "Réessayer le Paiement",
+      "failed": "Le paiement a échoué. Veuillez réessayer ou contacter le support.",
+      "processing": "Traitement du paiement...",
+      "success": "Paiement réussi ! Votre entreprise est maintenant enregistrée."
     },
     "success": {
       "title": "Demande Soumise",
-      "message": "Merci de votre intérêt pour rejoindre le Réseau d'Accès aux Toilettes. Nous examinerons votre demande et vous contacterons sous peu.",
+      "message": "Merci de votre intérêt pour rejoindre le Réseau d'Accès aux Toilettes. Nous examinerons votre demande et vous contacterons bientôt.",
       "backToHome": "Retour à l'Accueil"
     }
   },

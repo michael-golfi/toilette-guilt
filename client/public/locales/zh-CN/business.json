@@ -29,7 +29,16 @@
         "babyChanging": "婴儿换尿布台",
         "familyRestroom": "家庭洗手间"
       },
-      "submit": "提交申请"
+      "submit": "提交申请",
+      "submitting": "处理中..."
+    },
+    "payment": {
+      "title": "每月网络费用",
+      "description": "将收取每月{{amount}}美元的费用，以维护您的企业列表并提供网络访问权限。",
+      "retry": "重试支付",
+      "failed": "支付失败。请重试或联系支持。",
+      "processing": "处理支付中...",
+      "success": "支付成功！您的企业现已注册。"
     },
     "success": {
       "title": "申请已提交",

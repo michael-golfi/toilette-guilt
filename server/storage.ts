@@ -876,6 +876,119 @@ export class SqlStorage implements IStorage {
       throw new Error(`Failed to get poop count: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
+
+  async registerBusiness(data: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+    stripeCustomerId: string;
+    stripeSubscriptionId: string;
+    businessHours: Record<string, { open: string; close: string }>;
+    bathroomFeatures: Record<string, boolean>;
+  }): Promise<any> {
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+
+      // Insert business
+      const businessResult = await client.query(
+        `INSERT INTO business_partners (
+          name, email, phone, address, city, state, postal_code, country,
+          stripe_customer_id, stripe_subscription_id, status, payment_status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'pending', 'unpaid')
+        RETURNING *`,
+        [
+          data.name,
+          data.email,
+          data.phone,
+          data.address,
+          data.city,
+          data.state,
+          data.postalCode,
+          data.country,
+          data.stripeCustomerId,
+          data.stripeSubscriptionId,
+        ]
+      );
+
+      const business = businessResult.rows[0];
+
+      // Insert business hours
+      for (const [day, hours] of Object.entries(data.businessHours)) {
+        await client.query(
+          `INSERT INTO business_hours (
+            business_id, day_of_week, open_time, close_time
+          ) VALUES ($1, $2, $3, $4)`,
+          [business.id, day, hours.open, hours.close]
+        );
+      }
+
+      // Insert bathroom features
+      for (const [feature, enabled] of Object.entries(data.bathroomFeatures)) {
+        await client.query(
+          `INSERT INTO bathroom_features (
+            business_id, feature_name, enabled
+          ) VALUES ($1, $2, $3)`,
+          [business.id, feature, enabled]
+        );
+      }
+
+      await client.query('COMMIT');
+      return business;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async updateBusinessSubscriptionStatus(stripeCustomerId: string, status: string): Promise<void> {
+    await this.pool.query(
+      `UPDATE business_partners 
+       SET status = $1,
+           updated_at = now()
+       WHERE stripe_customer_id = $2`,
+      [status, stripeCustomerId]
+    );
+  }
+
+  async updateBusinessPaymentStatus(stripeCustomerId: string, status: string): Promise<void> {
+    await this.pool.query(
+      `UPDATE business_partners 
+       SET payment_status = $1,
+           last_payment_date = CASE WHEN $1 = 'paid' THEN now() ELSE last_payment_date END,
+           next_payment_date = CASE WHEN $1 = 'paid' THEN now() + interval '1 month' ELSE next_payment_date END,
+           updated_at = now()
+       WHERE stripe_customer_id = $2`,
+      [status, stripeCustomerId]
+    );
+  }
+
+  async updateBusinessSubscriptionId(stripeCustomerId: string, subscriptionId: string): Promise<void> {
+    await this.pool.query(
+      `UPDATE business_partners 
+       SET stripe_subscription_id = $1,
+           updated_at = now()
+       WHERE stripe_customer_id = $2`,
+      [subscriptionId, stripeCustomerId]
+    );
+  }
+
+  async getBusinessByEmail(email: string): Promise<any | null> {
+    const query = `
+      SELECT * FROM business_partners
+      WHERE email = $1
+    `;
+
+    const { rows } = await this.pool.query(query, [email]);
+    return rows[0] || null;
+  }
 }
 
 export const storage = new SqlStorage(process.env.DATABASE_URL!);
